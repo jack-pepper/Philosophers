@@ -54,9 +54,18 @@ int	main(int argc, char **argv)
 		}
 		i++;
 		
-		if (pthread_join(philosophers[i], NULL) != 0)
-			return (1);
 	}
+
+	i = 0;
+	while (i < settings.number_of_philosophers)
+	{
+		if (pthread_join(philosophers[i], NULL) != 0)
+		{
+		// free memory depending of i
+		return (1);
+		}
+	}
+
 	
 	pthread_mutex_destroy(&mutex);
 }
