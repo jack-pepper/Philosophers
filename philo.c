@@ -4,8 +4,7 @@
 int	main(int argc, char **argv)
 {
 	t_philo_vars	settings = {0};
-	t_philosopher	*philosophers;
-	int res;
+	int				res;
 	
 	// If {0} init not allowed, I will use memset
 	// memset(&settings, 0, sizeof(settings));
@@ -27,32 +26,50 @@ int	main(int argc, char **argv)
 	
 }
 
-// Try: init_philosopher / init_joins / init_mutexes...
 int	start_council(t_philosopher *philosophers, t_philo_vars *settings)
 {
-	pthread_mutex_t	mutex;
-
-	uint64_t timestamp_ms;
-	int i;
-		
-	pthread_mutex_init(&mutex, NULL);
+	t_fork	*forks;
+	t_philosopher	*philosophers;
 	
+	uint64_t timestamp_ms;
 
+	int i;
+
+	// set_forks() and mutexes;
+	forks =  malloc(sizeof(t_fork) * settings->number_of_philosophers);
+	if (!forks)
+		return (-1);
 	i = 0;
 	while (i < settings->number_of_philosophers)
 	{
-		if (pthread_create(philosophers[i]->thread, NULL, &routine, NULL) != 0)
+		forks[i].id = i + 1;
+		forks[i].is_already_taken = false;
+		if (pthread_mutex_init(&forks[i].mutex, NULL) != 0)
+		{
+			// free forks
+			return (-1);
+		}
+		i++;
+	}
+	
+	// set philosophers()
+	philosophers = malloc(sizeof(t_philosopher) * settings->number_of_philosophers);
+	if (!philosophers)
+		return (-1);
+	i = 0;
+	while (i < settings->number_of_philosophers)
+	{
+		if (pthread_create(philosophers[i].thread, NULL, &routine, NULL) != 0)
 		{
 			// free memory depending of i
 			return (1);
 		}
 		i++;
-		philosophers[i]->id = i + 1;
-		
+		philosophers[i].id = i + 1;
 	}
 	
 	i = 0;
-	while (i < settings.number_of_philosophers)
+	while (i < settings->number_of_philosophers)
 	{
 		if (pthread_join(philosophers[i].thread, NULL) != 0)
 		{
@@ -68,7 +85,7 @@ int	start_council(t_philosopher *philosophers, t_philo_vars *settings)
 
 void	*routine() {
 	pthread_mutex_lock(&mutex);
-
+	
 	pthread_mutex_unlock(&mutex);
 }
 
