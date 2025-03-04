@@ -6,9 +6,9 @@ int		main(int argc, char **argv)
 	int				res;
 	
 	// memset(&settings, 0, sizeof(settings)); // If {0} init not allowed by norm
-	if (args_are_valid(argc, argv, &state.settings) != 0)
-		return (-1);
-	printf("Args are valid!\n");
+	//if (args_are_valid(argc, argv, &state.settings) != 0) // ADD PARSING AFTER
+	//	return (-1);
+	//printf("Args are valid!\n");
 	store_args(argv, &state.settings);
 	printf("Args have been stored!\n");
 	res = 0;
@@ -34,19 +34,20 @@ int	start_council(t_state *state, t_philosopher *philosophers, t_fork *forks)
 {
 	int	nb_guests;
 	int i;
-	//uint64_t timestamp_ms;
 	
 	nb_guests = state->settings.number_of_philosophers;
+	if (set_clock(state) != 0)
+	{
+		return (-1);
+	}
 	if (set_forks(state->forks, nb_guests) != 0)
 	{
 		return (-1);
 	}
-	
 	if (set_philosophers(state, state->philosophers, nb_guests) != 0)
 	{
 		return (-1);
 	}
-	
 	// destroy_mutexes()
 	i = 0;
 	while (i < nb_guests)
@@ -55,26 +56,3 @@ int	start_council(t_state *state, t_philosopher *philosophers, t_fork *forks)
 		return (-1); // Better to wait?
 	}
 }
-
-void	*routine(t_state *state) {
-	
-	int	i;
-	
-	i = state->current_i;
-	// try to take 'left' fork (with same id as philosopher)
-	pthread_mutex_lock(&state->forks[i].mutex);
-	state->forks[i].is_already_taken = true;
-	// try to take 'right' fork (i + 1, or 1 if last philosopher of the circle)
-	pthread_mutex_lock(&state->forks[i + 1].mutex);
-	state->forks[i + 1].is_already_taken = true;
-	
-	// eat during the chosen time
-	change_status("is eating");
-	
-	// unlock only after finishing eating
-	state->forks[i].is_already_taken = false;
-	pthread_mutex_unlock(&state->forks[i].mutex);
-	state->forks[i].is_already_taken = false;
-	pthread_mutex_unlock(&state->forks[i + 1].mutex);
-}
-
