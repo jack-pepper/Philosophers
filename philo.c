@@ -1,91 +1,80 @@
 #include "philo.h"
 
-
-int	main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-	t_philo_vars	settings = {0};
+	t_state			state = {0};
 	int				res;
 	
-	// If {0} init not allowed, I will use memset
-	// memset(&settings, 0, sizeof(settings));
-	
-	if (args_are_valid(argc, argv, &settings) != 0)
-	return (-1);
-	store_args(argv, &settings);
-	
+	// memset(&settings, 0, sizeof(settings)); // If {0} init not allowed by norm
+	if (args_are_valid(argc, argv, &state.settings) != 0)
+		return (-1);
+	printf("Args are valid!\n");
+	store_args(argv, &state.settings);
+	printf("Args have been stored!\n");
 	res = 0;
-	res = start_council(&settings); // Won't stop
-	
+	res = start_council(&state, &state.philosophers, &state.forks);
 	if (res == -1)
-	return (-1); // Error: process not launched, problem with locks...
+	{
+		printf("Error: xxx\n");
+		return (-1); // Error: process not launched, problem with locks...
+	}
 	else if (res == 1)
-	return (1); // Philosopher died
-	else if (res == 2)
-	return (2); // All required meals eaten
-	
-	
+	{
+		printf("Error: xxx\n");
+		return (1); // Philosopher died
+	}
+		else if (res == 2)
+	{
+		printf("Error: xxx\n");
+		return (2); // All required meals eaten
+	}
 }
 
-int	start_council(t_philosopher *philosophers, t_philo_vars *settings)
+int	start_council(t_state *state, t_philosopher *philosophers, t_fork *forks)
 {
-	t_fork	*forks;
-	t_philosopher	*philosophers;
-	
-	uint64_t timestamp_ms;
-
+	int	nb_guests;
 	int i;
-
-	// set_forks() and mutexes;
-	forks =  malloc(sizeof(t_fork) * settings->number_of_philosophers);
-	if (!forks)
+	//uint64_t timestamp_ms;
+	
+	nb_guests = state->settings.number_of_philosophers;
+	if (set_forks(state->forks, nb_guests) != 0)
+	{
 		return (-1);
-	i = 0;
-	while (i < settings->number_of_philosophers)
-	{
-		forks[i].id = i + 1;
-		forks[i].is_already_taken = false;
-		if (pthread_mutex_init(&forks[i].mutex, NULL) != 0)
-		{
-			// free forks
-			return (-1);
-		}
-		i++;
 	}
 	
-	// set philosophers()
-	philosophers = malloc(sizeof(t_philosopher) * settings->number_of_philosophers);
-	if (!philosophers)
+	if (set_philosophers(state, state->philosophers, nb_guests) != 0)
+	{
 		return (-1);
-	i = 0;
-	while (i < settings->number_of_philosophers)
-	{
-		if (pthread_create(philosophers[i].thread, NULL, &routine, NULL) != 0)
-		{
-			// free memory depending of i
-			return (1);
-		}
-		i++;
-		philosophers[i].id = i + 1;
 	}
 	
+	// destroy_mutexes()
 	i = 0;
-	while (i < settings->number_of_philosophers)
+	while (i < nb_guests)
 	{
-		if (pthread_join(philosophers[i].thread, NULL) != 0)
-		{
-			// free memory depending of i
-			return (1);
-		}
-		i++;
+		if (pthread_mutex_destroy(&forks[i].mutex) != 0)
+		return (-1); // Better to wait?
 	}
-	
-	
-	pthread_mutex_destroy(&mutex);
 }
 
-void	*routine() {
-	pthread_mutex_lock(&mutex);
+void	*routine(t_state *state) {
 	
-	pthread_mutex_unlock(&mutex);
+	int	i;
+	
+	i = state->current_i;
+	// try to take 'left' fork (with same id as philosopher)
+	pthread_mutex_lock(&state->forks[i].mutex);
+	state->forks[i].is_already_taken = true;
+	// try to take 'right' fork (i + 1, or 1 if last philosopher of the circle)
+	pthread_mutex_lock(&state->forks[i + 1].mutex);
+	state->forks[i + 1].is_already_taken = true;
+	
+	// eat during the chosen time
+	change_status("is eating");
+	
+	// unlock only after finishing eating
+	state->forks[i].is_already_taken = false;
+	pthread_mutex_unlock(&state->forks[i].mutex);
+	state->forks[i].is_already_taken = false;
+	pthread_mutex_unlock(&state->forks[i + 1].mutex);
 }
 
