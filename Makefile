@@ -38,6 +38,7 @@ SRC = philo.c \
 	  args_parser.c \
 	  clock.c \
 	  table.c \
+	  memory.c \
 
 ### Object files
 OBJ = $(SRC:.c=.o)

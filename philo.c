@@ -11,7 +11,8 @@ int		main(int argc, char **argv)
 	//printf("Args are valid!\n");
 	printf("argc: %d\n", argc); // temporary for DEBUG
 	store_args(argv, &state.settings);
-	printf("Args have been stored!\n");
+	printf("Args stored! %d %d %d %d %d\n", state.settings.number_of_philosophers, state.settings.time_to_die,
+		state.settings.time_to_eat, state.settings.time_to_sleep, state.settings.number_of_times_each_philosopher_must_eat);
 	res = 0;
 	res = start_council(&state, state.philosophers, state.forks);
 	if (res == -1)
@@ -37,21 +38,25 @@ int	start_council(t_state *state, t_philosopher *philosophers, t_fork *forks)
 	int i;
 	
 	nb_guests = state->settings.number_of_philosophers;
+	printf("[start_council] Nb of guest: %d\n", nb_guests); // DEBUG
 	if (set_clock(state) != 0)
 	{
-		printf("[start_council] Clock non set!\n");// DEBUG
+		printf("[start_council] Clock non set!\n"); // DEBUG
 		return (-1);
 	}
-	if (set_forks(state->forks, nb_guests) != 0)
+	printf("[start_council] Clock set!\n"); // DEBUG
+	if (set_forks(&state->forks, nb_guests) != 0)
 	{
 		printf("[start_council] Forks non set!\n");// DEBUG
 		return (-1);
 	}
+	printf("[start_council] Forks set!\n"); // DEBUG
 	if (set_philosophers(state, philosophers, nb_guests) != 0)
 	{
 		printf("[start_council] Philosophers non set!\n");// DEBUG
 		return (-1);
 	}
+	state->clock.simulation_on = true;
 	// destroy_mutexes()
 	i = 0;
 	while (i < nb_guests)

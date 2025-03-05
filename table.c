@@ -1,27 +1,28 @@
 #include "philo.h"
 
-int	set_forks(t_fork *forks, int nb_guests)
+int	set_forks(t_fork **forks, int nb_guests)
 {
     int	i;
 
     // malloc for forks
-    forks =  malloc(sizeof(t_fork) * nb_guests);
-    if (!forks)
+    *forks = malloc(sizeof(t_fork) * nb_guests);
+    if (!*forks)
         return (-1);
-
+	printf("[set_forks] forks successfully mallocated!");
     // init fork mutexes
     i = 0;
     while (i < nb_guests)
     {
-        forks[i].id = i + 1;
-        forks[i].is_already_taken = false;
-        if (pthread_mutex_init(&forks[i].mutex, NULL) != 0)
+        (*forks)[i].id = i + 1;
+        (*forks)[i].is_already_taken = false;
+        if (pthread_mutex_init(&(*forks)[i].mutex, NULL) != 0)
         {
-            // free forks
+            // free forks and mutexes
             return (-1);
         }
     i++;
     }
+	printf("[set_forks] forks successfully mutexed!\n");
 	return (0);
 }
 
@@ -33,6 +34,7 @@ int	set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests)
 	philosophers = malloc(sizeof(t_philosopher) * nb_guests);
 	if (!philosophers)
 		return (-1);
+	printf("[set_philosophers] philosophers successfully mallocated!\n");
 	i = 0;
 	while (i < nb_guests)
 	{
