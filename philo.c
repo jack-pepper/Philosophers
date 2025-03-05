@@ -9,10 +9,11 @@ int		main(int argc, char **argv)
 	//if (args_are_valid(argc, argv, &state.settings) != 0) // ADD PARSING AFTER
 	//	return (-1);
 	//printf("Args are valid!\n");
+	printf("argc: %d\n", argc); // temporary for DEBUG
 	store_args(argv, &state.settings);
 	printf("Args have been stored!\n");
 	res = 0;
-	res = start_council(&state, &state.philosophers, &state.forks);
+	res = start_council(&state, state.philosophers, state.forks);
 	if (res == -1)
 	{
 		printf("Error: xxx\n");
@@ -38,14 +39,17 @@ int	start_council(t_state *state, t_philosopher *philosophers, t_fork *forks)
 	nb_guests = state->settings.number_of_philosophers;
 	if (set_clock(state) != 0)
 	{
+		printf("[start_council] Clock non set!\n");// DEBUG
 		return (-1);
 	}
 	if (set_forks(state->forks, nb_guests) != 0)
 	{
+		printf("[start_council] Forks non set!\n");// DEBUG
 		return (-1);
 	}
-	if (set_philosophers(state, state->philosophers, nb_guests) != 0)
+	if (set_philosophers(state, philosophers, nb_guests) != 0)
 	{
+		printf("[start_council] Philosophers non set!\n");// DEBUG
 		return (-1);
 	}
 	// destroy_mutexes()
@@ -55,4 +59,5 @@ int	start_council(t_state *state, t_philosopher *philosophers, t_fork *forks)
 		if (pthread_mutex_destroy(&forks[i].mutex) != 0)
 		return (-1); // Better to wait?
 	}
+	return (0);
 }

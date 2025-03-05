@@ -1,5 +1,6 @@
 #include "philo.h"
 
+/*
 int     args_are_valid(int argc, char **argv, t_settings *settings)
 {
     // check number of args
@@ -12,26 +13,31 @@ int     args_are_valid(int argc, char **argv, t_settings *settings)
     
     
     // check that bounds of the number fits the needed type and limits
-    
-    store_args(argv, settings);
-
     return (0);
-}
+} */
 
 // NB: will need a ft_atouint_64_t function for storing timestamps
 void    store_args(char **argv, t_settings *settings)
 {
-    settings->number_of_philosophers = ft_atonum_unsigned(argv[1], "int");
-    settings->time_to_die = ft_atonum_unsigned(argv[2], "int");
-    settings->time_to_eat = ft_atonum_unsigned(argv[3], "int");
-    settings->time_to_sleep = ft_atonum_unsigned(argv[4], "int");
+    settings->number_of_philosophers = ft_atoi(argv[1]);
+    settings->time_to_die = ft_atoi(argv[2]);
+    settings->time_to_eat = ft_atoi(argv[3]);
+    settings->time_to_sleep = ft_atoi(argv[4]);
     if (argv[5])
         settings->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
     return ;
+
+    // set ft_atonum later
+    //settings->number_of_philosophers = ft_atonum_unsigned(argv[1], "int");
+    //settings->time_to_die = ft_atonum_unsigned(argv[2], "int");
+    //settings->time_to_eat = ft_atonum_unsigned(argv[3], "int");
+    //settings->time_to_sleep = ft_atonum_unsigned(argv[4], "int");
+    //if (argv[5])
+    //    settings->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+    //return ;
 }
 
-
-
+/*
 
 // Trim each arg (remove + sign and leading zeros)
 char	*ps_trim(char *trimmed_arg, char *arg, int len, int k)
@@ -162,3 +168,4 @@ int	args_are_all_int(int nb_elem, char **args)
 	}
 	return (0);
 }
+    */

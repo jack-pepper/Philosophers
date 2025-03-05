@@ -10,6 +10,7 @@
 # include <pthread.h>
 # include <stdint.h>
 # include <string.h>
+# include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>
 # include <stdbool.h>
@@ -66,15 +67,26 @@ typedef struct 		s_state
 int		main(int argc, char **argv);
 int		start_council(t_state *state, t_philosopher *philosophers, t_fork *forks);
 
+// philo_utils.c
+int		ft_isspace(int c);
+int		ft_isdigit(int c);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_atoi(const char *nptr);
+size_t	ft_strlen(const char *s);
+
+// args_parser.c
+int     args_are_valid(int argc, char **argv, t_settings *settings);
+void    store_args(char **argv, t_settings *settings);
+
 // table.c
 int		set_forks(t_fork *forks, int nb_guests);
 int		set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests);
-void	*philo_routine(t_state *state);
+void	*philo_routine(void *arg);
 void	change_status(t_philosopher *philosopher, char *new_state);
 
 // clock.c
 int		set_clock(t_state *state);
-void    *clock_routine(t_state *state);
+void    *clock_routine(void *arg);
 int		take_pulse(t_state *state);
 
 

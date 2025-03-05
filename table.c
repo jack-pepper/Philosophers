@@ -22,6 +22,7 @@ int	set_forks(t_fork *forks, int nb_guests)
         }
     i++;
     }
+	return (0);
 }
 
 int	set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests)
@@ -36,7 +37,7 @@ int	set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests)
 	while (i < nb_guests)
 	{
 		state->current_i = i;
-		if (pthread_create(philosophers[i].thread, NULL, &philo_routine, &state) != 0)
+		if (pthread_create(&philosophers[i].thread, NULL, &philo_routine, &state) != 0)
 		{
 			// free memory depending of i
 			return (1);
@@ -55,12 +56,15 @@ int	set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests)
 		}
 		i++;
 	}
+	return (0);
 }
 
-void	*philo_routine(t_state *state) {
-	
+void	*philo_routine(void *arg)
+{
+	t_state	*state;	
 	int	i;
 	
+	state = (t_state *)arg;
 	i = state->current_i;
 	
 	while (1)
@@ -86,32 +90,33 @@ void	*philo_routine(t_state *state) {
 void	change_status(t_philosopher *philosopher, char *new_state)
 {
 	uint64_t timestamp_ms;
-	
+
+	timestamp_ms = 0;
 	if (ft_strncmp(new_state, DIED_MSG, ft_strlen(DIED_MSG)))
 	{
-		printf("%ld %d %s\n", timestamp_ms, philosopher->id, new_state);
+		printf("%llu %d %s\n", timestamp_ms, philosopher->id, new_state);
 		// display message and end simulation
 	}
 	else if (ft_strncmp(new_state, FORK_MSG, ft_strlen(FORK_MSG)))
 	{	
-		printf("%ld %d %s\n", timestamp_ms, philosopher->id, new_state);
+		printf("%llu %d %s\n", timestamp_ms, philosopher->id, new_state);
 		//
 	}
 	else if (ft_strncmp(new_state, EAT_MSG, ft_strlen(EAT_MSG)))
 	{
-		printf("%ld %d %s\n", timestamp_ms, philosopher->id, new_state);
+		printf("%llu %d %s\n", timestamp_ms, philosopher->id, new_state);
 		// launch a counter starting from the beginning of the meal
 		// wait time_to_eat time
 		// unlock the forks here?
 	}
 	else if (ft_strncmp(new_state, SLEEP_MSG, ft_strlen(SLEEP_MSG)))
 	{
-		printf("%ld %d %s\n", timestamp_ms, philosopher->id, new_state);
+		printf("%llu %d %s\n", timestamp_ms, philosopher->id, new_state);
 		//
 	}
 	else if (ft_strncmp(new_state, THINK_MSG, ft_strlen(THINK_MSG)))
 	{
-		printf("%ld %d %s\n", timestamp_ms, philosopher->id, new_state);
+		printf("%llu %d %s\n", timestamp_ms, philosopher->id, new_state);
 		/* code */
 	}
 
