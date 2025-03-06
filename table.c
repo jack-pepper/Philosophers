@@ -26,32 +26,32 @@ int	set_forks(t_fork **forks, int nb_guests)
 	return (0);
 }
 
-int	set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests)
+int	set_philosophers(t_state **state, t_philosopher **philosophers, int nb_guests)
 {
 	int	i;
 
 	// malloc philosophers
-	philosophers = malloc(sizeof(t_philosopher) * nb_guests);
-	if (!philosophers)
+	*philosophers = malloc(sizeof(t_philosopher) * nb_guests);
+	if (!*philosophers)
 		return (-1);
 	printf("[set_philosophers] philosophers successfully mallocated!\n");
 	i = 0;
 	while (i < nb_guests)
 	{
-		state->current_i = i;
-		if (pthread_create(&philosophers[i].thread, NULL, &philo_routine, &state) != 0)
+		(*state)->current_i = i;
+		if (pthread_create(&(*philosophers)[i].thread, NULL, &philo_routine, &state) != 0)
 		{
 			// free memory depending of i
 			return (1);
 		}
 		i++;
-		philosophers[i].id = i + 1;
-        philosophers[i].last_meal_time_ms = state->clock.cur_time.tv_sec / 1000;
+		(*philosophers)[i].id = i + 1;
+        (*philosophers)[i].last_meal_time_ms = (*state)->clock.cur_time_ms;
 	}
 	i = 0;
 	while (i < nb_guests)
 	{
-		if (pthread_join(philosophers[i].thread, NULL) != 0)
+		if (pthread_join((*philosophers)[i].thread, NULL) != 0)
 		{
 			// free memory depending of i
 			return (1);

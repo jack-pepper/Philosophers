@@ -53,49 +53,50 @@ typedef struct 		s_clock
 	struct timeval	cur_time;
 	uint64_t		start_time_ms;
 	uint64_t		cur_time_ms;
-	bool			simulation_on;
 }					t_clock;
 
 typedef struct 		s_state
 {
+	pthread_mutex_t	mutex_start_simulation;
 	t_settings		settings;
 	t_philosopher	*philosophers;
 	t_fork			*forks;
 	t_clock			clock;
 	int				current_i;
+	bool			simulation_on;
 }					t_state;
 
 // philo.c
-int		main(int argc, char **argv);
-int		start_council(t_state *state, t_philosopher *philosophers, t_fork *forks);
+int			main(int argc, char **argv);
+int			start_council(t_state **state, t_philosopher **philosophers, t_fork **forks);
 
 // philo_utils.c
-int		ft_isspace(int c);
-int		ft_isdigit(int c);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-int		ft_atoi(const char *nptr);
-size_t	ft_strlen(const char *s);
+int			ft_isspace(int c);
+int			ft_isdigit(int c);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+int			ft_atoi(const char *nptr);
+size_t		ft_strlen(const char *s);
 
 // args_parser.c
-int     args_are_valid(int argc, char **argv, t_settings *settings);
-void    store_args(char **argv, t_settings *settings);
+int     	args_are_valid(int argc, char **argv, t_settings *settings);
+void    	store_args(char **argv, t_settings *settings);
 
 // table.c
-int		set_forks(t_fork **forks, int nb_guests);
-int		set_philosophers(t_state *state, t_philosopher *philosophers, int nb_guests);
-void	*philo_routine(void *arg);
-void	change_status(t_philosopher *philosopher, char *new_state);
+int			set_forks(t_fork **forks, int nb_guests);
+int			set_philosophers(t_state **state, t_philosopher **philosophers, int nb_guests);
+void		*philo_routine(void *arg);
+void		change_status(t_philosopher *philosopher, char *new_state);
 
 // clock.c
-int		set_clock(t_state *state);
-void    *clock_routine(void *arg);
-int		take_pulse(t_state *state);
+int			set_clock(t_state **state);
+void    	*clock_routine(void *arg);
+int			take_pulse(t_state *state);
+uint64_t    convert_to_ms(struct timeval time);
 
 // memory.c
-int    on_exit(t_state *state);
-int    detach_threads(t_state *state);
-int   free_forks(t_state *state);
-void   free_philosophers(t_state *state);
-
+int    		on_exit(t_state *state);
+int    		detach_threads(t_state *state);
+int   		free_forks(t_state *state);
+void   		free_philosophers(t_state *state);
 
 #endif
