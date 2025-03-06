@@ -1,6 +1,6 @@
 #include "philo.h"
 
-int    on_exit(t_state *state)
+int    free_on_exit(t_state *state)
 {
     detach_threads(state); // get return value?
     free_forks(state);

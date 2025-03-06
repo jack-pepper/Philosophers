@@ -9,7 +9,7 @@ int     set_clock(t_state **state)
         printf("[set_clock] gettimeofday fail\n");
     (*state)->clock.start_time_ms = convert_to_ms((*state)->clock.start_time);
     (*state)->clock.cur_time_ms = convert_to_ms((*state)->clock.cur_time);
-    printf("[set clock] %llu\n", (*state)->clock.start_time_ms);
+    printf("[set clock] %lu\n", (*state)->clock.start_time_ms);
     if (pthread_create(&(*state)->clock.thread, NULL, &clock_routine, (*state)) != 0)
         return (-1);
     return (0);
@@ -36,15 +36,16 @@ void    *clock_routine(void *arg)
         printf("[clock_routine] usleep failed\n");
     }
     pthread_mutex_unlock(&state->mutex_start_simulation);
+    pthread_mutex_destroy(&state->mutex_start_simulation);    
     while (1)
     {
         if (gettimeofday(&state->clock.cur_time, NULL) != 0)
         printf("[clock_routine] gettimeofday fail\n");
         state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
-        printf("Current time (ms): %llu\n", state->clock.cur_time_ms);
+        printf("Current time (ms): %lu\n", state->clock.cur_time_ms);
         if (take_pulse(state) != 0)
         {
-            on_exit(state);
+            free_on_exit(state);
         }
         if (usleep(1000) != 0)
             printf("[clock_routine] usleep failed\n");
@@ -62,8 +63,8 @@ int	    take_pulse(t_state *state)
 	while (i < state->settings.number_of_philosophers)
 	{
 		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms;
-        printf("clock.cur_time_ms: %llu - state->philosophers[i].last_meal_time_ms: %llu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
-        printf("philosopher %d starving since %llu...\n", i, starving_since);
+        printf("clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
+        printf("philosopher %d starving since %lu...\n", i, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
 			change_status(&state->philosophers[i], "died");
