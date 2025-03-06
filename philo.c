@@ -17,7 +17,7 @@ int		main(int argc, char **argv)
 	printf("Args stored! %d %d %d %d %d\n", (*state).settings.number_of_philosophers, (*state).settings.time_to_die,
 		(*state).settings.time_to_eat, (*state).settings.time_to_sleep, (*state).settings.number_of_times_each_philosopher_must_eat);
 	res = 0;
-	res = start_council(&state, &(*state).philosophers, &(*state).forks);
+	res = start_council(&state);
 	if (res == -1)
 	{
 		printf("Error: xxx\n");
@@ -35,10 +35,10 @@ int		main(int argc, char **argv)
 	}
 }
 
-int	start_council(t_state **state, t_philosopher **philosophers, t_fork **forks)
+int	start_council(t_state **state)
 {
 	int	nb_guests;
-	int i;
+	//int i;
 
 	nb_guests = (*state)->settings.number_of_philosophers;
 	if (pthread_mutex_init(&(*state)->mutex_start_simulation, NULL) != 0)
@@ -51,25 +51,27 @@ int	start_council(t_state **state, t_philosopher **philosophers, t_fork **forks)
 		return (-1);
 	}
 	printf("[start_council] Clock set!\n"); // DEBUG
-	if (set_forks(&*forks, nb_guests) != 0)
+	if (set_forks(state, nb_guests) != 0)
 	{
 		printf("[start_council] Forks non set!\n");// DEBUG
 		return (-1);
 	}
 	printf("[start_council] Forks set!\n"); // DEBUG
-	if (set_philosophers(state, &*philosophers, nb_guests) != 0)
+	if (set_philosophers(state, nb_guests) != 0)
 	{
 		printf("[start_council] Philosophers non set!\n"); // DEBUG
 		return (-1);
 	}
+	printf("[start_council] Philosophers set!\n"); // DEBUG
 	(*state)->simulation_on = true;
 	pthread_mutex_unlock(&(*state)->mutex_start_simulation);
+	
 	// destroy_mutexes()
-	i = 0;
-	while (i < nb_guests)
-	{
-		if (pthread_mutex_destroy(&(*forks)[i].mutex) != 0)
-		return (-1); // Better to wait?
-	}
+	//i = 0;
+	//while (i < nb_guests)
+	//{
+	//	if (pthread_mutex_destroy(&(*state)->forks[i].mutex) != 0)
+	//	return (-1); // Better to wait?
+	//}
 	return (0);
 }
