@@ -59,3 +59,11 @@ size_t	ft_strlen(const char *s)
     }
     return (str - s);
 }
+uint64_t    convert_to_ms(struct timeval time)
+{
+    uint64_t    converted;
+
+    converted = time.tv_sec * 1000 + time.tv_usec / 1000; 
+    return (converted);
+}
+

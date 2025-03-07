@@ -1,94 +1,118 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
+/*   Updated: 2025/03/07 23:37:30 by mmalie           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_state			*state;
-	int				res;
+	t_state	state;
 
-	// malloc and init state to 0
-	state = malloc(sizeof(t_state));
-	if (!state)
+	memset(&state, 0, sizeof(t_state));
+	printf("argc: %d\n", argc); // temp for DEBUG
+	store_args(argv, &state.settings);
+	printf("Args stored! %d %d %d %d %d\n", state.settings.number_of_philosophers, state.settings.time_to_die,
+	state.settings.time_to_eat, state.settings.time_to_sleep, state.settings.number_of_times_each_philosopher_must_eat);
+	if (initer(&state) != 0)
+	{
+		printf("[main] error on initer\n");
 		return (-1);
-	memset(state, 0, sizeof(t_state));
-
-	// check args validity
-	//if (args_are_valid(argc, argv, &state.settings) != 0) // ADD PARSING AFTER
-	//	return (-1);
-	//printf("Args are valid!\n");
-	printf("argc: %d\n", argc); // temporary for DEBUG
-
-	// store valid args to settings
-	store_args(argv, &(*state).settings);
-	printf("Args stored! %d %d %d %d %d\n", (*state).settings.number_of_philosophers, (*state).settings.time_to_die,
-		(*state).settings.time_to_eat, (*state).settings.time_to_sleep, (*state).settings.number_of_times_each_philosopher_must_eat);
-	
-	// start council (set clock, forks and philosophers)
-	res = 0;
-	res = start_council(&state);
-
-	// handle the res of start_council
-	if (res == -1)
-	{
-		printf("[main.c] Error: xxx\n");
-		return (-1); // Error: process not launched, problem with locks...
 	}
-	else if (res == 1)
+	if (launch_simulation(&state) != 0)
 	{
-		printf("Error: xxx\n");
-			return (1); // Philosopher died
+		printf("[main] pthread error on launch_simulation)");
+		return (-1);
 	}
-	else if (res == 2)
-	{
-		printf("Error: xxx\n");
-			return (2); // All required meals eaten
-	}
-
-	// Clean up and Destroy mutexes
-	res = 0;
-	while (res < (*state).settings.number_of_philosophers)
-	{
-		if (pthread_mutex_destroy(&(*state).forks[res].mutex) != 0)
-			return (-1); // Better to wait?
-	}
+	return (0);
 }
 
-int	start_council(t_state **state)
+int     initer(t_state *state)
 {
-	int	nb_guests;
-	//int i;
+        int     nb_guests;
 
-	printf("[start_council] Entering start_council...\n");
-	nb_guests = (*state)->settings.number_of_philosophers;
-	printf("[start_council] Get nb_guests (%d) from settings (%d)\n", nb_guests, (*state)->settings.number_of_philosophers);
-    if (pthread_mutex_init(&(*state)->mutex_start_simulation, NULL) != 0)
-        	return (-1);
-	pthread_mutex_lock(&(*state)->mutex_start_simulation);
-	printf("MUTEX_START_SIMULATION locked by: main thread\n");
-	(*state)->simulation_on = false;
-	printf("[start_council] Setting clock...\n");
-	if (set_clock(state) != 0)
-	{
-		printf("[start_council] Clock non set!\n"); // DEBUG
-			return (-1);
-	}
-	printf("[start_council] Clock set!\n"); // DEBUG
-	(*state)->simulation_on = true;
-	printf("[start_council] Setting forks...\n");
-	if (set_forks(state, nb_guests) != 0)
-	{
-		printf("[start_council] Forks non set!\n");// DEBUG
-			return (-1);
-	}
-	printf("[start_council] Forks set!\n"); // DEBUG
-	printf("[start_council] Setting philosophers...\n");
-	if (set_philosophers(state, nb_guests) != 0)
-	{
-		printf("[start_council] Philosophers non set!\n"); // DEBUG
-			return (-1);
-	}
-	printf("[start_council] Philosophers set!\n"); // DEBUG	
-	pthread_mutex_unlock(&(*state)->mutex_start_simulation);
-	printf("MUTEX_START_SIMULATION UNlocked by: main thread\n");
+        nb_guests = state->settings.number_of_philosophers;
+        printf("[initer] nb_of_guests: %d\n", nb_guests);
+        if (!state)
+                return (-1);
+       // if (init_clock(state) != 0) // Probably better to do at the hand or in the launcher?
+       //         return (-1);
+        if (init_forks(state, nb_guests) != 0)
+                return (-1);
+        if (init_philosophers(state, nb_guests) != 0)
+                return (-1);
+        if (init_mutexes(state, nb_guests) != 0)
+                return (-1);
+        return (0);
+}
 
+int	launch_simulation(t_state *state)
+{
+	t_philo_arg	*arg;	
+	int     nb_guests;
+	int	i;
+
+        nb_guests = state->settings.number_of_philosophers;
+        printf("[launch_simulation] nb_of_guests: %d\n", nb_guests);
+	if (launch_death_clock(state, nb_guests) != 0)
+		return (-1);
+	i = 0;
+	while (i < nb_guests)
+	{
+		arg = malloc(sizeof(arg));
+		if (!arg)
+			return (-1);
+		arg->state = state;
+		arg->i = i;
+		arg->nb_guests = nb_guests;
+		if (pthread_create(&state->philosophers[i].thread, NULL, &philo_routine, arg) != 0)
+		{
+			// free memory depending of i
+			return (1);
+		}
+		i++;
+	}
+
+	//if (pthread_join(state->clock.thread, NULL) != 0)
+	//	return (-1);
+	i = 0;
+	while (i < nb_guests)
+	{
+		if (pthread_join(state->philosophers[i].thread, NULL) != 0)
+		{
+			// free memory depending of i
+			return (1);
+		}
+		i++;
+	}
 	return (0);
+}
+
+// Set start time and start the clock
+int     launch_death_clock(t_state *state, int nb_guests)
+{
+	int	i;
+
+	i = 0;
+	if (gettimeofday(&state->clock.cur_time, NULL) != 0)
+		printf("[launch_death_clock] gettimeofday fail\n"); // check in a loop while struct == 0?
+    	state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
+    	state->clock.start_time_ms = state->clock.cur_time_ms;
+    	printf("[launch_death_clock] cur_time_ms: %lu - start_time_ms: %lu\n", state->clock.cur_time_ms, state->clock.start_time_ms);
+    	while (i < nb_guests)
+	{
+		state->philosophers[i].last_meal_time_ms = state->clock.cur_time_ms;
+		printf("philosopher[%d] last_meal_time_ms: %lu\n", i, state->philosophers[i].last_meal_time_ms);
+		i++;
+	}
+    	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
+        	return (-1);
+    	return (0);
 }

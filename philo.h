@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
+/*   Updated: 2025/03/07 23:16:44 by mmalie           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -68,41 +80,45 @@ typedef struct 		s_state
 
 typedef struct		s_philo_arg
 {
-	t_state			**state;
-	t_philosopher	*this_philosopher;
+	t_state		*state;
+	int		i;
+	int		nb_guests;
 }					t_philo_arg;
 
-// philo.c
-int			main(int argc, char **argv);
-int			start_council(t_state **state);
 
-// philo_utils.c
-int			ft_isspace(int c);
-int			ft_isdigit(int c);
-int			ft_strncmp(const char *s1, const char *s2, size_t n);
-int			ft_atoi(const char *nptr);
-size_t		ft_strlen(const char *s);
+// philo.c
+int	main(int argc, char **argv);
+int     initer(t_state *state);
+int     launch_simulation(t_state *state);
+int     launch_death_clock(t_state *state, int nb_guests);
 
 // args_parser.c
-int     	args_are_valid(int argc, char **argv, t_settings *settings);
-void    	store_args(char **argv, t_settings *settings);
+void    store_args(char **argv, t_settings *settings);
 
-// table.c
-int			set_forks(t_state **state, int nb_guests);
-int			set_philosophers(t_state **state, int nb_guests);
-void		*philo_routine(void *arg);
-void		change_status(t_state **state, t_philosopher *philosopher, char *status);
+// initer.c
+int     init_forks(t_state *state, int nb_guests);
+int     init_philosophers(t_state *state, int nb_guests);
+//int     init_clock(t_state *state);
+int	init_mutexes(t_state *state, int nb_guests);
 
-// clock.c
-int			set_clock(t_state **state);
-void    	*clock_routine(void *arg);
-int			take_pulse(t_state *state);
-uint64_t    convert_to_ms(struct timeval time);
+// routines.c
+void    *clock_routine(void *arg);
+void    *philo_routine(void *arg);
+int         take_pulse(t_state *state);
+void    change_status(t_state *state, t_philosopher *philosopher, char *status);
 
 // memory.c
 int    		free_on_exit(t_state *state);
 int    		detach_threads(t_state *state);
 int   		free_forks(t_state *state);
 void   		free_philosophers(t_state *state);
+
+// utils.c
+uint64_t    convert_to_ms(struct timeval time);
+int			ft_isspace(int c);
+int			ft_isdigit(int c);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+int			ft_atoi(const char *nptr);
+size_t		ft_strlen(const char *s);
 
 #endif
