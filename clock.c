@@ -67,7 +67,7 @@ int	    take_pulse(t_state *state)
         printf("philosopher %d starving since %lu...\n", i, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
-			change_status(&state->philosophers[i], "died");
+			change_status(&state, &state->philosophers[i], "died");
 			return (1);
 		}
 		i++;

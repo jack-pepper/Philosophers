@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/01/26 22:17:58 by mmalie           ###   ########.fr        #
+#    Updated: 2025/03/07 11:43:44 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ NAME = philo
 ### Compilation settings ###
 ############################
 
-CC=cc
-CFLAGS=-g -Wall -Wextra -Werror
+CC=gcc
+CFLAGS=-lpthread -g -Wall -Wextra -Werror
 
 ####################
 ### Dependencies ###

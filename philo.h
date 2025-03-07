@@ -66,6 +66,12 @@ typedef struct 		s_state
 	bool			simulation_on;
 }					t_state;
 
+typedef struct		s_philo_arg
+{
+	t_state			**state;
+	t_philosopher	*this_philosopher;
+}					t_philo_arg;
+
 // philo.c
 int			main(int argc, char **argv);
 int			start_council(t_state **state);
@@ -85,7 +91,7 @@ void    	store_args(char **argv, t_settings *settings);
 int			set_forks(t_state **state, int nb_guests);
 int			set_philosophers(t_state **state, int nb_guests);
 void		*philo_routine(void *arg);
-void		change_status(t_philosopher *philosopher, char *new_state);
+void		change_status(t_state **state, t_philosopher *philosopher, char *status);
 
 // clock.c
 int			set_clock(t_state **state);
