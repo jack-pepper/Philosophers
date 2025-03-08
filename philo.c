@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/07 23:37:30 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/08 19:30:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	main(int argc, char **argv)
 		printf("[main] pthread error on launch_simulation)");
 		return (-1);
 	}
+	printf("[main] exit program (0)\n");
 	return (0);
 }
 
@@ -42,8 +43,6 @@ int     initer(t_state *state)
         printf("[initer] nb_of_guests: %d\n", nb_guests);
         if (!state)
                 return (-1);
-       // if (init_clock(state) != 0) // Probably better to do at the hand or in the launcher?
-       //         return (-1);
         if (init_forks(state, nb_guests) != 0)
                 return (-1);
         if (init_philosophers(state, nb_guests) != 0)
@@ -61,12 +60,13 @@ int	launch_simulation(t_state *state)
 
         nb_guests = state->settings.number_of_philosophers;
         printf("[launch_simulation] nb_of_guests: %d\n", nb_guests);
+	state->philo_all_set = false;
 	if (launch_death_clock(state, nb_guests) != 0)
 		return (-1);
 	i = 0;
 	while (i < nb_guests)
 	{
-		arg = malloc(sizeof(arg));
+		arg = malloc(sizeof(t_philo_arg));
 		if (!arg)
 			return (-1);
 		arg->state = state;
@@ -79,9 +79,16 @@ int	launch_simulation(t_state *state)
 		}
 		i++;
 	}
+	state->philo_all_set = true;
+	printf("[launch_simulation] created philosophers' threads\n");
 
 	//if (pthread_join(state->clock.thread, NULL) != 0)
-	//	return (-1);
+        //{
+        	// free memory depending of i
+        //     	return (1);
+        //}	
+	//printf("[launch_simulation] joined clock thread!\n");
+
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -92,6 +99,8 @@ int	launch_simulation(t_state *state)
 		}
 		i++;
 	}
+	printf("[launch_simulation] joined philosophers pthreads!\n");
+
 	return (0);
 }
 
@@ -109,10 +118,11 @@ int     launch_death_clock(t_state *state, int nb_guests)
     	while (i < nb_guests)
 	{
 		state->philosophers[i].last_meal_time_ms = state->clock.cur_time_ms;
-		printf("philosopher[%d] last_meal_time_ms: %lu\n", i, state->philosophers[i].last_meal_time_ms);
+	//	printf("philosopher[%d] last_meal_time_ms: %lu\n", i, state->philosophers[i].last_meal_time_ms);
 		i++;
 	}
     	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
         	return (-1);
+        i++;
     	return (0);
 }

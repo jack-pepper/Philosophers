@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/07 23:16:44 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/08 17:38:13 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ typedef struct 		s_clock
 	pthread_t		thread;
 	struct timeval	start_time;
 	struct timeval	cur_time;
-	uint64_t		start_time_ms;
-	uint64_t		cur_time_ms;
+	volatile uint64_t		start_time_ms;
+	volatile uint64_t		cur_time_ms;
 }					t_clock;
 
 typedef struct 		s_state
@@ -75,7 +75,8 @@ typedef struct 		s_state
 	t_fork			*forks;
 	t_clock			clock;
 	int				current_i;
-	bool			simulation_on;
+	volatile bool			simulation_on;
+	volatile bool			philo_all_set;
 }					t_state;
 
 typedef struct		s_philo_arg

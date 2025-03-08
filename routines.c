@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/07 23:29:50 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/08 17:58:03 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,25 @@ void    *clock_routine(void *arg)
         return (NULL);
     }
     printf("clock routine: thread launched!\n");
-    pthread_mutex_lock(&state->mutex_start_simulation);
-    printf("state->clock.simulation_on = %d\n", state->simulation_on);
-    while (state->simulation_on == false)
+    //pthread_mutex_lock(&state->mutex_start_simulation);
+    //printf("[clock_routine] state->clock.simulation_on = %d\n", state->simulation_on);
+    //while (state->simulation_on == false)
+    //{
+    //    printf("Clock waiting...\n");
+    //    if (usleep(1000) != 0)
+    //    printf("[clock_routine] usleep failed\n");
+    //}
+    //printf("[clock_routine] state->clock.simulation_on = %d - Tic toc!\n", state->simulation_on);
+    //pthread_mutex_unlock(&state->mutex_start_simulation);
+    //pthread_mutex_destroy(&state->mutex_start_simulation); 
+    state->simulation_on = true;
+    while (state->simulation_on == true)
     {
-        printf("Clock waiting...\n");
-        if (usleep(1000) != 0)
-        printf("[clock_routine] usleep failed\n");
-    }
-    pthread_mutex_unlock(&state->mutex_start_simulation);
-    pthread_mutex_destroy(&state->mutex_start_simulation);    
-    while (1)
-    {
+	
         if (gettimeofday(&state->clock.cur_time, NULL) != 0)
-        printf("[clock_routine] gettimeofday fail\n");
+        	printf("[clock_routine] gettimeofday fail\n");
         state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
-        printf("Current time (ms): %lu\n", state->clock.cur_time_ms);
+        printf("[clock_routine] Current time (ms): %lu\n", state->clock.cur_time_ms);
         if (take_pulse(state) != 0)
         {
             free_on_exit(state);
@@ -62,6 +65,13 @@ void	*philo_routine(void *arg)
 		next_i = 0;
 	else
 		next_i = i + 1;
+	while (this_arg->state->philo_all_set == false)
+	{
+		printf("[philo_routine] philosopher %d waiting for all philos to be set\n", i + 1);
+		if (usleep(1000) != 0)
+            		printf("[philo_routine] usleep failed\n");
+	}
+	printf("[philo_routine] philosopher %d set, starting routine!\n", i + 1);
 	while (1)
 	{
 		// try to take 'left' fork (with same id as philosopher)
@@ -94,12 +104,12 @@ int	    take_pulse(t_state *state)
 	int	        i;
 	uint64_t	starving_since;
 
-    i = 0;
+    	i = 0;
 	while (i < state->settings.number_of_philosophers)
 	{
 		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms;
-        printf("clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
-        printf("philosopher %d starving since %lu...\n", i, starving_since);
+		printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
+        	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
 			change_status(state, &state->philosophers[i], "died");
