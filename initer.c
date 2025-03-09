@@ -73,5 +73,11 @@ int	init_mutexes(t_state *state, int nb_guests)
         	i++;
     	}
 	printf("[init_mutexes] forks successfully mutexed!\n");
+	if (pthread_mutex_init(&state->clock.mutex_get_time, NULL) != 0)
+        	{
+	            	// free forks and mutexes
+	    		printf("[init_mutexes] Issue while initiating clock.mutex_get_time\n");
+            		return (-1);
+        	}
 	return (0);
 }

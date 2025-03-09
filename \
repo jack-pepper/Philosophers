@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 17:42:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/09 17:23:50 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void    *clock_routine(void *arg)
         pthread_mutex_unlock(&state->clock.mutex_get_time);
 	if (take_pulse(state) != 0)
         {
-	    state->simulation_on = false;
+	    state->simulation_on == false;
             free_on_exit(state);
         }
         if (usleep(1000) != 0)
@@ -63,7 +63,7 @@ void	*philo_routine(void *arg)
 	
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
-	if (i == this_arg->nb_guests - 1)
+	if (i == this_arg->nb_guests)
 		next_i = 0;
 	else
 		next_i = i + 1;
@@ -87,9 +87,8 @@ void	*philo_routine(void *arg)
 		change_status(this_arg->state, &this_arg->state->philosophers[i], FORK_MSG);
 		this_arg->state->forks[next_i].is_already_taken = true;
 		// eat during the chosen time
-		change_status(this_arg->state, &this_arg->state->philosophers[i], EAT_MSG);	
-		printf("%d will be eating during %d\n", this_arg->state->philosophers[i].id, this_arg->state->settings.time_to_eat);
-		usleep(this_arg->state->settings.time_to_eat);
+		change_status(this_arg->state, &this_arg->state->philosophers[i], EAT_MSG);
+	
 		// unlock only after finishing eating
 		//printf("Put right fork down\n");
 		this_arg->state->forks[next_i].is_already_taken = false;
@@ -111,8 +110,8 @@ int	    take_pulse(t_state *state)
 	while (i < state->settings.number_of_philosophers)
 	{
 		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms;
-	//	printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
-        //	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
+		printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
+        	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
 			printf("[take_pulse] philosopher %d starving for too long! Trying to change status... \n", i + 1);

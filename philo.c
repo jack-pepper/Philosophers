@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/08 19:30:39 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/09 17:22:11 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,6 @@ int     launch_death_clock(t_state *state, int nb_guests)
 	}
     	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
         	return (-1);
-        i++;
+        //i++;
     	return (0);
 }
