@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 15:28:46 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/09 22:23:54 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ typedef struct s_settings
 typedef struct 		s_philosopher
 {
 	pthread_t		thread;
+	struct timeval	cur_time;
+	uint64_t		cur_time_ms;
 	struct timeval	last_meal_time;
 	uint64_t		last_meal_time_ms;
 	int				id;
@@ -82,11 +84,10 @@ typedef struct 		s_state
 
 typedef struct		s_philo_arg
 {
-	t_state		*state;
+	t_state		**state;
 	int		i;
 	int		nb_guests;
 }					t_philo_arg;
-
 
 // philo.c
 int	main(int argc, char **argv);
@@ -106,8 +107,8 @@ int	init_mutexes(t_state *state, int nb_guests);
 // routines.c
 void    *clock_routine(void *arg);
 void    *philo_routine(void *arg);
-int         take_pulse(t_state *state);
-void    change_status(t_state *state, t_philosopher *philosopher, char *status);
+int         take_pulse(t_state *state, uint64_t timestamp_ms);
+void    change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status);
 
 // memory.c
 int    		free_on_exit(t_state *state);
@@ -116,11 +117,12 @@ int   		free_forks(t_state *state);
 void   		free_philosophers(t_state *state);
 
 // utils.c
-uint64_t    convert_to_ms(struct timeval time);
 int			ft_isspace(int c);
 int			ft_isdigit(int c);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_atoi(const char *nptr);
 size_t		ft_strlen(const char *s);
+uint64_t        get_timestamp_ms(struct timeval *tv);
+uint64_t    	convert_to_ms(struct timeval tv);
 
 #endif

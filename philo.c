@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 17:22:11 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/09 21:47:52 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	main(int argc, char **argv)
 	t_state	state;
 
 	memset(&state, 0, sizeof(t_state));
+	// PARSING ARGS LOGIC HERE
 	printf("argc: %d\n", argc); // temp for DEBUG
 	store_args(argv, &state.settings);
 	printf("Args stored! %d %d %d %d %d\n", state.settings.number_of_philosophers, state.settings.time_to_die,
@@ -59,7 +60,6 @@ int	launch_simulation(t_state *state)
 	int	i;
 
         nb_guests = state->settings.number_of_philosophers;
-        printf("[launch_simulation] nb_of_guests: %d\n", nb_guests);
 	state->philo_all_set = false;
 	if (launch_death_clock(state, nb_guests) != 0)
 		return (-1);
@@ -69,7 +69,7 @@ int	launch_simulation(t_state *state)
 		arg = malloc(sizeof(t_philo_arg));
 		if (!arg)
 			return (-1);
-		arg->state = state;
+		arg->state = &state;
 		arg->i = i;
 		arg->nb_guests = nb_guests;
 		if (pthread_create(&state->philosophers[i].thread, NULL, &philo_routine, arg) != 0)
@@ -81,14 +81,6 @@ int	launch_simulation(t_state *state)
 	}
 	state->philo_all_set = true;
 	printf("[launch_simulation] created philosophers' threads\n");
-
-	//if (pthread_join(state->clock.thread, NULL) != 0)
-        //{
-        	// free memory depending of i
-        //     	return (1);
-        //}	
-	//printf("[launch_simulation] joined clock thread!\n");
-
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -118,11 +110,9 @@ int     launch_death_clock(t_state *state, int nb_guests)
     	while (i < nb_guests)
 	{
 		state->philosophers[i].last_meal_time_ms = state->clock.cur_time_ms;
-	//	printf("philosopher[%d] last_meal_time_ms: %lu\n", i, state->philosophers[i].last_meal_time_ms);
 		i++;
 	}
     	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
         	return (-1);
-        //i++;
     	return (0);
 }

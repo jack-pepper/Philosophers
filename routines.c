@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 17:42:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/09 22:28:13 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,15 @@ void    *clock_routine(void *arg)
     state->simulation_on = true;
     while (state->simulation_on == true)
     {	
-        if (gettimeofday(&state->clock.cur_time, NULL) != 0)
-        	printf("[clock_routine] gettimeofday fail\n"); 
-	pthread_mutex_lock(&state->clock.mutex_get_time);
-	state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
-        printf("[clock_routine] Current time (ms): %lu\n", state->clock.cur_time_ms);
-        pthread_mutex_unlock(&state->clock.mutex_get_time);
-	if (take_pulse(state) != 0)
+        state->clock.cur_time_ms = get_timestamp_ms(&state->clock.cur_time);
+
+	//if (gettimeofday(&state->clock.cur_time, NULL) != 0)
+        //	printf("[clock_routine] gettimeofday fail\n"); 
+	//pthread_mutex_lock(&state->clock.mutex_get_time);
+	//state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
+     //   printf("[clock_routine] Current time (ms): %lu\n", state->clock.cur_time_ms);
+       // pthread_mutex_unlock(&state->clock.mutex_get_time);
+	if (take_pulse(state, state->clock.cur_time_ms) != 0)
         {
 	    state->simulation_on = false;
             free_on_exit(state);
@@ -55,11 +57,14 @@ void    *clock_routine(void *arg)
     return (0);
 }
 
+
+// INSTEAD OF GETTING TIMESTAMP several times, I could just add time_to_eat / time_to_sleep to the previous timestamp
 void	*philo_routine(void *arg)
 {
 	t_philo_arg	*this_arg;
 	int	i;
 	int	next_i;
+	uint64_t	timestamp_ms = 0;
 	
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
@@ -67,7 +72,7 @@ void	*philo_routine(void *arg)
 		next_i = 0;
 	else
 		next_i = i + 1;
-	while (this_arg->state->philo_all_set == false)
+	while ((*this_arg->state)->philo_all_set == false)
 	{
 		printf("[philo_routine] philosopher %d waiting for all philos to be set\n", i + 1);
 		if (usleep(1000) != 0)
@@ -76,33 +81,42 @@ void	*philo_routine(void *arg)
 	printf("[philo_routine] philosopher %d set, starting routine!\n", i + 1);
 	while (1)
 	{
-		// try to take 'left' fork (with same id as philosopher)
-		//printf("Trying to take left fork...\n");
-		pthread_mutex_lock(&this_arg->state->forks[i].mutex);
-		change_status(this_arg->state, &this_arg->state->philosophers[i], FORK_MSG);
-		this_arg->state->forks[i].is_already_taken = true;
+		// try to take left fork (i)
+		printf("philo %d waiting for fork %d...\n", i + 1, i + 1);	
+		pthread_mutex_lock(&(*this_arg->state)->forks[i].mutex);
+		(*this_arg->state)->forks[i].is_already_taken = true;
+		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
+		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], FORK_MSG);	
+		printf("philo %d took fork %d ...\n", i + 1, i + 1);
+
 		// try to take 'right' fork (i + 1, or 1 if last philosopher of the circle)
-		//printf("Trying to take right fork...\n");
-		pthread_mutex_lock(&this_arg->state->forks[next_i].mutex);
-		change_status(this_arg->state, &this_arg->state->philosophers[i], FORK_MSG);
-		this_arg->state->forks[next_i].is_already_taken = true;
-		// eat during the chosen time
-		change_status(this_arg->state, &this_arg->state->philosophers[i], EAT_MSG);	
-		printf("%d will be eating during %d\n", this_arg->state->philosophers[i].id, this_arg->state->settings.time_to_eat);
-		usleep(this_arg->state->settings.time_to_eat);
+                printf("philo %d waiting for fork %d...\n", i + 1, next_i + 1);	
+		pthread_mutex_lock(&(*this_arg->state)->forks[next_i].mutex);
+		(*this_arg->state)->forks[next_i].is_already_taken = true;
+		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
+		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], FORK_MSG);	
+		printf("philo %d took fork %d...\n", i + 1, next_i + 1);
+
+		// eat during the chosen time	
+		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
+		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], EAT_MSG);	
 		// unlock only after finishing eating
-		//printf("Put right fork down\n");
-		this_arg->state->forks[next_i].is_already_taken = false;
-		pthread_mutex_unlock(&this_arg->state->forks[next_i].mutex);
-		//printf("Put left fork down\n");
-		this_arg->state->forks[i].is_already_taken = false;
-		pthread_mutex_unlock(&this_arg->state->forks[i].mutex);
+		printf("philo %d put fork %d down...\n", i + 1, next_i + 1);
+		(*this_arg->state)->forks[next_i].is_already_taken = false;
+		pthread_mutex_unlock(&(*this_arg->state)->forks[next_i].mutex);	
+		printf("philo %d put fork %d down...\n", i + 1, i + 1);
+		(*this_arg->state)->forks[i].is_already_taken = false;
+		pthread_mutex_unlock(&(*this_arg->state)->forks[i].mutex);	
+		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
+		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], SLEEP_MSG);
+		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
+		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], THINK_MSG);
 	}
 }
 
 
 // Called by the clock routine to check if any of the philosophers died
-int	    take_pulse(t_state *state)
+int	    take_pulse(t_state *state, uint64_t timestamp_ms)
 {
 	int	        i;
 	uint64_t	starving_since;
@@ -115,8 +129,7 @@ int	    take_pulse(t_state *state)
         //	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
-			printf("[take_pulse] philosopher %d starving for too long! Trying to change status... \n", i + 1);
-			change_status(state, &state->philosophers[i], "died");
+			change_status(state, timestamp_ms, &state->philosophers[i], "died");
 			return (1);
 		}
 		i++;
@@ -124,37 +137,30 @@ int	    take_pulse(t_state *state)
     return (0);
 }
 
-void	change_status(t_state *state, t_philosopher *philosopher, char *status)
+void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status)
 {
-	uint64_t timestamp_ms;
-
-	printf("[change_status] entering function...\n");
-	pthread_mutex_lock(&state->clock.mutex_get_time);
-	printf("[change_status] getting lock...\n");
-	timestamp_ms = state->clock.cur_time_ms;
-	pthread_mutex_unlock(&state->clock.mutex_get_time);
-	if (ft_strncmp(status, DIED_MSG, ft_strlen(DIED_MSG)))
+	if (ft_strncmp(status, DIED_MSG, ft_strlen(DIED_MSG)) == 0)
 	{
 		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 		// display message and end simulation
 	}
-	else if (ft_strncmp(status, FORK_MSG, ft_strlen(FORK_MSG)))
+	else if (ft_strncmp(status, FORK_MSG, ft_strlen(FORK_MSG)) == 0)
 	{	
 		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	}
-	else if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)))
+	else if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)) == 0)
+	{
+		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);	
+		usleep((int)state->settings.time_to_eat);
+		printf("%d has finished eating!\n", philosopher->id);
+	}
+	else if (ft_strncmp(status, SLEEP_MSG, ft_strlen(SLEEP_MSG)) == 0)
 	{
 		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
-		// launch a counter starting from the beginning of the meal
-		// wait time_to_eat time
-		// unlock the forks here?
+		usleep((int)state->settings.time_to_sleep);
+		printf("%d woke up!\n", philosopher->id);
 	}
-	else if (ft_strncmp(status, SLEEP_MSG, ft_strlen(SLEEP_MSG)))
-	{
-		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
-		//
-	}
-	else if (ft_strncmp(status, THINK_MSG, ft_strlen(THINK_MSG)))
+	else if (ft_strncmp(status, THINK_MSG, ft_strlen(THINK_MSG)) == 0)
 	{
 		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 		/* code */
