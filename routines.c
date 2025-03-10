@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 22:28:13 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/10 13:51:14 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,32 +81,30 @@ void	*philo_routine(void *arg)
 	printf("[philo_routine] philosopher %d set, starting routine!\n", i + 1);
 	while (1)
 	{
-		// try to take left fork (i)
-		printf("philo %d waiting for fork %d...\n", i + 1, i + 1);	
+		//printf("philo %d waiting for fork %d...\n", i + 1, i + 1);	
 		pthread_mutex_lock(&(*this_arg->state)->forks[i].mutex);
 		(*this_arg->state)->forks[i].is_already_taken = true;
 		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
 		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], FORK_MSG);	
-		printf("philo %d took fork %d ...\n", i + 1, i + 1);
+		//printf("philo %d took fork %d ...\n", i + 1, i + 1);
 
-		// try to take 'right' fork (i + 1, or 1 if last philosopher of the circle)
-                printf("philo %d waiting for fork %d...\n", i + 1, next_i + 1);	
+                //printf("philo %d waiting for fork %d...\n", i + 1, next_i + 1);	
 		pthread_mutex_lock(&(*this_arg->state)->forks[next_i].mutex);
 		(*this_arg->state)->forks[next_i].is_already_taken = true;
 		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
 		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], FORK_MSG);	
-		printf("philo %d took fork %d...\n", i + 1, next_i + 1);
+		//printf("philo %d took fork %d...\n", i + 1, next_i + 1);
 
-		// eat during the chosen time	
 		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
 		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], EAT_MSG);	
-		// unlock only after finishing eating
-		printf("philo %d put fork %d down...\n", i + 1, next_i + 1);
+		
+		//printf("philo %d put fork %d down...\n", i + 1, next_i + 1);
 		(*this_arg->state)->forks[next_i].is_already_taken = false;
 		pthread_mutex_unlock(&(*this_arg->state)->forks[next_i].mutex);	
-		printf("philo %d put fork %d down...\n", i + 1, i + 1);
+		//printf("philo %d put fork %d down...\n", i + 1, i + 1);
 		(*this_arg->state)->forks[i].is_already_taken = false;
 		pthread_mutex_unlock(&(*this_arg->state)->forks[i].mutex);	
+		
 		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
 		change_status((*this_arg->state), timestamp_ms, &(*this_arg->state)->philosophers[i], SLEEP_MSG);
 		timestamp_ms = get_timestamp_ms(&(*this_arg->state)->philosophers[i].cur_time);
@@ -126,7 +124,7 @@ int	    take_pulse(t_state *state, uint64_t timestamp_ms)
 	{
 		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms;
 	//	printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
-        //	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
+        	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
 			change_status(state, timestamp_ms, &state->philosophers[i], "died");
@@ -150,7 +148,8 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 	}
 	else if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)) == 0)
 	{
-		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);	
+		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
+		philosopher->last_meal_time_ms = timestamp_ms;
 		usleep((int)state->settings.time_to_eat);
 		printf("%d has finished eating!\n", philosopher->id);
 	}

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 22:23:54 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/10 13:45:47 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ typedef struct		s_philo_arg
 
 // philo.c
 int	main(int argc, char **argv);
-int     initer(t_state *state);
-int     launch_simulation(t_state *state);
+int     initer(t_state *state, int nb_guests);
+int     launch_simulation(t_state *state, int nb_guests);
 int     launch_death_clock(t_state *state, int nb_guests);
 
 // args_parser.c

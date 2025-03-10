@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/09 21:47:52 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/10 14:00:43 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ int	main(int argc, char **argv)
 	store_args(argv, &state.settings);
 	printf("Args stored! %d %d %d %d %d\n", state.settings.number_of_philosophers, state.settings.time_to_die,
 	state.settings.time_to_eat, state.settings.time_to_sleep, state.settings.number_of_times_each_philosopher_must_eat);
-	if (initer(&state) != 0)
+	if (initer(&state, state.settings.number_of_philosophers) != 0)
 	{
 		printf("[main] error on initer\n");
 		return (-1);
 	}
-	if (launch_simulation(&state) != 0)
+	if (launch_simulation(&state, state.settings.number_of_philosophers) != 0)
 	{
 		printf("[main] pthread error on launch_simulation)");
 		return (-1);
@@ -36,12 +36,8 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-int     initer(t_state *state)
+int     initer(t_state *state, int nb_guests)
 {
-        int     nb_guests;
-
-        nb_guests = state->settings.number_of_philosophers;
-        printf("[initer] nb_of_guests: %d\n", nb_guests);
         if (!state)
                 return (-1);
         if (init_forks(state, nb_guests) != 0)
@@ -53,13 +49,11 @@ int     initer(t_state *state)
         return (0);
 }
 
-int	launch_simulation(t_state *state)
+int	launch_simulation(t_state *state, int nb_guests)
 {
-	t_philo_arg	*arg;	
-	int     nb_guests;
+	t_philo_arg	*arg;
 	int	i;
 
-        nb_guests = state->settings.number_of_philosophers;
 	state->philo_all_set = false;
 	if (launch_death_clock(state, nb_guests) != 0)
 		return (-1);
