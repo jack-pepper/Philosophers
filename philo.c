@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/10 14:00:43 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/10 14:04:26 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-int     initer(t_state *state, int nb_guests)
+int	initer(t_state *state, int nb_guests)
 {
-        if (!state)
-                return (-1);
-        if (init_forks(state, nb_guests) != 0)
-                return (-1);
-        if (init_philosophers(state, nb_guests) != 0)
-                return (-1);
-        if (init_mutexes(state, nb_guests) != 0)
-                return (-1);
-        return (0);
+	if (!state)
+		return (-1);
+	if (init_forks(state, nb_guests) != 0)
+		return (-1);
+	if (init_philosophers(state, nb_guests) != 0)
+		return (-1);
+	if (init_mutexes(state, nb_guests) != 0)
+		return (-1);
+	return (0);
 }
 
 int	launch_simulation(t_state *state, int nb_guests)
@@ -91,22 +91,22 @@ int	launch_simulation(t_state *state, int nb_guests)
 }
 
 // Set start time and start the clock
-int     launch_death_clock(t_state *state, int nb_guests)
+int	launch_death_clock(t_state *state, int nb_guests)
 {
 	int	i;
 
 	i = 0;
 	if (gettimeofday(&state->clock.cur_time, NULL) != 0)
 		printf("[launch_death_clock] gettimeofday fail\n"); // check in a loop while struct == 0?
-    	state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
-    	state->clock.start_time_ms = state->clock.cur_time_ms;
+	state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
+	state->clock.start_time_ms = state->clock.cur_time_ms;
     	printf("[launch_death_clock] cur_time_ms: %lu - start_time_ms: %lu\n", state->clock.cur_time_ms, state->clock.start_time_ms);
-    	while (i < nb_guests)
+	while (i < nb_guests)
 	{
 		state->philosophers[i].last_meal_time_ms = state->clock.cur_time_ms;
 		i++;
 	}
-    	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
-        	return (-1);
-    	return (0);
+	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
+		return (-1);
+	return (0);
 }

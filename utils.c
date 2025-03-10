@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
+/*   Updated: 2025/03/10 14:12:05 by mmalie           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	ft_isspace(int c)
@@ -26,12 +38,13 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
 
-
 int	ft_atoi(const char *nptr)
 {
-	int	result = 0;
-	int	sign = 1;
+	int	result;
+	int	sign;
 
+	result = 0;
+	sign = 1;
 	while (ft_isspace(*nptr))
 		nptr++;
 	if (*nptr == '+' || *nptr == '-')
@@ -64,14 +77,14 @@ size_t	ft_strlen(const char *s)
 uint64_t	get_timestamp_ms(struct timeval *tv)
 {
 	if (gettimeofday(&(*tv), NULL) != 0)
-        	printf("[get_timestamp_ms] gettimeofday fail\n");
-        return(convert_to_ms(*tv));
+		printf("[get_timestamp_ms] gettimeofday fail\n");
+	return(convert_to_ms(*tv));
 }
 
-uint64_t    convert_to_ms(struct timeval time)
+uint64_t	convert_to_ms(struct timeval time)
 {
-    uint64_t    converted;
+	uint64_t	converted;
 
-    converted = time.tv_sec * 1000 + time.tv_usec / 1000; 
-    return (converted);
+	converted = time.tv_sec * 1000 + time.tv_usec / 1000; 
+	return (converted);
 }

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:58 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/07 20:24:32 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/10 14:23:07 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ int     args_are_valid(int argc, char **argv, t_settings *settings)
 } */
 
 // NB: will need a ft_atouint_64_t function for storing timestamps
-void    store_args(char **argv, t_settings *settings)
+void	store_args(char **argv, t_settings *settings)
 {
-    settings->number_of_philosophers = ft_atoi(argv[1]);
-    settings->time_to_die = ft_atoi(argv[2]);
-    settings->time_to_eat = ft_atoi(argv[3]);
-    settings->time_to_sleep = ft_atoi(argv[4]);
-    if (argv[5])
-        settings->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
-    return ;
+	settings->number_of_philosophers = ft_atoi(argv[1]);
+	settings->time_to_die = ft_atoi(argv[2]);
+	settings->time_to_eat = ft_atoi(argv[3]);
+	settings->time_to_sleep = ft_atoi(argv[4]);
+	if (argv[5])
+		settings->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+	return ;
 
     // set ft_atonum later
     //settings->number_of_philosophers = ft_atonum_unsigned(argv[1], "int");
