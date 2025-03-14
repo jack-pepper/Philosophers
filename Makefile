@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/03/07 21:32:03 by mmalie           ###   ########.fr        #
+#    Updated: 2025/03/14 12:01:55 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,8 @@ DEPS = philo.h
 SRC = philo.c \
 	args_parser.c \
 	initer.c \
-	routines.c \
+	routine_clock.c \
+	routine_philo.c \
 	utils.c \
 	memory.c \
 

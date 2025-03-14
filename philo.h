@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/10 14:17:35 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 13:01:04 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,17 @@ int		init_philosophers(t_state *state, int nb_guests);
 //int     init_clock(t_state *state);
 int		init_mutexes(t_state *state, int nb_guests);
 
-// routines.c
+// routine_clock.c
 void		*clock_routine(void *arg);
-void		*philo_routine(void *arg);
 int		take_pulse(t_state *state, uint64_t timestamp_ms);
 void		change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status);
+
+// philo_routine.c
+void		*philo_routine(void *arg);
+int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
+int		eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i);
+void		take_a_nap(t_state *state, uint64_t timestamp_ms, int i);
+void		think(t_state *state, uint64_t timestamp_ms, int i);
 
 // memory.c
 int		free_on_exit(t_state *state);

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/10 14:04:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 13:16:07 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	launch_death_clock(t_state *state, int nb_guests)
     	printf("[launch_death_clock] cur_time_ms: %lu - start_time_ms: %lu\n", state->clock.cur_time_ms, state->clock.start_time_ms);
 	while (i < nb_guests)
 	{
-		state->philosophers[i].last_meal_time_ms = state->clock.cur_time_ms;
+		state->philosophers[i].last_meal_time_ms = 0; //state->clock.cur_time_ms;
 		i++;
 	}
 	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)

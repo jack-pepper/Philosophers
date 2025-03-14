@@ -5,8 +5,7 @@ int	init_forks(t_state *state, int nb_guests)
 	int	i;
 
 	printf("[init_forks] mallocating forks for %d guests...\n", nb_guests);
-	state->forks = malloc(sizeof(t_fork) * nb_guests);
-	if (!state->forks)
+	if (!(state->forks = malloc(sizeof(t_fork) * nb_guests)))
 		return (-1);
 	memset(state->forks, 0, sizeof(t_fork) * nb_guests);
 	printf("[init_forks] forks successfully mallocated and initialized!\n");
@@ -26,8 +25,7 @@ int	init_philosophers(t_state *state, int nb_guests)
 	int                     i;
 
 	printf("[init_philosophers] mallocating for %d philosophers...\n", nb_guests);
-	state->philosophers = malloc(sizeof(t_philosopher) * (nb_guests));
-	if (!state->philosophers)
+	if (!(state->philosophers = malloc(sizeof(t_philosopher) * (nb_guests))))
 		return (-1);
 	memset(state->philosophers, 0, sizeof(t_philosopher) * nb_guests);
 	printf("[init_philosophers] philosophers successfully mallocated and initialized!\n");

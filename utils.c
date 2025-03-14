@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/10 14:12:05 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 10:33:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,5 @@ uint64_t	get_timestamp_ms(struct timeval *tv)
 
 uint64_t	convert_to_ms(struct timeval time)
 {
-	uint64_t	converted;
-
-	converted = time.tv_sec * 1000 + time.tv_usec / 1000; 
-	return (converted);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
