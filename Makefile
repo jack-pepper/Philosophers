@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/03/14 12:01:55 by mmalie           ###   ########.fr        #
+#    Updated: 2025/03/14 13:43:00 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ SRC = philo.c \
 	initer.c \
 	routine_clock.c \
 	routine_philo.c \
-	utils.c \
+	libft_utils.c \
+        philo_utils.c \
 	memory.c \
 
 ### Object files

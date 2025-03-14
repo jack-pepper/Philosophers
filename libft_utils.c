@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   libft_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 10:33:34 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 13:42:19 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,4 @@ size_t	ft_strlen(const char *s)
 		str++;
 	}
 	return (str - s);
-}
-
-// NB: Will probably include convert_to_ms in get_timestamp_ms
-uint64_t	get_timestamp_ms(struct timeval *tv)
-{
-	if (gettimeofday(&(*tv), NULL) != 0)
-		printf("[get_timestamp_ms] gettimeofday fail\n");
-	return(convert_to_ms(*tv));
-}
-
-uint64_t	convert_to_ms(struct timeval time)
-{
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initer.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
+/*   Updated: 2025/03/14 19:24:44 by mmalie           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	init_forks(t_state *state, int nb_guests)
@@ -5,7 +17,8 @@ int	init_forks(t_state *state, int nb_guests)
 	int	i;
 
 	printf("[init_forks] mallocating forks for %d guests...\n", nb_guests);
-	if (!(state->forks = malloc(sizeof(t_fork) * nb_guests)))
+	state->forks = malloc(sizeof(t_fork) * nb_guests);
+	if (!state->forks)
 		return (-1);
 	memset(state->forks, 0, sizeof(t_fork) * nb_guests);
 	printf("[init_forks] forks successfully mallocated and initialized!\n");
@@ -22,10 +35,11 @@ int	init_forks(t_state *state, int nb_guests)
 
 int	init_philosophers(t_state *state, int nb_guests)
 {
-	int                     i;
+	int	i;
 
 	printf("[init_philosophers] mallocating for %d philosophers...\n", nb_guests);
-	if (!(state->philosophers = malloc(sizeof(t_philosopher) * (nb_guests))))
+	state->philosophers = malloc(sizeof(t_philosopher) * (nb_guests));
+	if (!state->philosophers)
 		return (-1);
 	memset(state->philosophers, 0, sizeof(t_philosopher) * nb_guests);
 	printf("[init_philosophers] philosophers successfully mallocated and initialized!\n");
@@ -33,6 +47,7 @@ int	init_philosophers(t_state *state, int nb_guests)
 	while (i < nb_guests)
 	{
 		state->philosophers[i].id = i + 1;
+                state->philosophers[i].last_meal_time_ms = 0;
 		i++;
 	}
 	return (0);
@@ -60,12 +75,16 @@ int	init_mutexes(t_state *state, int nb_guests)
 	i = 0;
 	while (i < nb_guests)
 	{
-		//state->forks[i].id = i + 1;
-		//state->forks[i].is_already_taken = false;
 		if (pthread_mutex_init(&state->forks[i].mutex, NULL) != 0)
 		{
-			// free forks and mutex
 			printf("[init_mutexes] Issue while initiating forks[%d] mutex\n", i);
+			i--;
+			while (i > 0)
+			{
+				if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
+					printf("[init_mutexes] err: forks[%d].mutex not destroyed!\n", i);
+				i--;
+			}
 			return (-1);
 		}
 		i++;
@@ -73,7 +92,7 @@ int	init_mutexes(t_state *state, int nb_guests)
 	printf("[init_mutexes] forks successfully mutexed!\n");
 	if (pthread_mutex_init(&state->clock.mutex_get_time, NULL) != 0)
 	{
-		// free forks and mutexe
+		// free mutexes
 		printf("[init_mutexes] Issue while initiating clock.mutex_get_time\n");
             	return (-1);
         }

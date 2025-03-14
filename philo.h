@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 13:01:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 17:59:10 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct s_philo_arg
 int		main(int argc, char **argv);
 int		initer(t_state *state, int nb_guests);
 int		launch_simulation(t_state *state, int nb_guests);
-int		launch_death_clock(t_state *state, int nb_guests);
+int		launch_death_clock(t_state *state);
 
 // args_parser.c
 void		store_args(char **argv, t_settings *settings);
@@ -122,13 +122,17 @@ int		detach_threads(t_state *state);
 int		free_forks(t_state *state);
 void		free_philosophers(t_state *state);
 
-// utils.c
+// libft_utils.c
 int		ft_isspace(int c);
 int		ft_isdigit(int c);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(const char *nptr);
 size_t		ft_strlen(const char *s);
+
+// philo_utils.c
+void		display_settings(const t_settings *settings);
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t    	convert_to_ms(struct timeval tv);
+int		ft_ret(int return_val, char *error_msg);
 
 #endif

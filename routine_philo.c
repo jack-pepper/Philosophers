@@ -6,20 +6,22 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 13:14:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 19:19:04 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// INSTEAD OF GETTING TIMESTAMP several times, I could just add time_to_eat / time_to_sleep to the previous timestamp?
+// INSTEAD OF GETTING TIMESTAMP several times, add time_to_eat / time_to_sleep
+// to the previous timestamp?
 void	*philo_routine(void *arg)
 {
 	t_philo_arg	*this_arg;
-	int		i;
-	int		next_i;
-	uint64_t	timestamp_ms = 0;
-	
+	int			i;
+	int			next_i;
+	uint64_t	timestamp_ms;
+
+	timestamp_ms = 0;
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
 	if (i == this_arg->nb_guests - 1)
@@ -28,17 +30,17 @@ void	*philo_routine(void *arg)
 		next_i = i + 1;
 	while ((*this_arg->state)->philo_all_set == false)
 	{
-		printf("[philo_routine] philosopher %d waiting for all philos to be set\n", i + 1);
+		printf("[philo_routine] philosopher %d waiting for all philos to be set\n", i + 1); // DEBUG
 		if (usleep(1000) != 0)
-            		printf("[philo_routine] usleep failed\n");
+			printf("[philo_routine] usleep failed\n");
 	}
 	printf("[philo_routine] philosopher %d set, starting routine!\n", i + 1);
 	while (1)
 	{
 		wait_forks((*this_arg->state), timestamp_ms, i, next_i); // check return value
-                eat_pasta((*this_arg->state), timestamp_ms, i, next_i); // check return value
-                take_a_nap((*this_arg->state), timestamp_ms, i);
-                think((*this_arg->state), timestamp_ms, i);
+		eat_pasta((*this_arg->state), timestamp_ms, i, next_i); // check return value
+		take_a_nap((*this_arg->state), timestamp_ms, i);
+		think((*this_arg->state), timestamp_ms, i);
 	}
 }
 

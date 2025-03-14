@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 13:16:07 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/14 18:07:41 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,11 @@ int	main(int argc, char **argv)
 	// PARSING ARGS LOGIC HERE
 	printf("argc: %d\n", argc); // temp for DEBUG
 	store_args(argv, &state.settings);
-	printf("Args stored! %d %d %d %d %d\n", state.settings.number_of_philosophers, state.settings.time_to_die,
-	state.settings.time_to_eat, state.settings.time_to_sleep, state.settings.number_of_times_each_philosopher_must_eat);
+	display_settings(&state.settings);	
 	if (initer(&state, state.settings.number_of_philosophers) != 0)
-	{
-		printf("[main] error on initer\n");
-		return (-1);
-	}
+		return (ft_ret(-1, "[main] err: on initer\n"));
 	if (launch_simulation(&state, state.settings.number_of_philosophers) != 0)
-	{
-		printf("[main] pthread error on launch_simulation)");
-		return (-1);
-	}
+		return (ft_ret(-1, "[main] err: on launch_simulation\n"));
 	printf("[main] exit program (0)\n");
 	return (0);
 }
@@ -39,13 +32,20 @@ int	main(int argc, char **argv)
 int	initer(t_state *state, int nb_guests)
 {
 	if (!state)
-		return (-1);
+		return (ft_ret(-1, "[initer] err: !state\n"));
 	if (init_forks(state, nb_guests) != 0)
-		return (-1);
+		return (ft_ret(-1, "[initer] err: init_forks\n"));
 	if (init_philosophers(state, nb_guests) != 0)
-		return (-1);
+	{
+		free(state->forks);
+		return (ft_ret(-1, "[initer] err: init_philosophers\n"));
+	}
 	if (init_mutexes(state, nb_guests) != 0)
-		return (-1);
+	{
+		free(state->forks);
+		free(state->philosophers);
+		return (ft_ret(-1, "[initer] err: init_mutexes\n"));
+	}
 	return (0);
 }
 
@@ -55,7 +55,7 @@ int	launch_simulation(t_state *state, int nb_guests)
 	int	i;
 
 	state->philo_all_set = false;
-	if (launch_death_clock(state, nb_guests) != 0)
+	if (launch_death_clock(state) != 0)
 		return (-1);
 	i = 0;
 	while (i < nb_guests)
@@ -86,26 +86,18 @@ int	launch_simulation(t_state *state, int nb_guests)
 		i++;
 	}
 	printf("[launch_simulation] joined philosophers pthreads!\n");
-
+	// calculate offset (difference between clock starting time and philosophers' launching to start at 0)
 	return (0);
 }
 
 // Set start time and start the clock
-int	launch_death_clock(t_state *state, int nb_guests)
+int	launch_death_clock(t_state *state)
 {
-	int	i;
-
-	i = 0;
 	if (gettimeofday(&state->clock.cur_time, NULL) != 0)
 		printf("[launch_death_clock] gettimeofday fail\n"); // check in a loop while struct == 0?
 	state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
 	state->clock.start_time_ms = state->clock.cur_time_ms;
     	printf("[launch_death_clock] cur_time_ms: %lu - start_time_ms: %lu\n", state->clock.cur_time_ms, state->clock.start_time_ms);
-	while (i < nb_guests)
-	{
-		state->philosophers[i].last_meal_time_ms = 0; //state->clock.cur_time_ms;
-		i++;
-	}
 	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
 		return (-1);
 	return (0);
