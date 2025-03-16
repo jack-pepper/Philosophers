@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 19:24:44 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 23:26:57 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,15 @@ int	init_mutexes(t_state *state, int nb_guests)
 		i++;
 	}
 	printf("[init_mutexes] forks successfully mutexed!\n");
+	
+
+	if (pthread_mutex_init(&state->mutex_display_status, NULL) != 0)
+	{
+		// free mutexes
+		printf("[init_mutexes] Issue while initiating mutex_display_status\n");
+            	return (-1);
+        }
+	
 	if (pthread_mutex_init(&state->clock.mutex_get_time, NULL) != 0)
 	{
 		// free mutexes

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/16 20:54:10 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/17 00:03:28 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,10 @@ int	launch_simulation(t_state *state, int nb_guests)
 			// free memory depending of i
 			return (1);
 		}
+		
 		i++;
 	}
-	usleep(10000);
+	//usleep(10000);
 	(*state).philo_all_set = true;
 	printf("[launch_simulation (after setting to true)] philo_all_set: %d\n", (*state).philo_all_set);
 	printf("[launch_simulation] created philosophers' threads\n");	
@@ -87,11 +88,17 @@ int	launch_simulation(t_state *state, int nb_guests)
 			// free memory depending of i
 			return (1);
 		}
+                state->philosophers[i].last_meal_time_ms = get_timestamp_ms(&state->clock.cur_time);
+		printf("last_meal: %ld\n", state->philosophers[i].last_meal_time_ms);
 		i++;
 	}
 	printf("[launch_simulation] joined philosophers pthreads!\n");
-
 	// calculate offset (difference between clock starting time and philosophers' launching to start at 0)
+//	if (pthread_join(state->clock.thread, NULL) != 0)
+//	{
+		// free memory depending of i
+//		return (1);
+//	}
 	return (0);
 }
 

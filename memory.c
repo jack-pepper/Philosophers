@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/16 20:30:01 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 23:37:14 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	free_on_exit(t_state *state)
 	if (ret != 0)
 		return (ret);
 	free_philosophers(state);
+        pthread_mutex_unlock(&state->mutex_display_status); // Locked previously by dead philo
 	return (0);
 }
 

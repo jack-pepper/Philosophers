@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/16 18:18:15 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/17 00:09:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,12 @@ void	display_settings(const t_settings *settings)
 
 uint64_t	get_timestamp_ms(struct timeval *tv)
 {
-	if (gettimeofday(&(*tv), NULL) != 0)
+	if (gettimeofday(tv, NULL) != 0)
 		printf("[get_timestamp_ms] gettimeofday fail\n");
 	return (convert_to_ms(*tv));
 }
 
+// static inline?
 uint64_t	convert_to_ms(struct timeval time)
 {
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
