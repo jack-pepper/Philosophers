@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 13:10:17 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 21:00:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,13 @@ void	*clock_routine(void *arg)
 	//printf("[clock_routine] state->clock.simulation_on = %d - Tic toc!\n", state->simulation_on);
 	//pthread_mutex_unlock(&state->mutex_start_simulation);
 	//pthread_mutex_destroy(&state->mutex_start_simulation); 
-	state->simulation_on = true;
-	while (state->simulation_on == true)
+	while (state->philo_all_set == false)
+	{
+		printf("[clock_routine] waiting for all philos to be set: philo_all_set = %d\n", state->philo_all_set);
+		if (usleep(1000) != 0)
+                        printf("[clock_routine] usleep failed\n");
+	}
+	while (state->philo_all_set == true)//state->simulation_on == true)
 	{	
 		state->clock.cur_time_ms = get_timestamp_ms(&state->clock.cur_time) - state->clock.start_time_ms;
 		//if (gettimeofday(&state->clock.cur_time, NULL) != 0)
@@ -45,13 +50,12 @@ void	*clock_routine(void *arg)
 		//state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
 		//   printf("[clock_routine] Current time (ms): %lu\n", state->clock.cur_time_ms);
 		// pthread_mutex_unlock(&state->clock.mutex_get_time);
-	if (take_pulse(state, state->clock.cur_time_ms) != 0)
-	{
-		state->simulation_on = false;
-		free_on_exit(state);
-	}
-	if (usleep(1000) != 0)
-		printf("[clock_routine] usleep failed\n");
+		if (take_pulse(state, state->clock.cur_time_ms) != 0)
+		{
+			return (0);
+		}
+		if (usleep(1000) != 0)
+			printf("[clock_routine] usleep failed\n");
 	}
 	return (0);
 }
@@ -65,11 +69,13 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
 	{
-		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms;
-		printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
-		printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
+		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms; // overflow
+	//	printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
+	//	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
-		{
+		{	
+			state->philo_all_set = false;
+			state->simulation_on = false;
 			change_status(state, timestamp_ms, &state->philosophers[i], "died");
 			return (1);
 		}

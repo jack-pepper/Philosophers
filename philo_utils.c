@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 19:20:12 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 18:18:15 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,6 @@ uint64_t	convert_to_ms(struct timeval time)
 
 int	ft_ret(int return_val, char *error_msg)
 {
-	printf(error_msg);
+	printf("%s", error_msg);
 	return (return_val);
 }

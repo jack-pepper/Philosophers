@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 19:19:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 20:39:46 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,21 @@ void	*philo_routine(void *arg)
 		next_i = 0;
 	else
 		next_i = i + 1;
-	while ((*this_arg->state)->philo_all_set == false)
+	while ((*this_arg->state).philo_all_set == false)
 	{
-		printf("[philo_routine] philosopher %d waiting for all philos to be set\n", i + 1); // DEBUG
+		printf("[philo_routine] philosopher %d waiting for all philos to be set: philo all set: %d\n", i + 1, ((*this_arg->state).philo_all_set)); // DEBUG
 		if (usleep(1000) != 0)
 			printf("[philo_routine] usleep failed\n");
 	}
-	printf("[philo_routine] philosopher %d set, starting routine!\n", i + 1);
-	while (1)
+	printf("[philo_routine] philosopher %d set, starting routine! philo_all_set: %d\n", i + 1, ((*this_arg->state).philo_all_set));
+	while ((*this_arg->state).simulation_on == true)
 	{
-		wait_forks((*this_arg->state), timestamp_ms, i, next_i); // check return value
-		eat_pasta((*this_arg->state), timestamp_ms, i, next_i); // check return value
-		take_a_nap((*this_arg->state), timestamp_ms, i);
-		think((*this_arg->state), timestamp_ms, i);
+		wait_forks((this_arg->state), timestamp_ms, i, next_i); // check return value
+		eat_pasta((this_arg->state), timestamp_ms, i, next_i); // check return value
+		take_a_nap((this_arg->state), timestamp_ms, i);
+		think((this_arg->state), timestamp_ms, i);
 	}
+	return (0);
 }
 
 int	wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i)

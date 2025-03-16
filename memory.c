@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/10 14:09:42 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 20:30:01 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,15 @@
 
 int	free_on_exit(t_state *state)
 {
-	detach_threads(state); // get return value?
-	free_forks(state);
+	int	ret;
+
+	ret = 0;
+	ret = detach_threads(state); // get return value?
+	if (ret != 0)
+		return (ret);
+	ret = free_forks(state);
+	if (ret != 0)
+		return (ret);
 	free_philosophers(state);
 	return (0);
 }
@@ -27,7 +34,7 @@ int	detach_threads(t_state *state)
 
 	res = 0;
 	if (pthread_detach(state->clock.thread) != 0)
-	res++;
+		res++;
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
 	{
@@ -36,7 +43,7 @@ int	detach_threads(t_state *state)
 		i++;
 	}
 	if (res != 0)
-	printf("Warning: %d threads could not be detached during cleanup.\n", res);
+		printf("Warning: %d threads could not be detached during cleanup.\n", res);
 	printf("[detach_threads] %d threads successfully detached.\n", state->settings.number_of_philosophers - res); // DEBUG
 	return (res);
 }
@@ -56,7 +63,7 @@ int	free_forks(t_state *state)
 	}
 	free(state->forks);
 	if (res != 0)
-	printf("Warning: %d mutex could not be destroyed during cleanup.\n", res);
+		printf("Warning: %d mutex could not be destroyed during cleanup.\n", res);
 	return (res);
 }
 

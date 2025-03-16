@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/14 17:59:10 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/16 20:32:02 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ typedef struct s_state
 
 typedef struct s_philo_arg
 {
-	t_state		**state;
+	t_state		*state;
 	int		i;
 	int		nb_guests;
 }			t_philo_arg;
