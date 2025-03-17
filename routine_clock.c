@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/17 00:16:59 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/17 11:38:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	*clock_routine(void *arg)
 		// pthread_mutex_unlock(&state->clock.mutex_get_time);
 		if (take_pulse(state, state->clock.cur_time_ms) != 0)
 		{
-			return (0);
+			free_on_exit(state);
+			return (0); // ???
 		}
 		if (usleep(1000) != 0)
 			printf("[clock_routine] usleep failed\n");
@@ -92,36 +93,16 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 		return ;
 	pthread_mutex_unlock(&state->mutex_display_status);
 
-	if (ft_strncmp(status, DIED_MSG, ft_strlen(DIED_MSG)) == 0)
+	if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)) == 0)
 	{
-	//	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
-	}
-	else if (ft_strncmp(status, FORK_MSG, ft_strlen(FORK_MSG)) == 0)
-	{	
-	//	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
-	}
-	else if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)) == 0)
-	{
-	//	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 		philosopher->last_meal_time_ms = timestamp_ms;
 		usleep((int)state->settings.time_to_eat * 1000);
-		//printf("%d has finished eating!\n", philosopher->id);
 	}
 	else if (ft_strncmp(status, SLEEP_MSG, ft_strlen(SLEEP_MSG)) == 0)
 	{
-	//	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 		usleep((int)state->settings.time_to_sleep * 1000);
-		//printf("%d woke up!\n", philosopher->id);
 	}
-	else if (ft_strncmp(status, THINK_MSG, ft_strlen(THINK_MSG)) == 0)
-	{
-	//	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
-		/* code */
-	}
-	else
-	{
-		printf("[change_status] Wrong message!\n");
+	else // THINK case
 		return ;
-	}
 }
 

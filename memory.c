@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/16 23:37:14 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/03/17 12:02:44 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ int	free_on_exit(t_state *state)
 	ret = detach_threads(state); // get return value?
 	if (ret != 0)
 		return (ret);
+	free_philosophers(state);
 	ret = free_forks(state);
 	if (ret != 0)
 		return (ret);
-	free_philosophers(state);
         pthread_mutex_unlock(&state->mutex_display_status); // Locked previously by dead philo
 	return (0);
 }
@@ -58,6 +58,7 @@ int	free_forks(t_state *state)
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
 	{
+       //	pthread_mutex_unlock(&(state)->forks[i].mutex); // save value for error management
 		if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
 			res++;
 		i++;
