@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 11:32:24 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 00:13:02 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	*philo_routine(void *arg)
 	int			i;
 	int			next_i;
 	uint64_t	timestamp_ms;
-//	bool		is_sim_on;
 
 	timestamp_ms = 0;
 	this_arg = (t_philo_arg *)arg;
@@ -30,13 +29,17 @@ void	*philo_routine(void *arg)
 	else
 		next_i = i + 1;
 
-	while ((*this_arg->state).philo_all_set == false)
-	{
-		printf("[philo_routine] philosopher %d waiting for all philos to be set: philo all set: %d\n", i + 1, ((*this_arg->state).philo_all_set)); // DEBUG
-		if (usleep(1000) != 0)
-			printf("[philo_routine] usleep failed\n");
-	}
-	printf("[philo_routine] philosopher %d set, starting routine! philo_all_set: %d\n", i + 1, ((*this_arg->state).philo_all_set));
+	//while ((*this_arg->state).philo_all_set == false)
+	//{
+	//	printf("[philo_routine] philosopher %d waiting for all philos to be set: philo all set: %d\n", i + 1, ((*this_arg->state).philo_all_set)); // DEBUG
+	//	if (usleep(1000) != 0)
+	//		printf("[philo_routine] usleep failed\n");
+	//}
+	
+	gandalf_barrier(&(*this_arg->state));
+
+	if (DEBUG == 1)	
+		printf("[philo_routine] philosopher %d set, starting routine!\n", i + 1);
 	while ((*this_arg->state).simulation_on == true)
 	{
 		wait_forks((this_arg->state), timestamp_ms, i, next_i); // check return value

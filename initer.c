@@ -6,11 +6,22 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 10:29:12 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 00:13:22 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	init_barrier(t_state *state)
+{
+	if (pthread_mutex_init(&(state->barrier.mtx_barrier), NULL) != 0)
+	{
+		// free function
+		return (-1);
+	}
+	state->barrier.threshold = state->settings.number_of_philosophers;
+	return (0);
+}
 
 int	init_forks(t_state *state, int nb_guests)
 {
@@ -116,8 +127,7 @@ int	init_mutexes(t_state *state, int nb_guests)
 		if (DEBUG == 1)
 			printf("[init_mutexes] Issue while initiating mutex_display_status\n");
             	return (-1);
-        }
-	
+        }	
 	if (pthread_mutex_init(&state->clock.mutex_get_time, NULL) != 0)
 	{
 		// free mutexes

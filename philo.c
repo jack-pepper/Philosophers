@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 11:11:49 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 00:02:59 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	initer(t_state *state, int nb_guests)
 {
 	if (!state)
 		return (ft_ret(-1, "[initer] err: !state\n"));
+	if (init_barrier(state) != 0)
+		return (ft_ret(-1, "[initer] err: init_barrier\n"));
 	if (init_forks(state, nb_guests) != 0)
 		return (ft_ret(-1, "[initer] err: init_forks\n"));
 	if (DEBUG == 1)
@@ -67,12 +69,14 @@ int	launch_simulation(t_state *state, int nb_guests)
 	int	i;
 
 	(*state).philo_all_set = false;
-	if (DEBUG == 1)
-		printf("[launch_simulation] (after setting to false) philo_all_set: %d\n", (*state).philo_all_set);
-	if (launch_death_clock(state) != 0)
+
+
+	if (launch_death_clock(state) != 0) // shouldn't be later? or calc an offset...
 		return (-1);
 	if (DEBUG == 1)
 		printf("[launch_simulation] death clock launched!\n");
+	
+
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -93,18 +97,6 @@ int	launch_simulation(t_state *state, int nb_guests)
 			printf("[launch_simulation] thread philo %d created!\n", arg->i);
 		i++;
 	}
-	//usleep(10000);
-
-	(*state).philo_all_set = true;
-
-	if (DEBUG == 1)
-	{
-		printf("[launch_simulation (after setting to true)] philo_all_set: %d\n", (*state).philo_all_set);
-		printf("[launch_simulation] created philosophers' threads\n");	
-	}
-	(*state).simulation_on = true;
-	if (DEBUG == 1)
-		printf("[launch_simulation] is simulation ON: %d (should be TRUE)\n", (*state).simulation_on);
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -120,8 +112,7 @@ int	launch_simulation(t_state *state, int nb_guests)
 			printf("last_meal: %ld\n", state->philosophers[i].last_meal_time_ms);
 		i++;
 	}
-	if (DEBUG == 1)
-		printf("[launch_simulation] joined all philosophers pthreads!\n");
+
 	// calculate offset (difference between clock starting time and philosophers' launching to start at 0)
 //	if (pthread_join(state->clock.thread, NULL) != 0)
 //	{

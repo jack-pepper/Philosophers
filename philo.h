@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 10:05:53 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/26 23:19:56 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,12 @@ typedef struct s_clock
 	volatile uint64_t	cur_time_ms;
 }				t_clock;
 
+typedef struct s_barrier
+{
+	pthread_mutex_t		mtx_barrier;
+	int			threshold;
+}				t_barrier;
+
 typedef struct s_state
 {
 	pthread_mutex_t		mutex_start_simulation;
@@ -80,6 +86,8 @@ typedef struct s_state
 	t_philosopher		*philosophers;
 	t_fork			*forks;
 	t_clock			clock;
+	t_barrier		barrier;
+	int			threads_ready;
 	int			current_i;
 	volatile bool		simulation_on;
 	volatile bool		philo_all_set;
@@ -102,6 +110,7 @@ int		launch_death_clock(t_state *state);
 void		store_args(char **argv, t_settings *settings);
 
 // initer.c
+int		init_barrier(t_state *state);
 int		init_forks(t_state *state, int nb_guests);
 int		init_philosophers(t_state *state, int nb_guests);
 //int     init_clock(t_state *state);
@@ -137,5 +146,6 @@ void		display_settings(const t_settings *settings);
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t    	convert_to_ms(struct timeval tv);
 int		ft_ret(int return_val, char *error_msg);
+void		gandalf_barrier(t_state *state);
 
 #endif

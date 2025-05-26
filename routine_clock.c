@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 11:35:13 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/26 23:50:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ void	*clock_routine(void *arg)
 
 	state = (t_state *)arg;
 	if (!state)
-	{
-		printf("Error: NULL state in clock_routine!\n");
 		return (NULL);
-	}
 	if (DEBUG == 1)
 		printf("clock routine: thread %d launched!\n", state->current_i);
 	//pthread_mutex_lock(&state->mutex_start_simulation);
@@ -37,13 +34,13 @@ void	*clock_routine(void *arg)
 	//pthread_mutex_unlock(&state->mutex_start_simulation);
 	//pthread_mutex_destroy(&state->mutex_start_simulation); 
 	while (state->philo_all_set == false)
-	{
+	{	
 		if (DEBUG == 1)
 			printf("[clock_routine] waiting for all philos to be set: philo_all_set = %d\n", state->philo_all_set);
-		if (usleep(1000) != 0)
-                        printf("[clock_routine] usleep failed\n");
+		while (state->philo_all_set != true)
+			;
 	}
-	while (state->philo_all_set == true)//state->simulation_on == true)
+	while (state->simulation_on == true)
 	{	
 		state->clock.cur_time_ms = get_timestamp_ms(&state->clock.cur_time) - state->clock.start_time_ms;
 		//if (gettimeofday(&state->clock.cur_time, NULL) != 0)

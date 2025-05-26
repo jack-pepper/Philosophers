@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 10:08:21 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 00:10:13 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,32 @@ int	ft_ret(int return_val, char *error_msg)
 {
 	printf("%s", error_msg);
 	return (return_val);
+}
+
+void	gandalf_barrier(t_state *state)
+{	
+	if (!pthread_mutex_lock(&(state->barrier.mtx_barrier)))
+	{
+		state->threads_ready += 1;
+		pthread_mutex_unlock(&(state->barrier.mtx_barrier)); // can return err too?
+	}
+	if (!pthread_mutex_lock(&(state->barrier.mtx_barrier)))
+	{
+		while (state->threads_ready < state->barrier.threshold)
+			;	
+		pthread_mutex_unlock(&(state->barrier.mtx_barrier)); // can return err too?
+	}
+	if (!pthread_mutex_lock(&(state->barrier.mtx_barrier)))
+	{
+		state->threads_ready -= 1;
+		if (state->threads_ready == 0)
+		{
+			state->philo_all_set = true;	
+			state->simulation_on = true;
+		}
+		pthread_mutex_unlock(&(state->barrier.mtx_barrier));
+		if (state->simulation_on == 0)
+			pthread_mutex_destroy(&(state->barrier.mtx_barrier));
+	}
+	return ;
 }
