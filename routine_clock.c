@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/17 11:38:34 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/26 11:35:13 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	*clock_routine(void *arg)
 		printf("Error: NULL state in clock_routine!\n");
 		return (NULL);
 	}
-	printf("clock routine: thread launched!\n");
+	if (DEBUG == 1)
+		printf("clock routine: thread %d launched!\n", state->current_i);
 	//pthread_mutex_lock(&state->mutex_start_simulation);
 	//printf("[clock_routine] state->clock.simulation_on = %d\n", state->simulation_on);
 	//while (state->simulation_on == false)
@@ -37,7 +38,8 @@ void	*clock_routine(void *arg)
 	//pthread_mutex_destroy(&state->mutex_start_simulation); 
 	while (state->philo_all_set == false)
 	{
-		printf("[clock_routine] waiting for all philos to be set: philo_all_set = %d\n", state->philo_all_set);
+		if (DEBUG == 1)
+			printf("[clock_routine] waiting for all philos to be set: philo_all_set = %d\n", state->philo_all_set);
 		if (usleep(1000) != 0)
                         printf("[clock_routine] usleep failed\n");
 	}

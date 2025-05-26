@@ -6,12 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/16 23:21:37 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/26 10:05:53 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
+
+# define DEBUG 1
 
 # define FORK_MSG "has taken a fork"
 # define EAT_MSG "is eating"

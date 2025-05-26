@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/16 23:26:57 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/26 10:29:12 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,28 @@ int	init_forks(t_state *state, int nb_guests)
 {
 	int	i;
 
-	printf("[init_forks] mallocating forks for %d guests...\n", nb_guests);
+	if (DEBUG == 1)
+		printf("[init_forks] mallocating forks for %d guests...\n", nb_guests);
 	state->forks = malloc(sizeof(t_fork) * nb_guests);
 	if (!state->forks)
 		return (-1);
 	memset(state->forks, 0, sizeof(t_fork) * nb_guests);
+	if (DEBUG == 1)
 	printf("[init_forks] forks successfully mallocated and initialized!\n");
 	i = 0;
 	while (i < nb_guests)
 	{
 		state->forks[i].id = i + 1;
 		state->forks[i].is_already_taken = false;
+		if (DEBUG == 1)
+		{
+			printf("[init_forks] fork %d set to %d (should be FALSE)!\n",
+				state->forks[i].id, state->forks[i].is_already_taken);
+		}
 		i++;
 	}
-	printf("[init_forks] forks successfully initiated (id, is_already_taken)!\n");
+	if (DEBUG == 1)
+		printf("[init_forks] forks ready!\n");
 	return (0);
 }
 
@@ -37,19 +45,28 @@ int	init_philosophers(t_state *state, int nb_guests)
 {
 	int	i;
 
-	printf("[init_philosophers] mallocating for %d philosophers...\n", nb_guests);
+	if (DEBUG == 1)
+		printf("[init_philosophers] mallocating for %d philosophers...\n", nb_guests);
 	state->philosophers = malloc(sizeof(t_philosopher) * (nb_guests));
 	if (!state->philosophers)
 		return (-1);
 	memset(state->philosophers, 0, sizeof(t_philosopher) * nb_guests);
-	printf("[init_philosophers] philosophers successfully mallocated and initialized!\n");
+	if (DEBUG == 1)
+		printf("[init_philosophers] philosophers successfully mallocated and initialized!\n");
 	i = 0;
 	while (i < nb_guests)
 	{
 		state->philosophers[i].id = i + 1;
                 state->philosophers[i].last_meal_time_ms = 0;
+		if (DEBUG == 1)
+		{
+			printf("[init_philosophers] philo %d last_meal_time_ms set to %ld \n",
+				state->philosophers[i].id, state->philosophers[i].last_meal_time_ms);
+		}
 		i++;
 	}
+	if (DEBUG == 1)
+		printf("[init_philosophers] philosophers ready!\n");
 	return (0);
 }
 
@@ -71,17 +88,19 @@ int	init_mutexes(t_state *state, int nb_guests)
 {
 	int	i;
 
-	printf("[init_mutexes] initiating forks' mutexes...\n");
+	if (DEBUG == 1)
+		printf("[init_mutexes] initiating mutexes...\n");
 	i = 0;
 	while (i < nb_guests)
 	{
 		if (pthread_mutex_init(&state->forks[i].mutex, NULL) != 0)
 		{
-			printf("[init_mutexes] Issue while initiating forks[%d] mutex\n", i);
+			if (DEBUG == 1)
+				printf("[init_mutexes] Issue while initiating forks[%d] mutex\n", i);
 			i--;
 			while (i > 0)
 			{
-				if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
+				if (pthread_mutex_destroy(&state->forks[i].mutex) != 0 && DEBUG == 1)
 					printf("[init_mutexes] err: forks[%d].mutex not destroyed!\n", i);
 				i--;
 			}
@@ -89,21 +108,24 @@ int	init_mutexes(t_state *state, int nb_guests)
 		}
 		i++;
 	}
-	printf("[init_mutexes] forks successfully mutexed!\n");
-	
-
+	if (DEBUG == 1)
+		printf("[init_mutexes] forks successfully mutexed!\n");
 	if (pthread_mutex_init(&state->mutex_display_status, NULL) != 0)
 	{
 		// free mutexes
-		printf("[init_mutexes] Issue while initiating mutex_display_status\n");
+		if (DEBUG == 1)
+			printf("[init_mutexes] Issue while initiating mutex_display_status\n");
             	return (-1);
         }
 	
 	if (pthread_mutex_init(&state->clock.mutex_get_time, NULL) != 0)
 	{
 		// free mutexes
-		printf("[init_mutexes] Issue while initiating clock.mutex_get_time\n");
+		if (DEBUG == 1)
+			printf("[init_mutexes] Issue while initiating clock.mutex_get_time\n");
             	return (-1);
         }
+	if (DEBUG == 1)
+		printf("[init_mutexes] mutexes ready!\n");
 	return (0);
 }
