@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 23:19:56 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 11:07:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_barrier
 
 typedef struct s_state
 {
-	pthread_mutex_t		mutex_start_simulation;
+	pthread_mutex_t		mtx_sim_state;
 	pthread_mutex_t		mutex_display_status;
 	t_settings		settings;
 	t_philosopher		*philosophers;

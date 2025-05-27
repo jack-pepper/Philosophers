@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/27 00:02:59 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:08:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,8 @@ int	launch_simulation(t_state *state, int nb_guests)
 	int	i;
 
 	(*state).philo_all_set = false;
-
-
-	if (launch_death_clock(state) != 0) // shouldn't be later? or calc an offset...
-		return (-1);
-	if (DEBUG == 1)
-		printf("[launch_simulation] death clock launched!\n");
 	
-
+	// create_philo_threads() 
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -97,6 +91,14 @@ int	launch_simulation(t_state *state, int nb_guests)
 			printf("[launch_simulation] thread philo %d created!\n", arg->i);
 		i++;
 	}
+
+	//
+	if (launch_death_clock(state) != 0) // shouldn't be later? or calc an offset...
+		return (-1);
+	if (DEBUG == 1)
+		printf("[launch_simulation] death clock launched!\n");
+
+	// join_philo_threads()
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -137,6 +139,6 @@ int	launch_death_clock(t_state *state)
 	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
 		return (-1);
 	if (DEBUG == 1)
-		printf("[launch_death_clock] DEATH CLOCK LAUNCHED SUCCESSFULLY!\n");
+		printf("[🕰️] [launch_death_clock] DEATH CLOCK LAUNCHED SUCCESSFULLY!\n");
 	return (0);
 }

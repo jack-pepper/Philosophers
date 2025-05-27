@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/26 23:50:39 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:00:52 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,42 @@ void	*clock_routine(void *arg)
 	if (!state)
 		return (NULL);
 	if (DEBUG == 1)
-		printf("clock routine: thread %d launched!\n", state->current_i);
-	//pthread_mutex_lock(&state->mutex_start_simulation);
-	//printf("[clock_routine] state->clock.simulation_on = %d\n", state->simulation_on);
-	//while (state->simulation_on == false)
-	//{
-	//    printf("Clock waiting...\n");
-	//    if (usleep(1000) != 0)
-	//    printf("[clock_routine] usleep failed\n");
-	//}
-	//printf("[clock_routine] state->clock.simulation_on = %d - Tic toc!\n", state->simulation_on);
-	//pthread_mutex_unlock(&state->mutex_start_simulation);
-	//pthread_mutex_destroy(&state->mutex_start_simulation); 
+		printf("clock routine: thread %d launched!\n", state->current_i);	
+
+
+
+
+pthread_mutex_lock(&(state->mtx_sim_state));
+                if (DEBUG == 1) printf("[gandalf_barrier] mtx_sim_state: locked!\n");
+                while (!state->simulation_on)
+                {
+                        pthread_mutex_unlock(&(state->mtx_sim_state));
+                        if (DEBUG == 1)
+                                printf("[gandalf_barrier] mtx_sim_state: unlocked!\n");
+                        if (usleep(1000) != 0)
+                                printf("[gandalf_barrier] usleep failed\n");
+                        pthread_mutex_lock(&(state->mtx_sim_state));
+                        if (DEBUG == 1)
+                                printf("[gandalf_barrier] mtx_sim_state: locked!\n");
+                }
+                pthread_mutex_unlock(&(state->mtx_sim_state));
+                if (DEBUG == 1)
+                        printf("[gandalf_barrier] mtx_sim_state: unlocked!\n");
+
+
+
+	pthread_mutex_lock(&(state->mtx_sim_state));
 	while (state->philo_all_set == false)
-	{	
+	{
+		pthread_mutex_unlock(&(state->mtx_sim_state));
 		if (DEBUG == 1)
 			printf("[clock_routine] waiting for all philos to be set: philo_all_set = %d\n", state->philo_all_set);
-		while (state->philo_all_set != true)
-			;
+		if (usleep(1000) != 0)
+			printf("[clock_routine] usleep failed\n");
+		pthread_mutex_lock(&(state->mtx_sim_state));	
 	}
+	pthread_mutex_unlock(&(state->mtx_sim_state));
+
 	while (state->simulation_on == true)
 	{	
 		state->clock.cur_time_ms = get_timestamp_ms(&state->clock.cur_time) - state->clock.start_time_ms;
