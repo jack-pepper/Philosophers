@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/27 11:07:39 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 23:47:28 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_philosopher
 typedef struct s_fork
 {
 	pthread_mutex_t		mutex;
+	pthread_mutex_t		mtx_status;
 	int			id;
 	bool			is_already_taken; // or only mutex?
 }				t_fork;
@@ -65,7 +66,7 @@ typedef struct s_fork
 typedef struct s_clock
 {
 	pthread_t		thread;
-	pthread_mutex_t		mutex_get_time;
+	pthread_mutex_t		mtx_get_time;
 	struct timeval		start_time;
 	struct timeval		cur_time;
 	volatile uint64_t	start_time_ms;

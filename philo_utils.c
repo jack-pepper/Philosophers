@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/27 11:47:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 19:27:27 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	display_settings(const t_settings *settings)
 {
-	printf("⚙️ [DISPLAY_SETTINGS]⚙️\n");
-	printf("number of philosophers: `%d`\n",
+	printf("\n⚙️  [DISPLAY_SETTINGS] ⚙️\n");
+	printf("👴 number of philosophers: `%d`\n",
 		settings->number_of_philosophers);
-	printf("time to die: `%d`\n",
+	printf("⏱️ 💀  time to die: `%d`\n",
 		settings->time_to_die);
-	printf("time to eat: `%d`\n",
+	printf("⏱️ 🍴 time to eat: `%d`\n",
 		settings->time_to_eat);
-	printf("time to sleep: `%d`\n",
+	printf("⏱️ 💤 time to sleep: `%d`\n",
 		settings->time_to_sleep);
-	printf("number of times each philosopher must eat: `%d`\n",
+	printf("🎯 number of times each philosopher must eat: `%d`\n",
 		settings->number_of_times_each_philosopher_must_eat);
 	return ;
 }
@@ -48,32 +48,37 @@ int	ft_ret(int return_val, char *error_msg)
 }
 
 void	gandalf_barrier(t_state *state)
-{	
-	pthread_mutex_lock(&(state->barrier.mtx_barrier));
+{
+	if (DEBUG == 1)
+		printf("\n🧙🚧 [gandalf_barrier]\n");
+	pthread_mutex_lock(&(state->barrier.mtx_barrier));	
+	if (DEBUG == 1)
+		printf("  🔒 mtx_sim_state: locked!\n");
 	state->threads_ready += 1;
 	if (DEBUG == 1)
-		printf("🧙 [gandalf_barrier] threads_ready++: %d\n", state->threads_ready);
+		printf("    🧵 threads_ready: ++ (%d)\n", state->threads_ready);
 	if (state->threads_ready < state->barrier.threshold)
 	{
 		pthread_mutex_unlock(&(state->barrier.mtx_barrier)); // can return err too?
 		if (DEBUG == 1)
-			printf("[gandalf_barrier] mtx_barrier: unlocked!\n");
+			printf("  🔓 mtx_barrier: unlocked!\n");
 		pthread_mutex_lock(&(state->mtx_sim_state));
-		if (DEBUG == 1) printf("[gandalf_barrier] mtx_sim_state: locked!\n");
+		if (DEBUG == 1)
+			printf("  🔒 mtx_sim_state: locked!\n");
 		while (!state->simulation_on)
 		{
 			pthread_mutex_unlock(&(state->mtx_sim_state));
 			if (DEBUG == 1)
-				printf("[gandalf_barrier] mtx_sim_state: unlocked!\n");
+				printf("  🔓 mtx_sim_state: unlocked!\n");
 			if (usleep(1000) != 0)
-				printf("[gandalf_barrier] usleep failed\n");
+				printf("[ ] usleep failed\n");
 			pthread_mutex_lock(&(state->mtx_sim_state));
 			if (DEBUG == 1)
-				printf("[gandalf_barrier] mtx_sim_state: locked!\n");
+				printf("  🔒 mtx_sim_state: locked!\n");
 		}
 		pthread_mutex_unlock(&(state->mtx_sim_state));
 		if (DEBUG == 1)
-			printf("[gandalf_barrier] mtx_sim_state: unlocked!\n");
+			printf("  🔓 mtx_sim_state: unlocked!\n");
 		return ;
 	}
 	else

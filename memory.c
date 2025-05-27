@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/03/17 12:02:44 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/28 00:00:22 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int	free_forks(t_state *state)
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
 	{
-       //	pthread_mutex_unlock(&(state)->forks[i].mutex); // save value for error management
+		if ((state)->forks[i].is_already_taken == true)
+			pthread_mutex_unlock(&(state)->forks[i].mutex); // save value for error management
 		if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
 			res++;
 		i++;
@@ -83,3 +84,14 @@ void	free_philosophers(t_state *state)
     */
 	free(state->philosophers);
 }
+
+/*
+void	destroy_all_mutexes(pthread_mutex_t mutex, int i)
+{
+	while (i > 0)
+	{
+		if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
+			printf("❌ err: forks[%d].mtx_status not destroyed!\n", i);
+		i--;
+	}
+}*/

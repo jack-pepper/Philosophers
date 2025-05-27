@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/27 12:00:52 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/27 22:58:19 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,58 +21,52 @@ void	*clock_routine(void *arg)
 	if (!state)
 		return (NULL);
 	if (DEBUG == 1)
-		printf("clock routine: thread %d launched!\n", state->current_i);	
-
-
-
-
-pthread_mutex_lock(&(state->mtx_sim_state));
-                if (DEBUG == 1) printf("[gandalf_barrier] mtx_sim_state: locked!\n");
-                while (!state->simulation_on)
-                {
-                        pthread_mutex_unlock(&(state->mtx_sim_state));
-                        if (DEBUG == 1)
-                                printf("[gandalf_barrier] mtx_sim_state: unlocked!\n");
-                        if (usleep(1000) != 0)
-                                printf("[gandalf_barrier] usleep failed\n");
-                        pthread_mutex_lock(&(state->mtx_sim_state));
-                        if (DEBUG == 1)
-                                printf("[gandalf_barrier] mtx_sim_state: locked!\n");
-                }
-                pthread_mutex_unlock(&(state->mtx_sim_state));
-                if (DEBUG == 1)
-                        printf("[gandalf_barrier] mtx_sim_state: unlocked!\n");
-
-
-
+		printf("🕰️ [clock_routine] thread %d launched!\n", state->current_i);	
 	pthread_mutex_lock(&(state->mtx_sim_state));
-	while (state->philo_all_set == false)
+	if (DEBUG == 1)
+		printf("	🔒 mtx_sim_state: locked! [clock_routine]\n");
+	while (!state->simulation_on)
 	{
 		pthread_mutex_unlock(&(state->mtx_sim_state));
 		if (DEBUG == 1)
-			printf("[clock_routine] waiting for all philos to be set: philo_all_set = %d\n", state->philo_all_set);
+			printf("	🔓 mtx_sim_state: unlocked! [clock_routine]\n");
 		if (usleep(1000) != 0)
 			printf("[clock_routine] usleep failed\n");
-		pthread_mutex_lock(&(state->mtx_sim_state));	
+		pthread_mutex_lock(&(state->mtx_sim_state));
+		if (DEBUG == 1)
+			printf("	🔒 mtx_sim_state: locked (simulation_on is FALSE: clock is waiting...)!\n");
 	}
 	pthread_mutex_unlock(&(state->mtx_sim_state));
-
+	if (DEBUG == 1)
+		printf("	🔓 mtx_sim_state: unlocked (simulation_on is TRUE: clock goes on)!\n");
+	
+	pthread_mutex_lock(&(state->mtx_sim_state));	
+	if (DEBUG == 1)
+		printf("	🔒 mtx_sim_state: locked! [clock_routine]\n");
 	while (state->simulation_on == true)
-	{	
+	{
+		pthread_mutex_unlock(&(state->mtx_sim_state));
+	//	if (DEBUG == 1)
+	//		printf("	🔓 mtx_sim_state: unlocked! [clock_routine]\n");
+	
+		pthread_mutex_lock(&(state->clock.mtx_get_time));
+	
 		state->clock.cur_time_ms = get_timestamp_ms(&state->clock.cur_time) - state->clock.start_time_ms;
-		//if (gettimeofday(&state->clock.cur_time, NULL) != 0)
-		//	printf("[clock_routine] gettimeofday fail\n"); 
-		//pthread_mutex_lock(&state->clock.mutex_get_time);
-		//state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
-		//   printf("[clock_routine] Current time (ms): %lu\n", state->clock.cur_time_ms);
-		// pthread_mutex_unlock(&state->clock.mutex_get_time);
-		if (take_pulse(state, state->clock.cur_time_ms) != 0)
+		volatile uint64_t now_time = state->clock.cur_time_ms; 
+		pthread_mutex_unlock(&(state->clock.mtx_get_time));
+		//if (take_pulse(state, state->clock.cur_time_ms) != 0)
+		if (take_pulse(state, now_time) != 0)
 		{
+			// unlock cur_time here? or in free_on_exit?
 			free_on_exit(state);
 			return (0); // ???
 		}
+	
 		if (usleep(1000) != 0)
 			printf("[clock_routine] usleep failed\n");
+		pthread_mutex_lock(&(state->mtx_sim_state));
+	//	if (DEBUG == 1)
+	//		printf("	🔒 mtx_sim_state: locked! [clock_routine]\n");
 	}
 	return (0);
 }
@@ -85,14 +79,20 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
-	{
+	{	
+		pthread_mutex_lock(&(state->clock.mtx_get_time));	
 		starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms; // overflow
-	//	printf("[take_pulse] clock.cur_time_ms: %lu - state->philosophers[i].last_meal_time_ms: %lu\n", state->clock.cur_time_ms, state->philosophers[i].last_meal_time_ms);
-	//	printf("[take_pulse] philosopher %d starving since %lu...\n", i + 1, starving_since);
+		pthread_mutex_unlock(&(state->clock.mtx_get_time));	
 		if (starving_since > (uint64_t)state->settings.time_to_die)
-		{	
+		{
+			pthread_mutex_lock(&(state->mtx_sim_state));
+			//if (DEBUG == 1)
+			//	printf("	🔓 mtx_sim_state: locked! [take_pulse]\n");
 			state->philo_all_set = false;
 			state->simulation_on = false;
+			pthread_mutex_unlock(&(state->mtx_sim_state));
+			//if (DEBUG == 1)
+			//	printf("	🔓 mtx_sim_state: unlocked! [take_pulse]\n");
 			change_status(state, timestamp_ms, &state->philosophers[i], "died");
 			return (1);
 		}
@@ -106,12 +106,17 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 	pthread_mutex_lock(&state->mutex_display_status);
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	if (ft_strncmp(status, DIED_MSG, ft_strlen(DIED_MSG)) == 0)
+	{
+		pthread_mutex_unlock(&state->mutex_display_status);
 		return ;
+	}
 	pthread_mutex_unlock(&state->mutex_display_status);
 
 	if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)) == 0)
-	{
-		philosopher->last_meal_time_ms = timestamp_ms;
+	{	
+		pthread_mutex_lock(&(state->clock.mtx_get_time));	
+		philosopher->last_meal_time_ms = timestamp_ms;	
+		pthread_mutex_unlock(&(state->clock.mtx_get_time));	
 		usleep((int)state->settings.time_to_eat * 1000);
 	}
 	else if (ft_strncmp(status, SLEEP_MSG, ft_strlen(SLEEP_MSG)) == 0)
