@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/27 19:27:27 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/28 19:28:54 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,67 +28,15 @@ void	display_settings(const t_settings *settings)
 	return ;
 }
 
-uint64_t	get_timestamp_ms(struct timeval *tv)
+//int	ft_ret(int return_val, char *error_msg)
+//{
+//	printf("%s", error_msg);
+//	return (return_val);
+//}
+
+int     ft_ret(int return_val, char *msg, int fd)
 {
-	if (gettimeofday(tv, NULL) != 0)
-		printf("[get_timestamp_ms] gettimeofday fail\n");
-	return (convert_to_ms(*tv));
+        ft_putstr_fd(msg, fd);
+        return (return_val);
 }
 
-// static inline?
-uint64_t	convert_to_ms(struct timeval time)
-{
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-int	ft_ret(int return_val, char *error_msg)
-{
-	printf("%s", error_msg);
-	return (return_val);
-}
-
-void	gandalf_barrier(t_state *state)
-{
-	if (DEBUG == 1)
-		printf("\n🧙🚧 [gandalf_barrier]\n");
-	pthread_mutex_lock(&(state->barrier.mtx_barrier));	
-	if (DEBUG == 1)
-		printf("  🔒 mtx_sim_state: locked!\n");
-	state->threads_ready += 1;
-	if (DEBUG == 1)
-		printf("    🧵 threads_ready: ++ (%d)\n", state->threads_ready);
-	if (state->threads_ready < state->barrier.threshold)
-	{
-		pthread_mutex_unlock(&(state->barrier.mtx_barrier)); // can return err too?
-		if (DEBUG == 1)
-			printf("  🔓 mtx_barrier: unlocked!\n");
-		pthread_mutex_lock(&(state->mtx_sim_state));
-		if (DEBUG == 1)
-			printf("  🔒 mtx_sim_state: locked!\n");
-		while (!state->simulation_on)
-		{
-			pthread_mutex_unlock(&(state->mtx_sim_state));
-			if (DEBUG == 1)
-				printf("  🔓 mtx_sim_state: unlocked!\n");
-			if (usleep(1000) != 0)
-				printf("[ ] usleep failed\n");
-			pthread_mutex_lock(&(state->mtx_sim_state));
-			if (DEBUG == 1)
-				printf("  🔒 mtx_sim_state: locked!\n");
-		}
-		pthread_mutex_unlock(&(state->mtx_sim_state));
-		if (DEBUG == 1)
-			printf("  🔓 mtx_sim_state: unlocked!\n");
-		return ;
-	}
-	else
-	{
-		pthread_mutex_lock(&(state->mtx_sim_state));
-		state->philo_all_set = true;
-		state->simulation_on = true;	
-		pthread_mutex_unlock(&(state->mtx_sim_state));
-		pthread_mutex_unlock(&(state->barrier.mtx_barrier)); // can return err too?
-		pthread_mutex_destroy(&(state->barrier.mtx_barrier));
-	}
-	return ;
-}

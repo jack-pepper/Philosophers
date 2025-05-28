@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/27 23:47:28 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/28 22:48:14 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define PHILO_H
 
 # define DEBUG 1
+
+# define STDOUT 1
+# define STDERR 2
 
 # define FORK_MSG "has taken a fork"
 # define EAT_MSG "is eating"
@@ -49,16 +52,12 @@ typedef struct s_philosopher
 	uint64_t		last_meal_time_ms;
 	int			id;
 	int			meals_eaten;
-	int			is_dead;
-	int			is_eating;
-	int			is_sleeping;
-	int			is_thinking;
 }				t_philosopher;
 
 typedef struct s_fork
 {
-	pthread_mutex_t		mutex;
-	pthread_mutex_t		mtx_status;
+	pthread_mutex_t		mtx_fork;
+//	pthread_mutex_t		mtx_status;
 	int			id;
 	bool			is_already_taken; // or only mutex?
 }				t_fork;
@@ -82,7 +81,7 @@ typedef struct s_barrier
 typedef struct s_state
 {
 	pthread_mutex_t		mtx_sim_state;
-	pthread_mutex_t		mutex_display_status;
+	pthread_mutex_t		mtx_display_status;
 	t_settings		settings;
 	t_philosopher		*philosophers;
 	t_fork			*forks;
@@ -105,7 +104,6 @@ typedef struct s_philo_arg
 int		main(int argc, char **argv);
 int		initer(t_state *state, int nb_guests);
 int		launch_simulation(t_state *state, int nb_guests);
-int		launch_death_clock(t_state *state);
 
 // args_parser.c
 void		store_args(char **argv, t_settings *settings);
@@ -117,6 +115,16 @@ int		init_philosophers(t_state *state, int nb_guests);
 //int     init_clock(t_state *state);
 int		init_mutexes(t_state *state, int nb_guests);
 
+// sim_launcher.c
+int		launch_death_clock(t_state *state);
+int		create_philo_threads(t_state *state, int nb_guests);
+int		join_philo_threads(t_state *state, int nb_guests);
+
+// sim_state.c
+void	set_sim_start(t_state *state, bool sim_status);
+int		is_sim_on(t_state *state);
+int		wait_sim_start(t_state *state);
+
 // routine_clock.c
 void		*clock_routine(void *arg);
 int		take_pulse(t_state *state, uint64_t timestamp_ms);
@@ -126,14 +134,15 @@ void		change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philos
 void		*philo_routine(void *arg);
 int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i);
-void		take_a_nap(t_state *state, uint64_t timestamp_ms, int i);
-void		think(t_state *state, uint64_t timestamp_ms, int i);
+int		take_a_nap(t_state *state, uint64_t timestamp_ms, int i);
+int		think(t_state *state, uint64_t timestamp_ms, int i);
 
 // memory.c
 int		free_on_exit(t_state *state);
 int		detach_threads(t_state *state);
 int		free_forks(t_state *state);
 void		free_philosophers(t_state *state);
+int		clean_all_forks_mutexes(t_fork *forks, pthread_mutex_t *mtx, int i);
 
 // libft_utils.c
 int		ft_isspace(int c);
@@ -144,9 +153,14 @@ size_t		ft_strlen(const char *s);
 
 // philo_utils.c
 void		display_settings(const t_settings *settings);
+int		ft_ret(int return_val, char *error_msg, int fd);
+void		gandalf_barrier(t_state *state);
+
+// time_utils.c
+void            set_start_time(t_state *state)
+uint64_t        get_cur_time(t_state *state)
+uint64_t        get_starvation_duration(t_state *state)
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t    	convert_to_ms(struct timeval tv);
-int		ft_ret(int return_val, char *error_msg);
-void		gandalf_barrier(t_state *state);
 
 #endif
