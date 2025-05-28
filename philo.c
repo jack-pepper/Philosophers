@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 22:48:23 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/28 23:30:06 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ int	launch_simulation(t_state *state, int nb_guests)
 		printf("\n🥽 [launch_simulation] Launching simulation...\n");
 	(*state).philo_all_set = false;
 	if (launch_death_clock(state) != 0) // shouldn't be later? or calc an offset...
-		return (ft_ret(1, "❌ [launch_simulation] error in launch_death_clock!\n", STDERR);
+		return (ft_ret(1, "❌ [launch_simulation] error in launch_death_clock!\n", STDERR));
 	if (DEBUG == 1)
 		printf("✅ [launch_simulation] death clock launched!\n");
 
 	if (create_philo_threads(state, nb_guests) != 0)
-		return (ft_ret(1, "❌ [launch_simulation] error in create_philo_threads!\n", STDERR);
+		return (ft_ret(1, "❌ [launch_simulation] error in create_philo_threads!\n", STDERR));
 	if (DEBUG == 1)
 		printf("✅ [launch_simulation] philo threads created!\n");
 

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 22:20:18 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 00:24:21 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	init_mutexes(t_state *state, int nb_guests)
 	if (DEBUG == 1)
 		printf("\n🐣🔐 [init_mutexes] initiating mutexes...\n");
 	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
-		return (ft_ret(-1, "❌ Issue while initiating mtx_get_time!\n"));
+		return (ft_ret(-1, "❌ Issue while initiating mtx_get_time!\n", STDERR));
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -93,7 +93,7 @@ int	init_mutexes(t_state *state, int nb_guests)
 		{
 			printf("❌ Issue while initiating forks[%d] mutex\n", i);
 			i--;
-			clean_all_forks_mutexes(&state->forks[i], &state->forks[i].mtx_fork, i);
+			clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
 			//while (i > 0)
 			//{
 			//	if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
@@ -102,35 +102,33 @@ int	init_mutexes(t_state *state, int nb_guests)
 		//	}
 			return (1);
 		}
-//		if (pthread_mutex_init(&state->forks[i].mtx_status, NULL) != 0)
-//		{
-//			printf("❌ Issue while initiating forks[%d].mtx_status\n", i);
-//			i--;
-//			clean_all_forks_mutexes(&state->forks[i], &state->forks[i].mtx_status, i);
-
+		if (pthread_mutex_init(&state->forks[i].mtx_is_taken, NULL) != 0)
+		{
+			printf("❌ Issue while initiating forks[%d].mtx_status\n", i);
+			i--;
+			clean_all_forks_mutexes(&state->forks[i].mtx_is_taken, i);
 //			while (i > 0)
 //			{
 //				if (pthread_mutex_destroy(&state->forks[i].mtx_status) != 0)
 //					printf("❌ err: forks[%d].mtx_status not destroyed!\n", i);
 //				i--;
 //			}
-//			return (-1);
-//		}
-
+			return (1);
+		}
 		i++;
 	}
 
 	if (pthread_mutex_init(&state->mtx_display_status, NULL) != 0)
 	{
-		clean_all_forks_mutexes(&state->forks[i], &state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating mtx_display_status\n", STDERR);
+		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
+		return (ft_ret(1, "❌ Issue while initiating mtx_display_status\n", STDERR));
         }	
 	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
 	{
 		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
-			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", i);
-		clean_all_forks_mutexes(&state->forks[i], &state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR);
+			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
+		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
+		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
         }
 	if (DEBUG == 1)
 		printf("👍 mutexes ready!\n");

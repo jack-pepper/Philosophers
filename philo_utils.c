@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 19:28:54 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 00:06:05 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,3 +40,17 @@ int     ft_ret(int return_val, char *msg, int fd)
         return (return_val);
 }
 
+void	ft_putstr_fd(char *s, int fd)
+{
+	size_t  i;
+
+	if (s != NULL)
+	{
+		i = 0;
+		while (s[i] != '\0')
+		{
+			write(fd, &s[i], 1);
+			i++;
+		}
+        }
+}

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 22:47:50 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 00:11:50 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,12 @@ int	toll_the_bell(t_state *state)
 			// unlock cur_time here? or in free_on_exit?
 			free_on_exit(state);
 			return (0); // ???
-		}
-	
+		}	
 		if (usleep(1000) != 0)
 			printf("[clock_routine] usleep failed\n");
 		pthread_mutex_lock(&(state->mtx_sim_state));
 	}
 	return (0);
-}
-
-uint64_t	get_starvation_duration(t_state *state)
-{
-	uint64_t	starving_since;
-
-	pthread_mutex_lock(&(state->clock.mtx_get_time));
-	starving_since = state->clock.cur_time_ms - state->philosophers[i].last_meal_time_ms; // overflow
-	pthread_mutex_unlock(&(state->clock.mtx_get_time));	
-	return (starving_since);
 }
 
 // Called by the clock routine to check if any of the philosophers died
@@ -75,7 +64,7 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
 	{	
-		starving_since = get_starvation_duration(state);
+		starving_since = calc_starvation_duration(state, i);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
 			set_sim_status(state, false);
@@ -91,25 +80,24 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 {
 	pthread_mutex_lock(&state->mtx_display_status);
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
-	if (ft_strncmp(status, DIED_MSG, ft_strlen(DIED_MSG)) == 0)
+	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
 		pthread_mutex_unlock(&state->mtx_display_status);
+		pthread_mutex_destroy(&state->mtx_display_status);
 		return ;
 	}
 	pthread_mutex_unlock(&state->mtx_display_status);
 
-	if (ft_strncmp(status, EAT_MSG, ft_strlen(EAT_MSG)) == 0)
-	{	
-		pthread_mutex_lock(&(state->clock.mtx_get_time));	
-		philosopher->last_meal_time_ms = timestamp_ms;	
-		pthread_mutex_unlock(&(state->clock.mtx_get_time));	
+	if (ft_strcmp(status, EAT_MSG) == 0)
+	{
+		pthread_mutex_lock(&(state->clock.mtx_get_time));
+		philosopher->last_meal_time_ms = timestamp_ms;
+		pthread_mutex_unlock(&(state->clock.mtx_get_time));
 		usleep((int)state->settings.time_to_eat * 1000);
 	}
-	else if (ft_strncmp(status, SLEEP_MSG, ft_strlen(SLEEP_MSG)) == 0)
-	{
+	else if (ft_strcmp(status, SLEEP_MSG) == 0)
 		usleep((int)state->settings.time_to_sleep * 1000);
-	}
-	else // THINK case
+	else
 		return ;
 }
 

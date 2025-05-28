@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 22:17:47 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/28 23:39:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	create_philo_threads(t_state *state, int nb_guests)
 	i = 0;
 	while (i < nb_guests)
 	{
-		arg = set_philo_arg(arg, i, nb_guests);
+		arg = set_philo_arg(state, arg, i, nb_guests);
 		if (arg == NULL)
 			return (1);
 
@@ -57,7 +57,7 @@ int	create_philo_threads(t_state *state, int nb_guests)
 	return (0);
 }
 
-t_philo_arg	*set_philo_arg(t_philo_arg *arg, i, nb_guests)
+t_philo_arg	*set_philo_arg(t_state *state, t_philo_arg *arg, int i, int nb_guests)
 {
 	arg = malloc(sizeof(t_philo_arg));
 	if (!arg)

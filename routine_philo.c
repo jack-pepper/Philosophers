@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 12:29:54 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 00:01:59 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,24 @@ int	wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 {
 	int	ret;
 
-	if (is_simulation_on(state) != 0)
+	if (is_sim_on(state) != 0)
 		return (-1);
 	if (DEBUG == 1)
 		printf("⏳ 👴 philo %d waiting for fork 🍴 %d...\n", i + 1, i + 1);	
-	ret = pthread_mutex_lock(&(state)->forks[i].mutex);
+	ret = pthread_mutex_lock(&(state)->forks[i].mtx_fork);
 	if (DEBUG == 1)	
 		printf("🔒 👴 philo %d locked fork 🍴 %d!\n", i + 1, i + 1);	
 	if (ret != 0)
 		return (-1);
-	if (is_simulation_on(state) != 0)
+	if (is_sim_on(state) != 0)
 	{
-		pthread_mutex_unlock(&(state)->forks[i].mutex);
+		pthread_mutex_unlock(&(state)->forks[i].mtx_fork);
 		return (-1);
 	}
-	pthread_mutex_lock(&(state)->forks[i].mtx_status);
+	
+	pthread_mutex_lock(&(state)->forks[i].mtx_is_taken);
 	(state)->forks[i].is_already_taken = true;	
-	pthread_mutex_unlock(&(state)->forks[i].mtx_status);
+	pthread_mutex_unlock(&(state)->forks[i].mtx_is_taken);
 
 	pthread_mutex_lock(&(state->clock.mtx_get_time));
 	timestamp_ms = get_timestamp_ms(&(state)->philosophers[i].cur_time) - (state)->clock.start_time_ms;
@@ -80,21 +81,21 @@ int	wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 	
 	if (DEBUG == 1)
 		printf("⏳ 👴 philo %d waiting for fork 🍴 %d...\n", i + 1, next_i + 1);	
-	ret = pthread_mutex_lock(&(state)->forks[next_i].mutex);
+	ret = pthread_mutex_lock(&(state)->forks[next_i].mtx_fork);
 	if (ret != 0)
 		return (-1);
 	if (DEBUG == 1)	
 		printf("🔒 👴 philo %d locked fork 🍴 %d!\n", i + 1, next_i + 1);
-	if (is_simulation_on(state) != 0)
+	if (is_sim_on(state) != 0)
 	{
-		pthread_mutex_unlock(&(state)->forks[next_i].mutex);
-		pthread_mutex_unlock(&(state)->forks[i].mutex);
+		pthread_mutex_unlock(&(state)->forks[next_i].mtx_fork);
+		pthread_mutex_unlock(&(state)->forks[i].mtx_fork);
 		return (-1);
 	}
 	
-	pthread_mutex_lock(&(state)->forks[next_i].mtx_status);
+	pthread_mutex_lock(&(state)->forks[next_i].mtx_is_taken);
 	(state)->forks[next_i].is_already_taken = true;
-	pthread_mutex_unlock(&(state)->forks[next_i].mtx_status);
+	pthread_mutex_unlock(&(state)->forks[next_i].mtx_is_taken);
 	
 	pthread_mutex_lock(&(state->clock.mtx_get_time));
 	timestamp_ms = get_timestamp_ms(&(state)->philosophers[i].cur_time) - (state)->clock.start_time_ms;
@@ -109,7 +110,7 @@ int	eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 {
 	int	ret;
 
-	if (is_simulation_on(state) != 0)
+	if (is_sim_on(state) != 0)
 		return (-1);
 	pthread_mutex_lock(&(state->clock.mtx_get_time));
 	timestamp_ms = get_timestamp_ms(&(state)->philosophers[i].cur_time) - (state)->clock.start_time_ms;
@@ -117,21 +118,21 @@ int	eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 
 	change_status((state), timestamp_ms, &(state)->philosophers[i], EAT_MSG);
 
-	pthread_mutex_lock(&(state)->forks[next_i].mtx_status);
+	pthread_mutex_lock(&(state)->forks[next_i].mtx_is_taken);
 	(state)->forks[next_i].is_already_taken = false;
-	pthread_mutex_unlock(&(state)->forks[next_i].mtx_status);
+	pthread_mutex_unlock(&(state)->forks[next_i].mtx_is_taken);
 
-	ret = pthread_mutex_unlock(&(state)->forks[next_i].mutex);
+	ret = pthread_mutex_unlock(&(state)->forks[next_i].mtx_is_taken);
 	if (ret != 0)
 		return (-1);
 	if (DEBUG == 1)
 		printf("	🔓 👴 philo %d unlocked fork 🍴 %d!\n", i + 1, next_i + 1);	
 
-	pthread_mutex_lock(&(state)->forks[i].mtx_status);
+	pthread_mutex_lock(&(state)->forks[i].mtx_is_taken);
 	(state)->forks[i].is_already_taken = false;
-	pthread_mutex_unlock(&(state)->forks[i].mtx_status);
+	pthread_mutex_unlock(&(state)->forks[i].mtx_is_taken);
 
-	ret = pthread_mutex_unlock(&(state)->forks[i].mutex);
+	ret = pthread_mutex_unlock(&(state)->forks[i].mtx_fork);
 	if (ret != 0)
 		return (-1);
 	if (DEBUG == 1)
@@ -141,7 +142,7 @@ int	eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 
 int	take_a_nap(t_state *state, uint64_t timestamp_ms, int i)
 {	
-	if (is_simulation_on(state) != 0)
+	if (is_sim_on(state) != 0)
 		return (-1);
 	pthread_mutex_lock(&(state->clock.mtx_get_time));
 	timestamp_ms = get_timestamp_ms(&(state)->philosophers[i].cur_time) - (state)->clock.start_time_ms;	
@@ -152,7 +153,7 @@ int	take_a_nap(t_state *state, uint64_t timestamp_ms, int i)
 
 int	think(t_state *state, uint64_t timestamp_ms, int i)
 {
-	if (is_simulation_on(state) != 0)
+	if (is_sim_on(state) != 0)
 		return (-1);
 	pthread_mutex_lock(&(state->clock.mtx_get_time));
 	timestamp_ms = get_timestamp_ms(&(state)->philosophers[i].cur_time) - (state)->clock.start_time_ms;

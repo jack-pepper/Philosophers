@@ -6,9 +6,11 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:12:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 12:33:55 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/28 23:44:11 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "philo.h"
 
 void	gandalf_barrier(t_state *state)
 {
@@ -28,7 +30,7 @@ void	gandalf_barrier(t_state *state)
 	}
 	else
         {
-		set_sim_start(state, true);
+		set_sim_status(state, true);
                 pthread_mutex_unlock(&(state->barrier.mtx_barrier)); // can return err too?
                 pthread_mutex_destroy(&(state->barrier.mtx_barrier));
                 if (DEBUG == 1)

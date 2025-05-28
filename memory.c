@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 21:37:14 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 00:25:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	free_on_exit(t_state *state)
 	ret = free_forks(state);
 	if (ret != 0)
 		return (ret);
-        pthread_mutex_unlock(&state->mutex_display_status); // Locked previously by dead philo
+       // pthread_mutex_unlock(&state->mutex_display_status); // Locked previously by dead philo
 	return (0);
 }
 
@@ -79,9 +79,9 @@ int	free_forks(t_state *state)
 			res++;
 		i++; */
 		
-		if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
-			res++;	
-		if (pthread_mutex_destroy(&state->forks[i].mtx_status) != 0)
+		if (pthread_mutex_destroy(&state->forks[i].mtx_fork) != 0)
+			res++;
+		if (pthread_mutex_destroy(&state->forks[i].mtx_is_taken) != 0)
 			res++;
 		i++;
 	}
@@ -117,13 +117,13 @@ void	destroy_all_mutexes(pthread_mutex_t mutex, int i)
 	}
 }*/
 
-int     clean_all_forks_mutexes(t_fork *forks, pthread_mutex_t *mtx, int i)
+int     clean_all_forks_mutexes(pthread_mutex_t *mtx, int i)
 {
         while (i > 0)
         {
-                if (pthread_mutex_destroy(forks[i].mtx) != 0)
+		i--;
+                if (pthread_mutex_destroy(&mtx[i]) != 0)
                         return (ft_ret(1, "❌ err: mutex forks[%d] not destroyed!\n", i));
-                i--;
         }
         return (0);
 }

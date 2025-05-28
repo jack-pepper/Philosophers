@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/05/26 23:58:07 by mmalie           ###   ########.fr        #
+#    Updated: 2025/05/28 23:27:46 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,10 +36,14 @@ DEPS = philo.h
 SRC = philo.c \
 	args_parser.c \
 	initer.c \
+	sim_launcher.c \
+	sim_state.c \
+	gandalf_barrier.c \
 	routine_clock.c \
 	routine_philo.c \
 	libft_utils.c \
         philo_utils.c \
+	time_utils.c \
 	memory.c \
 
 ### Object files

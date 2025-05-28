@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:28:51 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 22:43:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 00:10:09 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ uint64_t        get_cur_time(t_state *state)
         return (cur_time);
 }
 
-uint64_t        get_starvation_duration(t_state *state)
+uint64_t	calc_starvation_duration(t_state *state, int i)
 {
         uint64_t        starving_since;
 
