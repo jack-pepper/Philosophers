@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 00:25:25 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 14:30:03 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	free_on_exit(t_state *state)
 	int	ret;
 
 	ret = 0;
-	ret = detach_threads(state);
-	if (ret != 0)
-		return (ret);
+//	ret = detach_threads(state);
+//	if (ret != 0)
+//		return (ret);
 	free_philosophers(state);
 	ret = free_forks(state);
 	if (ret != 0)
@@ -79,9 +79,9 @@ int	free_forks(t_state *state)
 			res++;
 		i++; */
 		
-		if (pthread_mutex_destroy(&state->forks[i].mtx_fork) != 0)
+		if (pthread_mutex_destroy(&(state)->forks[i].mtx_fork) != 0)
 			res++;
-		if (pthread_mutex_destroy(&state->forks[i].mtx_is_taken) != 0)
+		if (pthread_mutex_destroy(&(state)->forks[i].mtx_is_taken) != 0)
 			res++;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 00:11:50 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 14:32:52 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,11 @@ void	*clock_routine(void *arg)
 //	if (!state)
 //		return (NULL);
 	if (DEBUG == 1)
-		printf("\n🕰️ [clock_routine] Starting routine...\n");
-	res = wait_sim_start(state);
-	if (res != 0)
-		return (NULL);
+		printf("\n🕰️ [clock_routine] Starting routine...\n");	
+	set_sim_status(state, true);
 	res = toll_the_bell(state);
 	if (res != 0)
 		return (NULL);
-
 	return (NULL);
 }
 
@@ -41,15 +38,22 @@ int	toll_the_bell(t_state *state)
 	while (state->simulation_on == true)
 	{
 		pthread_mutex_unlock(&(state->mtx_sim_state));
+		while (are_philo_threads_all_set(state) != 0)
+		{
+			if (usleep(1000) != 0)
+                       		printf("[wait sim_start] usleep failed\n");
+		}
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
 		{
 			// unlock cur_time here? or in free_on_exit?
-			free_on_exit(state);
+			if (usleep(5000) != 0) // should give time for other threads to stop properly
+                       		printf("[wait sim_start] usleep failed\n");	
+			free_on_exit(state);			
 			return (0); // ???
 		}	
 		if (usleep(1000) != 0)
-			printf("[clock_routine] usleep failed\n");
+			printf("[toll_the_bell] usleep failed\n");
 		pthread_mutex_lock(&(state->mtx_sim_state));
 	}
 	return (0);
@@ -82,6 +86,7 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
+		// Should put the forks if they have it at this point?
 		pthread_mutex_unlock(&state->mtx_display_status);
 		pthread_mutex_destroy(&state->mtx_display_status);
 		return ;

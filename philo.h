@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 00:23:38 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 13:54:56 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ typedef struct s_state
 {
 	pthread_mutex_t		mtx_sim_state;
 	pthread_mutex_t		mtx_display_status;
+	pthread_mutex_t		mtx_threads_ready;
+	pthread_mutex_t		mtx_philo_all_set;
 	t_settings		settings;
 	t_philosopher		*philosophers;
 	t_fork			*forks;
@@ -123,11 +125,14 @@ int		join_philo_threads(t_state *state, int nb_guests);
 
 // sim_state.c
 void		set_sim_status(t_state *state, bool sim_status);
+void		set_philo_threads_all_set(t_state *state, bool set_status);
+int		are_philo_threads_all_set(t_state *state);
 int		is_sim_on(t_state *state);
 int		wait_sim_start(t_state *state);
 
 // gandalf_barrier.c
 void		gandalf_barrier(t_state *state);
+int		wait_philo_all_set(t_state *state);
 
 // routine_clock.c
 void		*clock_routine(void *arg);
@@ -141,6 +146,13 @@ int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		take_a_nap(t_state *state, uint64_t timestamp_ms, int i);
 int		think(t_state *state, uint64_t timestamp_ms, int i);
+
+// fork_utils.c
+int     take_left_fork(t_state *state, int i);
+int     take_right_fork(t_state *state, int i, int next_i);
+int     put_left_fork(t_state *state, int i);
+int     put_right_fork(t_state *state, int i, int next_i);
+int     change_fork_status(t_state *state, int i, bool is_taken);
 
 // memory.c
 int		free_on_exit(t_state *state);

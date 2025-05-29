@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 00:24:21 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 10:49:47 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int	init_mutexes(t_state *state, int nb_guests)
 
 	if (DEBUG == 1)
 		printf("\n🐣🔐 [init_mutexes] initiating mutexes...\n");
-	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
-		return (ft_ret(-1, "❌ Issue while initiating mtx_get_time!\n", STDERR));
+//	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
+//		return (ft_ret(-1, "❌ Issue while initiating mtx_get_time!\n", STDERR));
 	i = 0;
 	while (i < nb_guests)
 	{
@@ -124,6 +124,27 @@ int	init_mutexes(t_state *state, int nb_guests)
 		return (ft_ret(1, "❌ Issue while initiating mtx_display_status\n", STDERR));
         }	
 	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
+	{
+		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
+			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
+		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
+		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
+        }
+	if (pthread_mutex_init(&state->mtx_sim_state, NULL) != 0)
+	{
+		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
+			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
+		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
+		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
+        }	
+	if (pthread_mutex_init(&state->mtx_threads_ready, NULL) != 0)
+	{
+		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
+			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
+		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
+		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
+        }
+	if (pthread_mutex_init(&state->mtx_philo_all_set, NULL) != 0)
 	{
 		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
 			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));

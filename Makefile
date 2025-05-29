@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/05/28 23:27:46 by mmalie           ###   ########.fr        #
+#    Updated: 2025/05/29 12:33:15 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRC = philo.c \
 	gandalf_barrier.c \
 	routine_clock.c \
 	routine_philo.c \
+	forks_utils.c \
 	libft_utils.c \
         philo_utils.c \
 	time_utils.c \

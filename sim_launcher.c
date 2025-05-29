@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 23:39:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 11:08:18 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	launch_death_clock(t_state *state)
 		return (1);
 	if (DEBUG == 1)
 		printf("	👍 [launch_death_clock] Death clock launched!\n");
+	if (usleep(1000) != 0)
+                        printf("[launch_death_clock] usleep failed\n");
 	return (0);
 }
 
