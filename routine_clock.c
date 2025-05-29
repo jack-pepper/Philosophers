@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 20:23:59 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:50:41 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,16 @@ int	toll_the_bell(t_state *state)
 	{
 		pthread_mutex_unlock(&(state->mtx_sim_state));
 		while (are_philo_threads_all_set(state) != 0)
-		{
-			if (usleep(1000) != 0)
-                       		printf("[wait sim_start] usleep failed\n");
-		}
+			ft_usleep(1000, "[wait sim_start] usleep failed\n");
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
 		{
 			// unlock cur_time here? or in free_on_exit?
-			if (usleep(50000) != 0) // should give time for other threads to stop properly
-                       		printf("[wait sim_start] usleep failed\n");	
+			ft_usleep(50000, "[wait sim_start] usleep failed\n"); // should give time to other threads to finish?
 			free_on_exit(state);			
 			return (0); // ???
 		}	
-		if (usleep(1000) != 0)
-			printf("[toll_the_bell] usleep failed\n");
+		ft_usleep(1000, "[toll_the_bell] usleep failed\n");
 		pthread_mutex_lock(&(state->mtx_sim_state));
 	}
 	return (0);
@@ -88,6 +83,7 @@ void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
 		next_i = 0;
 	else
 		next_i = i + 1;
+
 	if (philosopher->has_left_fork == true)
 		put_left_fork(state, philosopher->id - 1);
 	if (philosopher->has_right_fork == true)
@@ -113,10 +109,10 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 		pthread_mutex_lock(&(state->clock.mtx_get_time));
 		philosopher->last_meal_time_ms = timestamp_ms;
 		pthread_mutex_unlock(&(state->clock.mtx_get_time));
-		usleep((int)state->settings.time_to_eat * 1000);
+		ft_usleep((int)state->settings.time_to_eat * 1000, "[change_status] usleep failed\n");
 	}
 	else if (ft_strcmp(status, SLEEP_MSG) == 0)
-		usleep((int)state->settings.time_to_sleep * 1000);
+		ft_usleep((int)state->settings.time_to_sleep * 1000, "[change_status] usleep failed\n");
 	else
 		return ;
 }

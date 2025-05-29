@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 22:35:31 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:00:48 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,18 @@ int	clean_ret(t_state *state, char *err_msg, int *i, int lvl)
 	return (1);
 }
 
-int     clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i)
+int	clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i)
 {
 	// include the err_msg, join the msg with the ft_itoa(number) + \n, then free, to display the full msg
-
 	while ((*i) > 0)
-        {
-                (*i)--;
+	{
+		(*i)--;
 		if (destroy_mutex(&mtx[(*i)], ERR_MTX_DEST_FORK) != 0)
 			return (1);
                 //if (pthread_mutex_destroy(&mtx[i]) != 0)
                 //        return (ft_ret(1, "❌ err: mutex forks[%d] not destroyed!\n", i));
-        }
-        return (0);
+	}
+	return (0);
 }
 
 int	destroy_mutex(pthread_mutex_t *mtx, char *err_msg)

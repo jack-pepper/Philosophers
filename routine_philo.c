@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 20:16:10 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:59:01 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,15 @@ void	*philo_routine(void *arg)
 	timestamp_ms = 0;
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
-
+	// export to set_next_i()
 	if (i == this_arg->nb_guests - 1)
 		next_i = 0;
 	else
 		next_i = i + 1;
-
 	wait_sim_start(&(*this_arg->state));
 	gandalf_barrier(&(*this_arg->state));
-	
 	if (DEBUG == 1)	
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
-
 	pthread_mutex_lock(&(this_arg->state)->mtx_sim_state);	
 	while ((*this_arg->state).simulation_on == true)
 	{

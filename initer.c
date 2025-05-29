@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 22:29:00 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 23:48:14 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	init_barrier(t_state *state)
 {
 	if (pthread_mutex_init(&(state->barrier.mtx_barrier), NULL) != 0)
-		return (1);	
+		return (1);
 	state->barrier.threshold = state->settings.number_of_philosophers;
 	return (0);
 }
@@ -25,7 +25,7 @@ int	init_forks(t_state *state, int nb_guests)
 	int	i;
 
 	if (DEBUG == 1)
-		printf("\n🐣🍴 [init_forks] mallocating forks for %d guests...\n", nb_guests);
+		printf("\n🐣🍴 init forks for %d guests...\n", nb_guests);
 	state->forks = malloc(sizeof(t_fork) * nb_guests);
 	if (!state->forks)
 		return (1);
@@ -47,7 +47,7 @@ int	init_philosophers(t_state *state, int nb_guests)
 	int	i;
 
 	if (DEBUG == 1)
-		printf("\n🐣👴 [init_philosophers] mallocating for %d philosophers...\n", nb_guests);
+		printf("\n🐣👴 init %d philosophers...\n", nb_guests);
 	state->philosophers = malloc(sizeof(t_philosopher) * (nb_guests));
 	if (!state->philosophers)
 		return (1);
@@ -56,7 +56,7 @@ int	init_philosophers(t_state *state, int nb_guests)
 	while (i < nb_guests)
 	{
 		state->philosophers[i].id = i + 1;
-                state->philosophers[i].last_meal_time_ms = 0;
+		state->philosophers[i].last_meal_time_ms = 0;
 		state->philosophers[i].has_left_fork = false;
 		state->philosophers[i].has_right_fork = false;
 		i++;
@@ -71,7 +71,7 @@ int	init_mutexes(t_state *state, int nb_guests)
 	int	i;
 
 	if (DEBUG == 1)
-		printf("\n🐣🔐 [init_mutexes] initiating mutexes...\n");
+		printf("\n🐣🔐 init mutexes...\n");
 	i = 0;
 	if (init_fork_mutexes(state, nb_guests, &i) != 0)
 		return (1);

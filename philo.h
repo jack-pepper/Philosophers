@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 22:32:02 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:11:56 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,5 +215,6 @@ uint64_t        get_cur_time(t_state *state);
 uint64_t        calc_starvation_duration(t_state *state, int i);
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t    	convert_to_ms(struct timeval tv);
+void		ft_usleep(useconds_t usec, char *err_msg);
 
 #endif

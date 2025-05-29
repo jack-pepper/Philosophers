@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 00:06:05 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:32:49 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	display_settings(const t_settings *settings)
 {
-	printf("\n⚙️  [DISPLAY_SETTINGS] ⚙️\n");
-	printf("👴 number of philosophers: `%d`\n",
+	printf("\n⚙️  [SETTINGS] ⚙️\n");
+	printf("\n👴 number of philosophers: `%d`\n",
 		settings->number_of_philosophers);
 	printf("⏱️ 💀  time to die: `%d`\n",
 		settings->time_to_die);
@@ -34,15 +34,15 @@ void	display_settings(const t_settings *settings)
 //	return (return_val);
 //}
 
-int     ft_ret(int return_val, char *msg, int fd)
+int	ft_ret(int return_val, char *msg, int fd)
 {
-        ft_putstr_fd(msg, fd);
-        return (return_val);
+	ft_putstr_fd(msg, fd);
+	return (return_val);
 }
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	size_t  i;
+	size_t	i;
 
 	if (s != NULL)
 	{
@@ -52,5 +52,5 @@ void	ft_putstr_fd(char *s, int fd)
 			write(fd, &s[i], 1);
 			i++;
 		}
-        }
+	}
 }

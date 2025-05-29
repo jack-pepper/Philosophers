@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 11:08:18 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:36:55 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int	launch_death_clock(t_state *state)
 {
 	if (DEBUG == 1)
-		printf("	\n🕰️ [launch_death_clock] Launching death clock...\n");
+		printf("	\n 🕰️ [launch_death_clock] Launching death clock...\n");
 	
 	while (gettimeofday(&state->clock.cur_time, NULL) != 0)
 		;
@@ -28,8 +28,7 @@ int	launch_death_clock(t_state *state)
 		return (1);
 	if (DEBUG == 1)
 		printf("	👍 [launch_death_clock] Death clock launched!\n");
-	if (usleep(1000) != 0)
-                        printf("[launch_death_clock] usleep failed\n");
+	ft_usleep(1000, "[launch_death_clock] usleep failed\n");
 	return (0);
 }
 

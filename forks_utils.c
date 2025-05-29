@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 19:19:39 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 23:45:08 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@ int	take_left_fork(t_state *state, int i)
 
 	ret = 0;
 	if (DEBUG == 1)
-		printf("	⏳ 👴 philo %d waiting for fork 🍴 %d...\n", i + 1, i + 1);	
+		printf("	⏳ 👴 philo %d waiting for fork 🍴 %d...\n",
+			i + 1, i + 1);
 	ret = pthread_mutex_lock(&(state)->forks[i].mtx_fork);
 	if (ret != 0)
 		return (1);
 	change_fork_status(state, i, true);
 	state->philosophers[i].has_left_fork = true;
-	if (DEBUG == 1)	
-		printf("	🔒 👴 philo %d locked fork 🍴 %d!\n", i + 1, i + 1);	
+	if (DEBUG == 1)
+		printf("	🔒 👴 philo %d locked fork 🍴 %d!\n",
+			i + 1, i + 1);
 	return (ret);
 }
 
@@ -35,14 +37,16 @@ int	take_right_fork(t_state *state, int i, int next_i)
 
 	ret = 0;
 	if (DEBUG == 1)
-		printf("	⏳ 👴 philo %d waiting for fork 🍴 %d...\n", i + 1, next_i + 1);	
+		printf("	⏳ 👴 philo %d waiting for fork 🍴 %d...\n",
+			i + 1, next_i + 1);
 	ret = pthread_mutex_lock(&(state)->forks[next_i].mtx_fork);
 	if (ret != 0)
 		return (1);
 	change_fork_status(state, i, true);
 	state->philosophers[i].has_right_fork = true;
-	if (DEBUG == 1)	
-		printf("	🔒 👴 philo %d locked fork 🍴 %d!\n", i + 1, next_i + 1);
+	if (DEBUG == 1)
+		printf("	🔒 👴 philo %d locked fork 🍴 %d!\n",
+			i + 1, next_i + 1);
 	return (ret);
 }
 
@@ -51,12 +55,13 @@ int	put_left_fork(t_state *state, int i)
 	int	ret;
 
 	ret = 0;
-        change_fork_status(state, i, false);	
+	change_fork_status(state, i, false);
 	state->philosophers[i].has_left_fork = false;
 	if (ret != 0)
 		return (1);
 	if (DEBUG == 1)
-                printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n", i + 1, i + 1);
+		printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n",
+			i + 1, i + 1);
 	return (ret);
 }
 
@@ -65,10 +70,11 @@ int	put_right_fork(t_state *state, int i, int next_i)
 	int	ret;
 
 	ret = 0;
-        change_fork_status(state, next_i, false);
+	change_fork_status(state, next_i, false);
 	state->philosophers[i].has_right_fork = false;
-        if (DEBUG == 1)
-                printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n", i + 1, next_i + 1);
+	if (DEBUG == 1)
+		printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n",
+			i + 1, next_i + 1);
 	return (ret);
 }
 

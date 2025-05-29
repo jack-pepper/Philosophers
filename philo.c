@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 20:29:21 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 00:39:17 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv)
 	if (initer(&state, state.settings.number_of_philosophers) != 0)
 		return (ft_ret(1, "[main] err: on initer()\n", STDERR));
 	if (DEBUG == 1)
-		printf("\n🎉 [main] State initiated... Launching simulation...\n");
+		printf("\n🎉 [main] State initiated!\n");
 	if (launch_simulation(&state, state.settings.number_of_philosophers) != 0)
 		return (ft_ret(1, "[main] err: on launch_simulation()\n", STDERR));
 	if (DEBUG == 1)
@@ -72,16 +72,16 @@ int	launch_simulation(t_state *state, int nb_guests)
 	if (launch_death_clock(state) != 0)
 		return (ft_ret(1, "❌ [launch_simulation] error in launch_death_clock!\n", STDERR));
 	if (DEBUG == 1)
-		printf("✅ [launch_simulation] death clock launched!\n");
+		printf("	✅ [launch_simulation] death clock launched!\n");
 
 	if (create_philo_threads(state, nb_guests) != 0)
 		return (ft_ret(1, "❌ [launch_simulation] error in create_philo_threads!\n", STDERR));
 	if (DEBUG == 1)
-		printf("✅ [launch_simulation] philo threads created!\n");
+		printf("	✅ [launch_simulation] philo threads created!\n");
 
 	if (join_philo_threads(state, nb_guests) != 0)
 		return (ft_ret(1, "❌ [launch_simulation] error in join_philo_threads!\n", STDERR));
 	if (DEBUG == 1)
-		printf("✅ [launch_simulation] philo threads all terminated!\n");
+		printf("	✅ [launch_simulation] philo threads all terminated!\n");
 	return (0);
 }
