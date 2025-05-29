@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 13:54:56 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 22:32:02 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,31 @@
 # define SLEEP_MSG "is sleeping"
 # define THINK_MSG "is thinking"
 # define DIED_MSG "died"
+
+# define ERR_MTX_INIT_DISPLAY_STATUS "❌ Error on pthread_mutex_init(display_status)\n"
+# define ERR_MTX_INIT_GET_TIME "❌ Error on pthread_mutex_init(get_time)\n"
+# define ERR_MTX_INIT_SIM_STATE "❌ Error on pthread_mutex_init(sim_state)\n"
+# define ERR_MTX_INIT_THREADS_READY "❌ Error on pthread_mutex_init(threads_ready)\n"
+# define ERR_MTX_INIT_PHILO_ALL_SET "❌ Error on pthread_mutex_init(philo_all_set)\n"
+
+// Complete with a strjoin
+# define ERR_MTX_INIT_FORK "❌ Error on pthread_mutex_init(mtx_fork): fork "
+# define ERR_MTX_INIT_IS_TAKEN "❌ Error on pthread_mutex_init(is_taken): fork "
+# define ERR_MTX_INIT_HAS_LEFT_FORK "❌ Error on pthread_mutex_init(has_left_work): philosopher "
+# define ERR_MTX_INIT_HAS_RIGHT_FORK "❌ Error on pthread_mutex_init(has_right_fork): philosopher "
+
+
+# define ERR_MTX_DEST_DISPLAY_STATUS "❌ Error on pthread_mutex_destroy(display_status)\n"
+# define ERR_MTX_DEST_GET_TIME "❌ Error on pthread_mutex_destroy(get_time)\n"
+# define ERR_MTX_DEST_SIM_STATE "❌ Error on pthread_mutex_destroy(sim_state)\n"
+# define ERR_MTX_DEST_THREADS_READY "❌ Error on pthread_mutex_destroy(threads_ready)\n"
+# define ERR_MTX_DEST_PHILO_ALL_SET "❌ Error on pthread_mutex_destroy(philo_all_set)\n"
+
+# define ERR_MTX_DEST_FORK "❌ Error on pthread_mutex_destroy(mtx_fork): fork "
+# define ERR_MTX_DEST_IS_TAKEN "❌ Error on pthread_mutex_destroy(is_taken): fork "
+# define ERR_MTX_DEST_HAS_LEFT_FORK "❌ Error on pthread_mutex_destroy(has_left_work): philosopher "
+# define ERR_MTX_DEST_HAS_RIGHT_FORK "❌ Error on pthread_mutex_destroy(has_right_fork): philosopher "
+
 
 # include <pthread.h>
 # include <stdint.h>
@@ -46,12 +71,16 @@ typedef struct s_settings
 typedef struct s_philosopher
 {
 	pthread_t		thread;
+	pthread_mutex_t		mtx_has_left_fork;
+	pthread_mutex_t		mtx_has_right_fork;
 	struct timeval		cur_time;
 	uint64_t		cur_time_ms;
 	struct timeval		last_meal_time;
 	uint64_t		last_meal_time_ms;
 	int			id;
 	int			meals_eaten;
+	bool			has_left_fork;
+	bool			has_right_fork;
 }				t_philosopher;
 
 typedef struct s_fork
@@ -114,8 +143,14 @@ void		store_args(char **argv, t_settings *settings);
 int		init_barrier(t_state *state);
 int		init_forks(t_state *state, int nb_guests);
 int		init_philosophers(t_state *state, int nb_guests);
-//int     init_clock(t_state *state);
 int		init_mutexes(t_state *state, int nb_guests);
+
+// mtx_handler.c
+int     init_fork_mutexes(t_state *state, int nb_guests, int *i);
+int     clean_ret(t_state *state, char *err_msg, int *i, int lvl);
+int     clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i);
+int     destroy_mutex(pthread_mutex_t *mtx, char *err_msg);
+
 
 // sim_launcher.c
 int		launch_death_clock(t_state *state);
@@ -140,6 +175,8 @@ int		toll_the_bell(t_state *state);
 int		take_pulse(t_state *state, uint64_t timestamp_ms);
 void		change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status);
 
+void    drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i);
+
 // routine_philo.c
 void		*philo_routine(void *arg);
 int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
@@ -159,7 +196,6 @@ int		free_on_exit(t_state *state);
 int		detach_threads(t_state *state);
 int		free_forks(t_state *state);
 void		free_philosophers(t_state *state);
-int		clean_all_forks_mutexes(pthread_mutex_t *mtx, int i);
 
 // libft_utils.c
 int		ft_isspace(int c);

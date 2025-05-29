@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 10:49:47 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 22:29:00 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	init_philosophers(t_state *state, int nb_guests)
 	{
 		state->philosophers[i].id = i + 1;
                 state->philosophers[i].last_meal_time_ms = 0;
+		state->philosophers[i].has_left_fork = false;
+		state->philosophers[i].has_right_fork = false;
 		i++;
 	}
 	if (DEBUG == 1)
@@ -64,93 +66,25 @@ int	init_philosophers(t_state *state, int nb_guests)
 	return (0);
 }
 
-/*
-int     init_clock(t_state *state)
-{
-        if (gettimeofday(&(*state)->clock.start_time, NULL) != 0)
-                printf("[init_clock] gettimeofday fail\n");
-        if (gettimeofday(&(*state)->clock.cur_time, NULL) != 0)
-                printf("[init_clock] gettimeofday fail\n");
-        state->clock.start_time_ms = convert_to_ms(state->clock.start_time);
-        state->clock.cur_time_ms = convert_to_ms(state->clock.cur_time);
-        printf("[init_clock] %lu\n", state->clock.start_time_ms);
-        return (0);
-}
-*/
-
 int	init_mutexes(t_state *state, int nb_guests)
 {
 	int	i;
 
 	if (DEBUG == 1)
 		printf("\n🐣🔐 [init_mutexes] initiating mutexes...\n");
-//	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
-//		return (ft_ret(-1, "❌ Issue while initiating mtx_get_time!\n", STDERR));
 	i = 0;
-	while (i < nb_guests)
-	{
-		if (pthread_mutex_init(&state->forks[i].mtx_fork, NULL) != 0)
-		{
-			printf("❌ Issue while initiating forks[%d] mutex\n", i);
-			i--;
-			clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
-			//while (i > 0)
-			//{
-			//	if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
-			//		printf("❌ err: forks[%d].mutex not destroyed!\n", i);
-			//	i--;
-		//	}
-			return (1);
-		}
-		if (pthread_mutex_init(&state->forks[i].mtx_is_taken, NULL) != 0)
-		{
-			printf("❌ Issue while initiating forks[%d].mtx_status\n", i);
-			i--;
-			clean_all_forks_mutexes(&state->forks[i].mtx_is_taken, i);
-//			while (i > 0)
-//			{
-//				if (pthread_mutex_destroy(&state->forks[i].mtx_status) != 0)
-//					printf("❌ err: forks[%d].mtx_status not destroyed!\n", i);
-//				i--;
-//			}
-			return (1);
-		}
-		i++;
-	}
-
+	if (init_fork_mutexes(state, nb_guests, &i) != 0)
+		return (1);
 	if (pthread_mutex_init(&state->mtx_display_status, NULL) != 0)
-	{
-		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating mtx_display_status\n", STDERR));
-        }	
+		return (clean_ret(state, ERR_MTX_INIT_DISPLAY_STATUS, &i, 5));
 	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
-	{
-		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
-			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
-		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
-        }
+		return (clean_ret(state, ERR_MTX_INIT_GET_TIME, &i, 6));
 	if (pthread_mutex_init(&state->mtx_sim_state, NULL) != 0)
-	{
-		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
-			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
-		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
-        }	
+		return (clean_ret(state, ERR_MTX_INIT_SIM_STATE, &i, 7));
 	if (pthread_mutex_init(&state->mtx_threads_ready, NULL) != 0)
-	{
-		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
-			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
-		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
-        }
+		return (clean_ret(state, ERR_MTX_INIT_THREADS_READY, &i, 8));
 	if (pthread_mutex_init(&state->mtx_philo_all_set, NULL) != 0)
-	{
-		 if (pthread_mutex_destroy(&state->mtx_display_status) != 0)
-			return (ft_ret(1, "❌ err: mtx_display_status not destroyed!\n", STDERR));
-		clean_all_forks_mutexes(&state->forks[i].mtx_fork, i);
-		return (ft_ret(1, "❌ Issue while initiating clock.mutex_get_time\n", STDERR));
-        }
+		return (clean_ret(state, ERR_MTX_INIT_PHILO_ALL_SET, &i, 9));
 	if (DEBUG == 1)
 		printf("👍 mutexes ready!\n");
 	return (0);

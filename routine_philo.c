@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 14:26:48 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 20:16:10 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	*philo_routine(void *arg)
 	timestamp_ms = 0;
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
+
 	if (i == this_arg->nb_guests - 1)
 		next_i = 0;
 	else
@@ -40,14 +41,14 @@ void	*philo_routine(void *arg)
 	{
 		pthread_mutex_unlock(&(this_arg->state)->mtx_sim_state);
 		
-		if (wait_forks((this_arg->state), timestamp_ms, i, next_i) != 0)
-			break ;
-		if (eat_pasta((this_arg->state), timestamp_ms, i, next_i) != 0)
-			break ; // check return value
-		if (take_a_nap((this_arg->state), timestamp_ms, i) != 0)
-			break ;
-		if (think((this_arg->state), timestamp_ms, i) != 0)
-			break ;
+		if (wait_forks((this_arg->state), timestamp_ms, i, next_i) != 0
+			|| eat_pasta((this_arg->state), timestamp_ms, i, next_i) != 0
+			|| take_a_nap((this_arg->state), timestamp_ms, i) != 0
+			|| think((this_arg->state), timestamp_ms, i) != 0)
+		{
+			drop_forks_in_agony(&(*this_arg->state), &(*this_arg->state).philosophers[i], i);
+			return (0);
+		}
 		pthread_mutex_lock(&(this_arg->state)->mtx_sim_state);
 	}
 	return (0);

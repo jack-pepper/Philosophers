@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/05/29 12:33:15 by mmalie           ###   ########.fr        #
+#    Updated: 2025/05/29 22:04:31 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ DEPS = philo.h
 SRC = philo.c \
 	args_parser.c \
 	initer.c \
+	mtx_handler.c \
 	sim_launcher.c \
 	sim_state.c \
 	gandalf_barrier.c \

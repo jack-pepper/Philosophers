@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/28 23:30:06 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 20:29:21 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	launch_simulation(t_state *state, int nb_guests)
 	if (DEBUG == 1)
 		printf("\n🥽 [launch_simulation] Launching simulation...\n");
 	(*state).philo_all_set = false;
-	if (launch_death_clock(state) != 0) // shouldn't be later? or calc an offset...
+	if (launch_death_clock(state) != 0)
 		return (ft_ret(1, "❌ [launch_simulation] error in launch_death_clock!\n", STDERR));
 	if (DEBUG == 1)
 		printf("✅ [launch_simulation] death clock launched!\n");

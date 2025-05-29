@@ -6,22 +6,30 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 14:30:03 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 22:33:09 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+
+//void	destroy_mutexes(t_state *state)
+//{
+//
+//}
 
 int	free_on_exit(t_state *state)
 {
 	int	ret;
 
 	ret = 0;
+
 //	ret = detach_threads(state);
 //	if (ret != 0)
 //		return (ret);
 	free_philosophers(state);
 	ret = free_forks(state);
+//	destroy_mutexes(state);
 	if (ret != 0)
 		return (ret);
        // pthread_mutex_unlock(&state->mutex_display_status); // Locked previously by dead philo
@@ -116,15 +124,4 @@ void	destroy_all_mutexes(pthread_mutex_t mutex, int i)
 		i--;
 	}
 }*/
-
-int     clean_all_forks_mutexes(pthread_mutex_t *mtx, int i)
-{
-        while (i > 0)
-        {
-		i--;
-                if (pthread_mutex_destroy(&mtx[i]) != 0)
-                        return (ft_ret(1, "❌ err: mutex forks[%d] not destroyed!\n", i));
-        }
-        return (0);
-}
 

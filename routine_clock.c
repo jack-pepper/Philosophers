@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 14:32:52 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/29 20:23:59 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	toll_the_bell(t_state *state)
 		if (take_pulse(state, now_time) != 0)
 		{
 			// unlock cur_time here? or in free_on_exit?
-			if (usleep(5000) != 0) // should give time for other threads to stop properly
+			if (usleep(50000) != 0) // should give time for other threads to stop properly
                        		printf("[wait sim_start] usleep failed\n");	
 			free_on_exit(state);			
 			return (0); // ???
@@ -80,13 +80,28 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 	return (0);
 }
 
+void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
+{
+	int	next_i;
+
+	if (i == state->settings.number_of_philosophers - 1)
+		next_i = 0;
+	else
+		next_i = i + 1;
+	if (philosopher->has_left_fork == true)
+		put_left_fork(state, philosopher->id - 1);
+	if (philosopher->has_right_fork == true)
+		put_right_fork(state, philosopher->id - 1, next_i);
+	return ;
+}
+
 void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status)
 {
 	pthread_mutex_lock(&state->mtx_display_status);
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
-		// Should put the forks if they have it at this point?
+		drop_forks_in_agony(state, philosopher, philosopher->id - 1);
 		pthread_mutex_unlock(&state->mtx_display_status);
 		pthread_mutex_destroy(&state->mtx_display_status);
 		return ;
