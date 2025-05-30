@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:28:51 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 00:55:48 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 00:25:18 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,6 @@ uint64_t	get_cur_time(t_state *state)
 	cur_time = state->clock.cur_time_ms;
 	pthread_mutex_unlock(&(state->clock.mtx_get_time));
 	return (cur_time);
-}
-
-uint64_t	calc_starvation_duration(t_state *state, int i)
-{
-	uint64_t	starving_since;
-
-	pthread_mutex_lock(&(state->clock.mtx_get_time));
-	starving_since = state->clock.cur_time_ms
-		- state->philosophers[i].last_meal_time_ms;
-	pthread_mutex_unlock(&(state->clock.mtx_get_time));
-	return (starving_since);
 }
 
 uint64_t	get_timestamp_ms(struct timeval *tv)

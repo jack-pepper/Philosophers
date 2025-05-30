@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 22:43:17 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 00:57:53 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,14 +169,21 @@ int		wait_sim_start(t_state *state);
 // gandalf_barrier.c
 void		gandalf_barrier(t_state *state);
 int		wait_philo_all_set(t_state *state);
+int		wait(t_state *state);
+int		break_through(t_state *state);
 
 // routine_clock.c
 void		*clock_routine(void *arg);
 int		toll_the_bell(t_state *state);
 int		take_pulse(t_state *state, uint64_t timestamp_ms);
-void		change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status);
+void    	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i);
+bool    	verify_satiety(t_state *state);
 
-void    drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i);
+// status_change.c
+void		change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status);
+void		die(t_state *state, t_philosopher *philosopher);
+void		eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms);
+void		nap(t_state *state);
 
 // routine_philo.c
 void		*philo_routine(void *arg);
@@ -194,7 +201,7 @@ int     change_fork_status(t_state *state, int i, bool is_taken);
 
 // memory.c
 int		free_on_exit(t_state *state);
-int		detach_threads(t_state *state);
+//int		detach_threads(t_state *state);
 int		free_forks(t_state *state);
 void		free_philosophers(t_state *state);
 
@@ -210,11 +217,11 @@ void		display_settings(const t_settings *settings);
 int		ft_ret(int return_val, char *error_msg, int fd);
 void		ft_putstr_fd(char *s, int fd);
 void		change_has_fork(t_state *state, int i, char *side, bool has_fork);
+uint64_t        calc_starvation_duration(t_state *state, int i);
 
 // time_utils.c
 void            set_start_time(t_state *state);
 uint64_t        get_cur_time(t_state *state);
-uint64_t        calc_starvation_duration(t_state *state, int i);
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t    	convert_to_ms(struct timeval tv);
 void		ft_usleep(useconds_t usec, char *err_msg);
