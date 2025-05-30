@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 21:53:14 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 21:58:17 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,4 @@ void	change_has_fork(t_state *state, int i, char *side, bool has_fork)
         	state->philosophers[i].has_right_fork = has_fork;	
 		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
 	}
-}
-
-void	dbg(int debug_level, char *msg)
-{
-	if (DEBUG == debug_level)
-		printf(msg);
 }

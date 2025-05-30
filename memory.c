@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 20:52:55 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 22:23:32 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,7 @@ int	free_forks(t_state *state)
 	res = 0;
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
-	{
-		// unlock not needed because of thread being detached already?
-		/*pthread_mutex_lock(&(state)->forks[i].mtx_status);
-		if ((state)->forks[i].is_already_taken == true)
-		{
-			// WRONG: each thread should unlock their own locks
-			printf("FREE_FORKS: (status fork %d: %d)\n", i, (state)->forks[i].is_already_taken);
-			pthread_mutex_unlock(&(state)->forks[i].mtx_status);
-			pthread_mutex_unlock(&(state)->forks[i].mutex); // save value for error management
-		}
-		else
-			pthread_mutex_unlock(&(state)->forks[i].mtx_status);
-		if (pthread_mutex_destroy(&state->forks[i].mutex) != 0)
-			res++;	
-		if (pthread_mutex_destroy(&state->forks[i].mtx_status) != 0)
-			res++;
-		i++; */
-		
+	{	
 		if (pthread_mutex_destroy(&(state)->forks[i].mtx_fork) != 0)
 			res++;
 		if (pthread_mutex_destroy(&(state)->forks[i].mtx_is_taken) != 0)

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 21:48:05 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 22:46:21 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int	main(int argc, char **argv)
 	if (launch_simulation(&state, state.settings.number_of_philosophers) != 0)
 		return (ft_ret(1, "[main] err: on launch_simulation()\n", STDERR));
 	if (DEBUG == 1)
-		printf("\n╰┈➤🚪 [main] Exiting program.\n");
-        return (free_on_exit(&state));
+		printf("\n╰┈➤🚪 [main] Exiting program.\n"); 
+	return (free_on_exit(&state));
 }
 
 int	initer(t_state *state, int nb_guests)
@@ -86,7 +86,5 @@ int	launch_simulation(t_state *state, int nb_guests)
 		return (ft_ret(1, "❌ [launch_simulation] error in join_philo_threads!\n", STDERR));
 	if (DEBUG == 1)
 		printf("	✅ [launch_simulation] philo threads all terminated!\n");
-
-	free_on_exit(state);
 	return (0);
 }

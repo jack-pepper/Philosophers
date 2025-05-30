@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 21:54:06 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 22:34:43 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ int	toll_the_bell(t_state *state)
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
 		{
-			dbg(1, "🔔 👻 ⏳ Philosophers, settle your paradoxes: you are running out of time.\n");
+			if (DEBUG == 1)
+				printf("🔔 👻 ⏳ Philosophers, settle your paradoxes: you are running out of time.\n");
 			//ft_usleep(50000, "[toll_the_bell] usleep failed\n"); // should give time to other threads to finish?
 			return (0); // ???
 		}	
@@ -112,6 +113,7 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 		drop_forks_in_agony(state, philosopher, philosopher->id - 1);
 		pthread_mutex_unlock(&state->mtx_display_status);
 		pthread_mutex_destroy(&state->mtx_display_status);
+		free(philosopher->arg);
 		return ;
 	}
 	pthread_mutex_unlock(&state->mtx_display_status);

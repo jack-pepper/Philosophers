@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 21:53:37 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 22:43:17 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_settings
 typedef struct s_philosopher
 {
 	pthread_t		thread;
+	struct s_philo_arg	*arg;
 	pthread_mutex_t		mtx_has_left_fork;
 	pthread_mutex_t		mtx_has_right_fork;
 	struct timeval		cur_time;
@@ -88,7 +89,7 @@ typedef struct s_fork
 	pthread_mutex_t		mtx_fork;
 	pthread_mutex_t		mtx_is_taken;
 	int			id;
-	bool			is_already_taken; // or only mutex?
+	bool			is_already_taken;
 }				t_fork;
 
 typedef struct s_clock
@@ -209,7 +210,6 @@ void		display_settings(const t_settings *settings);
 int		ft_ret(int return_val, char *error_msg, int fd);
 void		ft_putstr_fd(char *s, int fd);
 void		change_has_fork(t_state *state, int i, char *side, bool has_fork);
-void		dbg(int debug_level, char *msg);
 
 // time_utils.c
 void            set_start_time(t_state *state);
