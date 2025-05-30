@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 10:11:25 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 20:52:55 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,8 @@ int	free_forks(t_state *state)
 			res++;
 		i++;
 	}
-	free(state->forks);
+	if (state->forks)
+		free(state->forks);
 	if (res != 0)
 		printf("Warning: %d mutex could not be destroyed during cleanup.\n", res);
 	return (res);
@@ -112,7 +113,8 @@ void	free_philosophers(t_state *state)
         i++;
     }
     */
-	free(state->philosophers);
+	if (state->philosophers)
+		free(state->philosophers);
 }
 
 /*

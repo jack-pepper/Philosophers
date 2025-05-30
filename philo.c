@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 00:39:17 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 21:48:05 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,16 @@ int	launch_simulation(t_state *state, int nb_guests)
 	if (create_philo_threads(state, nb_guests) != 0)
 		return (ft_ret(1, "❌ [launch_simulation] error in create_philo_threads!\n", STDERR));
 	if (DEBUG == 1)
-		printf("	✅ [launch_simulation] philo threads created!\n");
-
+		printf("	✅ [launch_simulation] philo threads created!\n");	
+	if (pthread_join(state->clock.thread, NULL) != 0)
+		return (1);
+	if (DEBUG == 1)
+		printf("        ✅ [launch_simulation] thread clock terminated!\n");
 	if (join_philo_threads(state, nb_guests) != 0)
 		return (ft_ret(1, "❌ [launch_simulation] error in join_philo_threads!\n", STDERR));
 	if (DEBUG == 1)
 		printf("	✅ [launch_simulation] philo threads all terminated!\n");
+
+	free_on_exit(state);
 	return (0);
 }

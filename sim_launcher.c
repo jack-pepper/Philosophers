@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 00:36:55 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 21:29:03 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,16 @@ int	join_philo_threads(t_state *state, int nb_guests)
 			return (1);
 		}
 		if (DEBUG == 1)
-			printf("	✅ thread philo %d joined!\n", i);
+			printf("	✅ thread philo %d terminated!\n", i);
 		
 		//state->philosophers[i].last_meal_time_ms = get_timestamp_ms(&state->clock.cur_time);
 		//if (DEBUG == 1)
 		//	printf("	😫 last_meal: %ld\n", state->philosophers[i].last_meal_time_ms);
 		i++;
 	}
+//	if (pthread_join(state->clock.thread, NULL) != 0)
+//		return (1);
+//	if (DEBUG == 1)
+//		printf("	✅ thread clock %d terminated!\n", i);
 	return (0);
 }

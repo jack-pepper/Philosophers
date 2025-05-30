@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 10:29:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 21:54:06 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,8 @@ int	toll_the_bell(t_state *state)
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
 		{
-			// unlock cur_time here? or in free_on_exit?
-			if (DEBUG == 1)
-				printf("🔔 👻 ⏳ Philosophers, settle your paradoxes: you are running out of time.\n");
-			ft_usleep(100000, "[toll_the_bell] usleep failed\n"); // should give time to other threads to finish?
-			free_on_exit(state);			
+			dbg(1, "🔔 👻 ⏳ Philosophers, settle your paradoxes: you are running out of time.\n");
+			//ft_usleep(50000, "[toll_the_bell] usleep failed\n"); // should give time to other threads to finish?
 			return (0); // ???
 		}	
 		ft_usleep(1000, "[toll_the_bell] usleep failed\n");
