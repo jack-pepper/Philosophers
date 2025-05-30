@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 00:50:41 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 10:29:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ int	toll_the_bell(t_state *state)
 		if (take_pulse(state, now_time) != 0)
 		{
 			// unlock cur_time here? or in free_on_exit?
-			ft_usleep(50000, "[wait sim_start] usleep failed\n"); // should give time to other threads to finish?
+			if (DEBUG == 1)
+				printf("🔔 👻 ⏳ Philosophers, settle your paradoxes: you are running out of time.\n");
+			ft_usleep(100000, "[toll_the_bell] usleep failed\n"); // should give time to other threads to finish?
 			free_on_exit(state);			
 			return (0); // ???
 		}	
@@ -84,10 +86,23 @@ void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
 	else
 		next_i = i + 1;
 
+	//ft_usleep(1000, "[drop_forks_in_agony] usleep failed\n");
+	pthread_mutex_lock(&(state)->philosophers[i].mtx_has_left_fork);
 	if (philosopher->has_left_fork == true)
+	{
+		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
 		put_left_fork(state, philosopher->id - 1);
+	}
+	else
+		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
+	pthread_mutex_lock(&(state)->philosophers[i].mtx_has_right_fork);
 	if (philosopher->has_right_fork == true)
+	{
+		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
 		put_right_fork(state, philosopher->id - 1, next_i);
+	}
+	else
+		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
 	return ;
 }
 

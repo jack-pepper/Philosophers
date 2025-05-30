@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/29 22:33:09 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 10:11:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	free_on_exit(t_state *state)
 //	ret = detach_threads(state);
 //	if (ret != 0)
 //		return (ret);
+	
 	free_philosophers(state);
 	ret = free_forks(state);
 //	destroy_mutexes(state);

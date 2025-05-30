@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 00:59:01 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 10:29:11 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ void	*philo_routine(void *arg)
 			|| take_a_nap((this_arg->state), timestamp_ms, i) != 0
 			|| think((this_arg->state), timestamp_ms, i) != 0)
 		{
-			drop_forks_in_agony(&(*this_arg->state), &(*this_arg->state).philosophers[i], i);
+			//drop_forks_in_agony(&(*this_arg->state), &(*this_arg->state).philosophers[i], i);
+			if (DEBUG == 1)
+				printf("❤️‍🩹 👴 philo %d won't eat pasta out of ethical consideration.\n", i + 1);
 			return (0);
 		}
 		pthread_mutex_lock(&(this_arg->state)->mtx_sim_state);

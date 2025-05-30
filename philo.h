@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 00:11:56 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/30 09:45:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,7 @@ size_t		ft_strlen(const char *s);
 void		display_settings(const t_settings *settings);
 int		ft_ret(int return_val, char *error_msg, int fd);
 void		ft_putstr_fd(char *s, int fd);
+void		change_has_fork(t_state *state, int i, char *side, bool has_fork);
 
 // time_utils.c
 void            set_start_time(t_state *state);
