@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 10:20:58 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 23:20:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 1
+# define DEBUG 0
 
 # define STDOUT 1
 # define STDERR 2
@@ -82,6 +82,7 @@ typedef struct s_philosopher
 	int			meals_eaten;
 	bool			has_left_fork;
 	bool			has_right_fork;
+	bool			is_left_handed;
 }				t_philosopher;
 
 typedef struct s_fork
@@ -152,7 +153,6 @@ int     clean_ret(t_state *state, char *err_msg, int *i, int lvl);
 int     clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i);
 int     destroy_mutex(pthread_mutex_t *mtx, char *err_msg);
 
-
 // sim_launcher.c
 int		launch_death_clock(t_state *state);
 int		create_philo_threads(t_state *state, int nb_guests);
@@ -186,7 +186,20 @@ void		nap(t_state *state);
 
 // routine_philo.c
 void		*philo_routine(void *arg);
+int		have_council(t_state *state, int i, int next_i);
 int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
+int		left_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
+int		right_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
+
+// fork_utils.c
+int		take_left_fork(t_state *state, int i);
+int		take_right_fork(t_state *state, int i, int next_i);
+int		put_left_fork(t_state *state, int i);
+int		put_right_fork(t_state *state, int i, int next_i);
+int		change_fork_status(t_state *state, int i, bool is_taken);
+
+// philo_actions.c
+uint64_t	calc_timestamp_ms(t_state *state, int i);
 int		eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		take_a_nap(t_state *state, uint64_t timestamp_ms, int i);
 int		think(t_state *state, uint64_t timestamp_ms, int i);
@@ -194,20 +207,13 @@ int		think(t_state *state, uint64_t timestamp_ms, int i);
 // end_cases.c
 int		set_next_i(t_state *state, int i, int *next_i);
 void		drop_forks(t_state *state, t_philosopher *philosopher, int i);
+void		endcase_die_alone(t_state *state, t_philosopher *philosopher, int i);
 void		endcase_agony(t_state *state, t_philosopher *philosopher, int i);
 void		endcase_grief(t_state *state, t_philosopher *philosopher, int i);
 void		endcase_satiety(t_state *state, t_philosopher *philosopher, int i);
 
-// fork_utils.c
-int     take_left_fork(t_state *state, int i);
-int     take_right_fork(t_state *state, int i, int next_i);
-int     put_left_fork(t_state *state, int i);
-int     put_right_fork(t_state *state, int i, int next_i);
-int     change_fork_status(t_state *state, int i, bool is_taken);
-
 // memory.c
 int		free_on_exit(t_state *state);
-//int		detach_threads(t_state *state);
 int		free_forks(t_state *state);
 void		free_philosophers(t_state *state);
 

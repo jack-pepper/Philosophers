@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:12:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 00:47:34 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 22:07:38 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	gandalf_barrier(t_state *state)
 	{
 		break_through(state);
 		if (DEBUG == 1)
-			printf("	💥 Gandalf barrier destroyed!\n");
+			printf("\n	... 💥 Gandalf barrier destroyed!\n");
 	}
 	return ;
 }

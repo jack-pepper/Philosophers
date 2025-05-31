@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 10:05:35 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 23:35:56 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	toll_the_bell(t_state *state)
 		if (take_pulse(state, now_time) != 0)
 		{
 			if (DEBUG == 1)
-				printf("🔔 👻 ⏳ Philosophers, settle your paradoxes: you are running out of time.\n");
+				printf("\n🔔 👻 ⏳ Philosophers, settle your paradoxes: your time has come.\n");
 			return (0);
 		}	
 		ft_usleep(1000, "[toll_the_bell] usleep failed\n");

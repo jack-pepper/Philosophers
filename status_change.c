@@ -6,13 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 10:40:28 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 23:50:15 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status)
+void	change_status(t_state *state, uint64_t timestamp_ms,
+		t_philosopher *philosopher, char *status)
 {
 	pthread_mutex_lock(&state->mtx_display_status);
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
@@ -41,12 +42,15 @@ void	die(t_state *state, t_philosopher *philosopher)
 
 void	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 {
+	int	satiety;
+
+	satiety = state->settings.number_of_times_each_philosopher_must_eat;
 	pthread_mutex_lock(&(state->clock.mtx_get_time));
 	philosopher->last_meal_time_ms = timestamp_ms;
-	if (state->settings.number_of_times_each_philosopher_must_eat > 0)
+	if (satiety > 0)
 	{
 		philosopher->meals_eaten += 1;
-		if (philosopher->meals_eaten >= state->settings.number_of_times_each_philosopher_must_eat
+		if (philosopher->meals_eaten >= satiety
 			&& verify_satiety(state) == true)
 		{
 			endcase_satiety(state, philosopher, philosopher->id - 1);
@@ -54,11 +58,13 @@ void	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 		}
 	}
 	pthread_mutex_unlock(&(state->clock.mtx_get_time));
-	ft_usleep((int)state->settings.time_to_eat * 1000, "[change_status] usleep failed\n");
+	ft_usleep((int)state->settings.time_to_eat * 1000,
+		"[change_status] usleep failed\n");
 	return ;
 }
 
 void	nap(t_state *state)
 {
-	ft_usleep((int)state->settings.time_to_sleep * 1000, "[change_status] usleep failed\n");
+	ft_usleep((int)state->settings.time_to_sleep * 1000,
+		"[change_status] usleep failed\n");
 }
