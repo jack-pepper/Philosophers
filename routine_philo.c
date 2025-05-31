@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 21:06:57 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 10:41:53 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ void	*philo_routine(void *arg)
 	timestamp_ms = 0;
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
-	// export to set_next_i()
-	if (i == this_arg->nb_guests - 1)
-		next_i = 0;
-	else
-		next_i = i + 1;
+	
+	set_next_i(this_arg->state, i, &next_i);
 	wait_sim_start(&(*this_arg->state));
 	gandalf_barrier(&(*this_arg->state));
 	if (DEBUG == 1)	
@@ -43,17 +40,11 @@ void	*philo_routine(void *arg)
 			|| take_a_nap((this_arg->state), timestamp_ms, i) != 0
 			|| think((this_arg->state), timestamp_ms, i) != 0)
 		{
-			drop_forks_in_agony(&(*this_arg->state), &(*this_arg->state).philosophers[i], i);
-			if (DEBUG == 1)
-			{
-				free(this_arg);
-				printf("❤️‍🩹 👴 philo %d won't eat pasta out of ethical consideration.\n", i + 1);
-			}
+			endcase_grief(&(*this_arg->state), &(*this_arg->state).philosophers[i], i);
 			return (0);
 		}
 		pthread_mutex_lock(&(this_arg->state)->mtx_sim_state);
 	}
-	free(this_arg);
 	return (0);
 }
 

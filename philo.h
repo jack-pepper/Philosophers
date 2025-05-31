@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 00:57:53 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 10:20:58 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ int		break_through(t_state *state);
 void		*clock_routine(void *arg);
 int		toll_the_bell(t_state *state);
 int		take_pulse(t_state *state, uint64_t timestamp_ms);
-void    	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i);
 bool    	verify_satiety(t_state *state);
 
 // status_change.c
@@ -191,6 +190,13 @@ int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		take_a_nap(t_state *state, uint64_t timestamp_ms, int i);
 int		think(t_state *state, uint64_t timestamp_ms, int i);
+
+// end_cases.c
+int		set_next_i(t_state *state, int i, int *next_i);
+void		drop_forks(t_state *state, t_philosopher *philosopher, int i);
+void		endcase_agony(t_state *state, t_philosopher *philosopher, int i);
+void		endcase_grief(t_state *state, t_philosopher *philosopher, int i);
+void		endcase_satiety(t_state *state, t_philosopher *philosopher, int i);
 
 // fork_utils.c
 int     take_left_fork(t_state *state, int i);

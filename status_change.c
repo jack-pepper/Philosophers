@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 00:57:41 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 10:40:28 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philoso
 
 void	die(t_state *state, t_philosopher *philosopher)
 {
-	drop_forks_in_agony(state, philosopher, philosopher->id - 1);
+	endcase_agony(state, philosopher, philosopher->id - 1);
 	pthread_mutex_unlock(&state->mtx_display_status);
 	pthread_mutex_destroy(&state->mtx_display_status);
 	free(philosopher->arg);
@@ -49,8 +49,8 @@ void	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 		if (philosopher->meals_eaten >= state->settings.number_of_times_each_philosopher_must_eat
 			&& verify_satiety(state) == true)
 		{
-				// [TODO] Stop sim if all are full
-				;
+			endcase_satiety(state, philosopher, philosopher->id - 1);
+			return ;
 		}
 	}
 	pthread_mutex_unlock(&(state->clock.mtx_get_time));

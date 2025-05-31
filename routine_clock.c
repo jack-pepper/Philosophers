@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 00:48:19 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/05/31 10:05:35 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 	return (0);
 }
 
-void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
+/*void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
 {
 	int	next_i;
 
@@ -100,7 +100,7 @@ void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
 	else
 		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
 	return ;
-}
+}*/
 
 bool	verify_satiety(t_state *state)
 {
