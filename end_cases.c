@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 23:54:37 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:20:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,25 +64,37 @@ void	endcase_die_alone(t_state *state, t_philosopher *philosopher, int i)
 		ft_usleep(1000, "[endcase_die_alone] usleep failed\n");
 		pthread_mutex_lock(&(state)->mtx_sim_state);
 	}
+	pthread_mutex_unlock(&(state)->mtx_sim_state);
 	put_left_fork(state, i);
+	free(philosopher->arg);
+	if (DEBUG == 1)
+		printf("	🗿 👼 [endcase_die_alone] philo_arg %d freed!\n", philosopher->id);
 	return ;
 }
 
 void	endcase_agony(t_state *state, t_philosopher *philosopher, int i)
 {
-	drop_forks(state, philosopher, i);
-	free(philosopher->arg);
+	if (state->settings.number_of_philosophers > 1)
+		drop_forks(state, philosopher, i);
 	if (DEBUG == 1)
 		printf("\n🥀 ⚰️  philo %d died of starvation! Something seems to exist but the individual's consciousness.\n", i + 1);
+	if (state->settings.number_of_philosophers > 1)
+	{
+		free(philosopher->arg);
+		if (DEBUG == 1)
+			printf("	🤤 👼 [endcase_die_agony] philo_arg %d freed!\n", philosopher->id);
+	}
 	return ;
 }
 
 void	endcase_grief(t_state *state, t_philosopher *philosopher, int i)
 {
 	drop_forks(state, philosopher, i);
+	if (DEBUG == 1)
+		printf("	\n❤️🩹 👴 philo %d won't eat pasta out of ethical consideration.\n", i + 1);
 	free(philosopher->arg);
 	if (DEBUG == 1)
-		printf("\n❤️🩹 👴 philo %d won't eat pasta out of ethical consideration.\n", i + 1);
+		printf("	🕯️ 👋 [endcase_grief] philo_arg %d freed!\n", philosopher->id);
 	return ;
 }
 
@@ -91,6 +103,6 @@ void	endcase_satiety(t_state *state, t_philosopher *philosopher, int i)
 	drop_forks(state, philosopher, i);
 	free(philosopher->arg);
 	if (DEBUG == 1)
-		printf("\n🍵🍃 👴 philo %d had %d meals, enough! There is measure in all things.\n", i + 1, philosopher->meals_eaten);
+		printf("\n	🍵🍃 👴 philo %d had %d meals, enough! There is measure in all things.\n", i + 1, philosopher->meals_eaten);
 	return ;
 }

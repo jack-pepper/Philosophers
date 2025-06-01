@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 23:50:15 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:18:02 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	change_status(t_state *state, uint64_t timestamp_ms,
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
+		if (DEBUG == 1)
+			printf("	🍽️ 😩 [change_status] last_meal: %ld\n", philosopher->last_meal_time_ms);
 		die(state, philosopher);
 		return ;
 	}
@@ -36,7 +38,7 @@ void	die(t_state *state, t_philosopher *philosopher)
 	endcase_agony(state, philosopher, philosopher->id - 1);
 	pthread_mutex_unlock(&state->mtx_display_status);
 	pthread_mutex_destroy(&state->mtx_display_status);
-	free(philosopher->arg);
+	//free(philosopher->arg);
 	return ;
 }
 

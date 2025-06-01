@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 23:20:25 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 14:54:22 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 # define STDOUT 1
 # define STDERR 2

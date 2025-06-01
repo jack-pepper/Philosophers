@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/30 22:43:46 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:02:26 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ int	create_philo_threads(t_state *state, int nb_guests)
 	i = 0;
 	while (i < nb_guests)
 	{
+
+		state->philosophers[i].arg = set_philo_arg(state, arg, i, nb_guests);	
 		arg = state->philosophers[i].arg;
-		arg = set_philo_arg(state, arg, i, nb_guests);
 		if (arg == NULL)
 			return (1);
 
