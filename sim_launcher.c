@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 15:02:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 21:35:32 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@ int	launch_death_clock(t_state *state)
 {
 	if (DEBUG == 1)
 		printf("	\n 🕰️ [launch_death_clock] Launching death clock...\n");
-	
 	while (gettimeofday(&state->clock.cur_time, NULL) != 0)
 		;
 	//if (gettimeofday(&state->clock.cur_time, NULL) != 0) // while or if?
 	//	printf("	❌ gettimeofday fail\n");
-
 	set_start_time(state);
 	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
 		return (1);
@@ -35,20 +33,19 @@ int	launch_death_clock(t_state *state)
 int	create_philo_threads(t_state *state, int nb_guests)
 {
 	t_philo_arg	*arg;
-	int		i;
+	int			i;
 
 	if (DEBUG == 1)
 		printf("\n🧵 [create_philo_threads]\n");
 	i = 0;
 	while (i < nb_guests)
 	{
-
-		state->philosophers[i].arg = set_philo_arg(state, arg, i, nb_guests);	
+		state->philosophers[i].arg = set_philo_arg(state, arg, i, nb_guests);
 		arg = state->philosophers[i].arg;
 		if (arg == NULL)
 			return (1);
-
-		if (pthread_create(&state->philosophers[i].thread, NULL, &philo_routine, arg) != 0)
+		if (pthread_create(&state->philosophers[i].thread, NULL,
+				&philo_routine, arg) != 0)
 		{
 			// free memory depending of i
 			return (1);
@@ -60,7 +57,8 @@ int	create_philo_threads(t_state *state, int nb_guests)
 	return (0);
 }
 
-t_philo_arg	*set_philo_arg(t_state *state, t_philo_arg *arg, int i, int nb_guests)
+t_philo_arg	*set_philo_arg(t_state *state, t_philo_arg *arg,
+			int i, int nb_guests)
 {
 	arg = malloc(sizeof(t_philo_arg));
 	if (!arg)
@@ -88,16 +86,8 @@ int	join_philo_threads(t_state *state, int nb_guests)
 			return (1);
 		}
 		if (DEBUG == 1)
-			printf("	✅ thread philo %d terminated!\n", i);
-		
-		//state->philosophers[i].last_meal_time_ms = get_timestamp_ms(&state->clock.cur_time);
-		//if (DEBUG == 1)
-		//	printf("	😫 last_meal: %ld\n", state->philosophers[i].last_meal_time_ms);
+			printf("\n	✅ thread philo %d terminated!\n", i);
 		i++;
 	}
-//	if (pthread_join(state->clock.thread, NULL) != 0)
-//		return (1);
-//	if (DEBUG == 1)
-//		printf("	✅ thread clock %d terminated!\n", i);
 	return (0);
 }

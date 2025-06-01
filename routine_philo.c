@@ -6,17 +6,16 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 23:52:08 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 21:39:03 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// INSTEAD OF GETTING TIMESTAMP several times, add time_to_eat / time_to_sleep
-// to the previous timestamp?
 void	*philo_routine(void *arg)
 {
 	t_philo_arg	*this_arg;
+	int			res;
 	int			i;
 	int			next_i;
 
@@ -31,110 +30,74 @@ void	*philo_routine(void *arg)
 		endcase_die_alone(this_arg->state,
 			&(*this_arg->state).philosophers[i], i);
 	else
-		have_council(&(*this_arg->state), i, next_i);
+	{
+		res = have_council(&(*this_arg->state), i, next_i);
+		ft_mutex_lock(&(*this_arg->state).mtx_sim_state);
+		if (this_arg->state->philosophers[i].is_alive == false)
+		{
+			ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
+			endcase_agony(this_arg->state, &(this_arg->state)->philosophers[i], i);
+			return (0);
+		}
+		ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
+		if (res == EXIT_GRIEF)
+			endcase_grief(this_arg->state, &(this_arg->state)->philosophers[i], i);
+		else if (res == EXIT_SATIETY)
+			endcase_satiety(this_arg->state, &(this_arg->state)->philosophers[i], i);
+	}
+	return (0);
+}
+
+int	set_next_i(t_state *state, int i, int *next_i)
+{
+	if (i == state->settings.number_of_philosophers - 1)
+		(*next_i) = 0;
+	else
+		(*next_i) = i + 1;
+	return ((*next_i));
+}
+
+int	wait_sim_start(t_state *state)
+{
+	ft_mutex_lock(&(state->mtx_sim_state));
+	while (!state->simulation_on)
+	{
+		ft_mutex_unlock(&(state->mtx_sim_state));
+		ft_usleep(1000, "[wait sim_start] usleep failed\n");
+		ft_mutex_lock(&(state->mtx_sim_state));
+		if (DEBUG == 1)
+			printf("        🔒 mtx_sim_state: locked (simulation_on is FALSE: waiting...)\n");
+	}
+	ft_mutex_unlock(&(state->mtx_sim_state));
+	if (DEBUG == 1)
+		printf("        🔓 mtx_sim_state: unlocked (simulation_on is TRUE: let's go!)\n");
 	return (0);
 }
 
 int	have_council(t_state *state, int i, int next_i)
 {
+	int		res;
 	uint64_t	timestamp_ms;
 
+	res = 0;
 	timestamp_ms = 0;
 	pthread_mutex_lock(&(state)->mtx_sim_state);
 	while (state->simulation_on == true)
 	{
-		pthread_mutex_unlock(&(state)->mtx_sim_state);
-		if (wait_forks(state, timestamp_ms, i, next_i) != 0
-			|| eat_pasta(state, timestamp_ms, i, next_i) != 0
-			|| take_a_nap(state, timestamp_ms, i) != 0
-			|| think(state, timestamp_ms, i) != 0)
-		{
-			endcase_grief(state, &(state)->philosophers[i], i);
-			return (0);
-		}
-		pthread_mutex_lock(&(state)->mtx_sim_state);
+		ft_mutex_unlock(&(state)->mtx_sim_state);
+		res = wait_forks(state, timestamp_ms, i, next_i);
+		if (check_exit_case(res) != 0)
+			return (res);
+		res = eat_pasta(state, timestamp_ms, i, next_i);
+		if (check_exit_case(res) != 0)
+			return (res);
+		res = take_a_nap(state, timestamp_ms, i);	
+		if (check_exit_case(res) != 0)
+			return (res);
+		res = think(state, timestamp_ms, i);	
+		if (check_exit_case(res) != 0)
+			return (res);
+		ft_mutex_lock(&(state)->mtx_sim_state);
 	}
-	return (0);
-}
-
-/*
-int	wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i)
-{
-	if (is_sim_on(state) != 0)
-		return (1);
-	take_left_fork(state, i);
-	if (is_sim_on(state) != 0)
-	{
-		put_left_fork(state, i);
-		return (1);
-	}
-	timestamp_ms = calc_timestamp_ms(state, i);
-	change_status(state, timestamp_ms, &(state)->philosophers[i], FORK_MSG);
-
-	take_right_fork(state, i, next_i);
-	if (is_sim_on(state) != 0)
-	{
-		put_right_fork(state, i, next_i);
-		put_left_fork(state, i);
-		return (1);
-	}
-	timestamp_ms = calc_timestamp_ms(state, i);
-	change_status(state, timestamp_ms, &(state)->philosophers[i], FORK_MSG);
-	return (0);
-}
-*/
-
-int	wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i)
-{
-	if (is_sim_on(state) != 0)
-		return (1);
-	if (state->philosophers[i].is_left_handed == true)
-		left_handed_case(state, timestamp_ms, i, next_i);
-	else
-		right_handed_case(state, timestamp_ms, i, next_i);
-	return (0);
-}
-
-int	left_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i)
-{
-	take_left_fork(state, i);
-	if (is_sim_on(state) != 0)
-	{
-		put_left_fork(state, i);
-		return (1);
-	}
-	timestamp_ms = calc_timestamp_ms(state, i);
-	change_status(state, timestamp_ms, &(state)->philosophers[i], FORK_MSG);
-	take_right_fork(state, i, next_i);
-	if (is_sim_on(state) != 0)
-	{
-		put_right_fork(state, i, next_i);
-		put_left_fork(state, i);
-		return (1);
-	}
-	timestamp_ms = calc_timestamp_ms(state, i);
-	change_status(state, timestamp_ms, &(state)->philosophers[i], FORK_MSG);
-	return (0);
-}
-
-int	right_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i)
-{
-	take_right_fork(state, i, next_i);
-	if (is_sim_on(state) != 0)
-	{
-		put_right_fork(state, i, next_i);
-		return (1);
-	}
-	timestamp_ms = calc_timestamp_ms(state, i);
-	change_status(state, timestamp_ms, &(state)->philosophers[i], FORK_MSG);
-	take_left_fork(state, i);
-	if (is_sim_on(state) != 0)
-	{
-		put_left_fork(state, i);
-		put_right_fork(state, i, next_i);
-		return (1);
-	}
-	timestamp_ms = calc_timestamp_ms(state, i);
-	change_status(state, timestamp_ms, &(state)->philosophers[i], FORK_MSG);
 	return (0);
 }

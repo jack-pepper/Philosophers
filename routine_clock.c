@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 23:35:56 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 21:31:15 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,52 +16,52 @@
 void	*clock_routine(void *arg)
 {
 	t_state		*state;
-	int		res;
 
 	state = (t_state *)arg;
-//	if (!state)
-//		return (NULL);
 	if (DEBUG == 1)
-		printf("\n🕰️ [clock_routine] Starting routine...\n");	
+		printf("\n🕰️ [clock_routine] Starting routine...\n");
 	set_sim_status(state, true);
-	res = toll_the_bell(state);
-	if (res != 0)
-		return (NULL);
+	toll_the_bell(state);
 	return (NULL);
 }
 
-int	toll_the_bell(t_state *state)
+void	toll_the_bell(t_state *state)
 {
 	volatile uint64_t	now_time;
 
-	pthread_mutex_lock(&(state->mtx_sim_state));
+	ft_mutex_lock(&(state->mtx_sim_state));
 	while (state->simulation_on == true)
 	{
-		pthread_mutex_unlock(&(state->mtx_sim_state));
+		ft_mutex_unlock(&(state->mtx_sim_state));
 		while (are_philo_threads_all_set(state) != 0)
 			ft_usleep(1000, "[wait sim_start] usleep failed\n");
+		// if satiety reached: let the clock finish!
+		// return ;
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
 		{
 			if (DEBUG == 1)
-				printf("\n🔔 👻 ⏳ Philosophers, settle your paradoxes: your time has come.\n");
-			return (0);
-		}	
+			{
+				printf("\n🔔 👻 ⏳ Philosophers, settle your paradoxes...\n");
+				printf("	It's time to leave.\n");
+			}
+			return ;
+		}
 		ft_usleep(1000, "[toll_the_bell] usleep failed\n");
-		pthread_mutex_lock(&(state->mtx_sim_state));
+		ft_mutex_lock(&(state->mtx_sim_state));
 	}
-	return (0);
+	return ;
 }
 
 // Called by the clock routine to check if any of the philosophers died
 int	take_pulse(t_state *state, uint64_t timestamp_ms)
 {
-	int	        i;
+	int		i;
 	uint64_t	starving_since;
 
 	i = 0;
 	while (i < state->settings.number_of_philosophers)
-	{	
+	{
 		starving_since = calc_starvation_duration(state, i);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
@@ -73,34 +73,6 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 	}
 	return (0);
 }
-
-/*void	drop_forks_in_agony(t_state *state, t_philosopher *philosopher, int i)
-{
-	int	next_i;
-
-	if (i == state->settings.number_of_philosophers - 1)
-		next_i = 0;
-	else
-		next_i = i + 1;
-
-	pthread_mutex_lock(&(state)->philosophers[i].mtx_has_left_fork);
-	if (philosopher->has_left_fork == true)
-	{
-		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
-		put_left_fork(state, philosopher->id - 1);
-	}
-	else
-		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
-	pthread_mutex_lock(&(state)->philosophers[i].mtx_has_right_fork);
-	if (philosopher->has_right_fork == true)
-	{
-		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
-		put_right_fork(state, philosopher->id - 1, next_i);
-	}
-	else
-		pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
-	return ;
-}*/
 
 bool	verify_satiety(t_state *state)
 {
@@ -117,5 +89,8 @@ bool	verify_satiety(t_state *state)
 			return (false);
 		i++;
 	}
+	ft_mutex_lock(&state->mtx_philo_all_fed_up);
+	state->philo_all_fed_up = true;
+	ft_mutex_unlock(&state->mtx_philo_all_fed_up);
 	return (true);
 }

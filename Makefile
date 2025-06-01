@@ -6,7 +6,7 @@
 #    By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 09:35:38 by mmalie            #+#    #+#              #
-#    Updated: 2025/05/31 22:06:25 by mmalie           ###   ########.fr        #
+#    Updated: 2025/06/01 22:20:50 by mmalie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRC = philo.c \
 	routine_clock.c \
 	status_change.c \
 	routine_philo.c \
+	forks_algorithm.c \
 	philo_actions.c \
 	end_cases.c \
 	forks_utils.c \

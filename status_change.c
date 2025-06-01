@@ -6,48 +6,62 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 15:18:02 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 21:51:31 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	change_status(t_state *state, uint64_t timestamp_ms,
+int	change_status(t_state *state, uint64_t timestamp_ms,
 		t_philosopher *philosopher, char *status)
 {
-	pthread_mutex_lock(&state->mtx_display_status);
+	int	res;
+
+	ft_mutex_lock(&state->mtx_display_status);
 	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
-		if (DEBUG == 1)
-			printf("	🍽️ 😩 [change_status] last_meal: %ld\n", philosopher->last_meal_time_ms);
 		die(state, philosopher);
-		return ;
+		return (EXIT_GRIEF);
 	}
-	pthread_mutex_unlock(&state->mtx_display_status);
+	ft_mutex_unlock(&state->mtx_display_status);
 	if (ft_strcmp(status, EAT_MSG) == 0)
-		eat(state, philosopher, timestamp_ms);
+	{
+		res = eat(state, philosopher, timestamp_ms) != 0;
+		if (res == EXIT_SATIETY)
+			return (EXIT_SATIETY);
+	}
 	else if (ft_strcmp(status, SLEEP_MSG) == 0)
 		nap(state);
-	else
-		return ;
+	return (0);
 }
 
 void	die(t_state *state, t_philosopher *philosopher)
 {
-	endcase_agony(state, philosopher, philosopher->id - 1);
-	pthread_mutex_unlock(&state->mtx_display_status);
+	if (DEBUG == 1)
+		printf("	🍽️ 😩 [change_status] last_meal: %ld\n",
+			philosopher->last_meal_time_ms);
+	ft_mutex_lock(&state->mtx_sim_state);
+	if (state->settings.number_of_philosophers > 1)
+		drop_forks(state, philosopher, philosopher->id - 1);
+	if (DEBUG == 1)
+	{
+		printf("\n🥀 ⚰️  philo %d died of starvation!\n", philosopher->id);
+		printf("	...\n");
+	}
+	philosopher->is_alive = false;
+	ft_mutex_unlock(&state->mtx_sim_state);
+	ft_mutex_unlock(&state->mtx_display_status);
 	pthread_mutex_destroy(&state->mtx_display_status);
-	//free(philosopher->arg);
 	return ;
 }
 
-void	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
+int	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 {
 	int	satiety;
 
 	satiety = state->settings.number_of_times_each_philosopher_must_eat;
-	pthread_mutex_lock(&(state->clock.mtx_get_time));
+	ft_mutex_lock(&(state->clock.mtx_get_time));
 	philosopher->last_meal_time_ms = timestamp_ms;
 	if (satiety > 0)
 	{
@@ -55,14 +69,15 @@ void	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 		if (philosopher->meals_eaten >= satiety
 			&& verify_satiety(state) == true)
 		{
-			endcase_satiety(state, philosopher, philosopher->id - 1);
-			return ;
+			endcase_satiety(state, philosopher,
+				philosopher->id - 1);
+			return (EXIT_SATIETY);
 		}
 	}
-	pthread_mutex_unlock(&(state->clock.mtx_get_time));
+	ft_mutex_unlock(&(state->clock.mtx_get_time));
 	ft_usleep((int)state->settings.time_to_eat * 1000,
 		"[change_status] usleep failed\n");
-	return ;
+	return (0);
 }
 
 void	nap(t_state *state)

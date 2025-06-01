@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 10:29:30 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/01 23:03:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,73 +17,66 @@ int	main(int argc, char **argv)
 	t_state	state;
 
 	memset(&state, 0, sizeof(t_state));
-
 	// PARSING ARGS LOGIC HERE
-	
 	if (DEBUG == 1)
 		printf("argc: %d\n", argc); // temp for DEBUG
 	store_args(argv, &state.settings);
 	if (DEBUG == 1)
-		display_settings(&state.settings);	
+		display_settings(&state.settings);
 	if (initer(&state, state.settings.number_of_philosophers) != 0)
-		return (ft_ret(1, "[main] err: on initer()\n", STDERR));
+		return (ft_ret(1, ERR_INITER, STDERR));
 	if (DEBUG == 1)
-		printf("\n🎉 [main] State initiated!\n");
+		printf(SUC_INITER);
 	if (launch_simulation(&state, state.settings.number_of_philosophers) != 0)
-		return (ft_ret(1, "[main] err: on launch_simulation()\n", STDERR));
+		return (ft_ret(1, ERR_LAUNCH_SIMULATION, STDERR));
 	if (DEBUG == 1)
-		printf("\n╰┈➤🚪 [main] Freeing & exiting program.\n");
+		printf(EXIT_MESSAGE);
 	return (free_on_exit(&state));
 }
 
 int	initer(t_state *state, int nb_guests)
 {
 	if (!state)
-		return (ft_ret(1, "❌ [initer] err: !state\n", STDERR));
+		return (ft_ret(1, ERR_STATE, STDERR));
 	if (init_barrier(state) != 0)
-		return (ft_ret(1, "❌ [initer] err: init_barrier\n", STDERR));
+		return (ft_ret(1, ERR_INIT_BARRIER, STDERR));
 	if (init_forks(state, nb_guests) != 0)
-		return (ft_ret(1, "❌ [initer] err: init_forks\n", STDERR));
-	if (DEBUG == 1)
-		printf("🚀🍴 [initer] INIT_FORKS COMPLETE!\n");
+		return (ft_ret(1, ERR_INIT_FORKS, STDERR));
 	if (init_philosophers(state, nb_guests) != 0)
 	{
 		free(state->forks);
-		return (ft_ret(1, "❌ [initer] err: init_philosophers\n", STDERR));
+		return (ft_ret(1, ERR_INIT_PHILOSOPHERS, STDERR));
 	}
-	if (DEBUG == 1)
-		printf("🚀👴 [initer] INIT_PHILOSOPHERS COMPLETE!\n");
 	if (init_mutexes(state, nb_guests) != 0)
 	{
 		free(state->forks);
 		free(state->philosophers);
-		return (ft_ret(1, "❌ [initer] err: init_mutexes\n", STDERR));
+		return (ft_ret(1, ERR_INIT_MUTEXES, STDERR));
 	}
-	if (DEBUG == 1)
-		printf("🚀🔐 [initer] INIT_MUTEXES COMPLETE!\n");
 	return (0);
 }
 
 int	launch_simulation(t_state *state, int nb_guests)
 {
 	if (DEBUG == 1)
-		printf("\n🥽 [launch_simulation] Launching simulation...\n");
+		printf(SUC_LAUNCH_SIMULATION);
 	(*state).philo_all_set = false;
+	(*state).philo_all_fed_up = false;
 	if (launch_death_clock(state) != 0)
-		return (ft_ret(1, "❌ [launch_simulation] error in launch_death_clock!\n", STDERR));
+		return (ft_ret(1, ERR_LAUNCH_DEATH_CLOCK, STDERR));
 	if (DEBUG == 1)
-		printf("	✅ [launch_simulation] death clock launched!\n");
+		printf(SUC_LAUNCH_DEATH_CLOCK);
 	if (create_philo_threads(state, nb_guests) != 0)
-		return (ft_ret(1, "❌ [launch_simulation] error in create_philo_threads!\n", STDERR));
+		return (ft_ret(1, ERR_CREATE_PHILO_THREADS, STDERR));
 	if (DEBUG == 1)
-		printf("	✅ [launch_simulation] philo threads created!\n");	
+		printf(SUC_CREATE_PHILO_THREADS);
 	if (pthread_join(state->clock.thread, NULL) != 0)
-		return (1);
+		return (ft_ret(1, ERR_JOIN_CLOCK_THREAD, STDERR));
 	if (DEBUG == 1)
-		printf("        ✅ [launch_simulation] thread clock terminated!\n");
+		printf(SUC_JOIN_CLOCK_THREAD);
 	if (join_philo_threads(state, nb_guests) != 0)
-		return (ft_ret(1, "❌ [launch_simulation] error in join_philo_threads!\n", STDERR));
+		return (ft_ret(1, ERR_JOIN_PHILO_THREADS, STDERR));
 	if (DEBUG == 1)
-		printf("	✅ [launch_simulation] philo threads all terminated!\n");
+		printf(SUC_JOIN_PHILO_THREADS);
 	return (0);
 }
