@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 23:23:12 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/07 23:26:43 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 # define STDOUT 1
 # define STDERR 2
@@ -67,6 +67,7 @@
 # define ERR_MTX_INIT_SIM_STATE "❌ Error on pthread_mutex_init(sim_state)\n"
 # define ERR_MTX_INIT_THREADS_READY "❌ Error on pthread_mutex_init(threads_ready)\n"
 # define ERR_MTX_INIT_PHILO_ALL_SET "❌ Error on pthread_mutex_init(philo_all_set)\n"
+# define ERR_MTX_INIT_MEALS "❌ Error on pthread_mutex_init(meals)\n"
 # define ERR_MTX_INIT_PHILO_ALL_FED_UP "❌ Error on pthread_mutex_init(philo_all_fed_up)\n"
 
 
@@ -83,6 +84,7 @@
 # define ERR_MTX_DEST_PHILO_ALL_SET "❌ Error on pthread_mutex_destroy(philo_all_set)\n"
 
 # define ERR_MTX_DEST_FORK "❌ Error on pthread_mutex_destroy(mtx_fork): fork "
+# define ERR_MTX_DEST_MEALS "❌ Error on pthread_mutex_destroy(mtx_meals): meals "
 # define ERR_MTX_DEST_IS_TAKEN "❌ Error on pthread_mutex_destroy(is_taken): fork "
 # define ERR_MTX_DEST_HAS_LEFT_FORK "❌ Error on pthread_mutex_destroy(has_left_work): philosopher "
 # define ERR_MTX_DEST_HAS_RIGHT_FORK "❌ Error on pthread_mutex_destroy(has_right_fork): philosopher "
@@ -113,6 +115,7 @@ typedef struct s_philosopher
 	struct s_philo_arg	*arg;
 	pthread_mutex_t		mtx_has_left_fork;
 	pthread_mutex_t		mtx_has_right_fork;
+	pthread_mutex_t		mtx_meals;
 	struct timeval		cur_time;
 	uint64_t		cur_time_ms;
 	struct timeval		last_meal_time;

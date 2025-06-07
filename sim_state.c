@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:26:24 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 21:23:34 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/07 22:47:24 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ int	are_philo_all_fed_up(t_state *state)
 		if (state->philo_all_fed_up == false)
 		{
 			ft_mutex_unlock(&(state)->mtx_philo_all_fed_up);
-			return (1);
+			return (0);
 		}
 		ft_mutex_unlock(&(state)->mtx_philo_all_fed_up);
 	}
-	return (0);
+	return (1);
 }

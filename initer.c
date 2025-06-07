@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 23:05:24 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/07 23:30:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,17 +87,17 @@ int	init_mutexes(t_state *state, int nb_guests)
 	if (init_fork_mutexes(state, nb_guests, &i) != 0)
 		return (1);
 	if (pthread_mutex_init(&state->mtx_display_status, NULL) != 0)
-		return (clean_ret(state, ERR_MTX_INIT_DISPLAY_STATUS, &i, 5));
+		return (clean_ret(state, ERR_MTX_INIT_DISPLAY_STATUS, &i, 6));
 	if (pthread_mutex_init(&state->clock.mtx_get_time, NULL) != 0)
-		return (clean_ret(state, ERR_MTX_INIT_GET_TIME, &i, 6));
+		return (clean_ret(state, ERR_MTX_INIT_GET_TIME, &i, 7));
 	if (pthread_mutex_init(&state->mtx_sim_state, NULL) != 0)
-		return (clean_ret(state, ERR_MTX_INIT_SIM_STATE, &i, 7));
+		return (clean_ret(state, ERR_MTX_INIT_SIM_STATE, &i, 8));
 	if (pthread_mutex_init(&state->mtx_threads_ready, NULL) != 0)
-		return (clean_ret(state, ERR_MTX_INIT_THREADS_READY, &i, 8));
+		return (clean_ret(state, ERR_MTX_INIT_THREADS_READY, &i, 9));
 	if (pthread_mutex_init(&state->mtx_philo_all_set, NULL) != 0)
-		return (clean_ret(state, ERR_MTX_INIT_PHILO_ALL_SET, &i, 9));
+		return (clean_ret(state, ERR_MTX_INIT_PHILO_ALL_SET, &i, 10));
 	if (pthread_mutex_init(&state->mtx_philo_all_fed_up, NULL) != 0)
-		return (clean_ret(state, ERR_MTX_INIT_PHILO_ALL_FED_UP, &i, 9));
+		return (clean_ret(state, ERR_MTX_INIT_PHILO_ALL_FED_UP, &i, 11));
 	if (DEBUG == 1)
 		printf(SUC_INIT_MUTEXES);
 	return (0);

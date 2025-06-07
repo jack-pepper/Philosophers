@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 21:51:31 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/07 23:43:36 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,17 @@ void	die(t_state *state, t_philosopher *philosopher)
 int	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 {
 	int	satiety;
+	int	meals_eaten;
 
 	satiety = state->settings.number_of_times_each_philosopher_must_eat;
 	ft_mutex_lock(&(state->clock.mtx_get_time));
 	philosopher->last_meal_time_ms = timestamp_ms;
 	if (satiety > 0)
 	{
-		philosopher->meals_eaten += 1;
-		if (philosopher->meals_eaten >= satiety
+		ft_mutex_lock(&(philosopher->mtx_meals));
+		meals_eaten = philosopher->meals_eaten += 1;
+		ft_mutex_unlock(&(philosopher->mtx_meals));
+		if (meals_eaten >= satiety
 			&& verify_satiety(state) == true)
 		{
 			endcase_satiety(state, philosopher,
