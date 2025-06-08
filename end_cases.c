@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/07 22:53:35 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/08 22:30:52 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,11 +113,11 @@ void	endcase_grief(t_state *state, t_philosopher *philosopher, int i)
 void	endcase_satiety(t_state *state, t_philosopher *philosopher, int i)
 {
 	drop_forks(state, philosopher, i);
-	//free(philosopher->arg);
+	free(philosopher->arg);
 	if (DEBUG == 1)
 	{
 		printf("\n🍵🍃 [endcase_satiety]\n");
-		printf("	👴 philo %d had %d meals, enough!\nThere is measure in all things.\n", philosopher->id, philosopher->meals_eaten);
+		printf("	👴 philo %d had %d meals, enough!", philosopher->id, philosopher->meals_eaten);
 		printf("	There is measure in all things.\n");	
 		printf("	philo_arg %d freed!\n", philosopher->id);
 	}

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 19:55:10 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/08 21:12:27 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,29 @@ int	take_right_fork(t_state *state, int i, int next_i)
 
 int	put_left_fork(t_state *state, int i)
 {
-	change_fork_status(state, i, false);
-	change_has_fork(state, i, "left", false);
-	ft_mutex_unlock(&(state)->forks[i].mtx_fork);
-	if (DEBUG == 1)
-		printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n",
-			i + 1, i + 1);
+	if (state->philosophers[i].has_left_fork == true)
+	{	
+		change_fork_status(state, i, false);
+		change_has_fork(state, i, "left", false);
+		ft_mutex_unlock(&(state)->forks[i].mtx_fork);
+		if (DEBUG == 1)
+			printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n",
+				i + 1, i + 1);
+	}
 	return (0);
 }
 
 int	put_right_fork(t_state *state, int i, int next_i)
 {
-	change_fork_status(state, next_i, false);
-	change_has_fork(state, i, "right", false);
-	ft_mutex_unlock(&(state)->forks[next_i].mtx_fork);
-	if (DEBUG == 1)
-		printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n",
-			i + 1, next_i + 1);
+	if (state->philosophers[i].has_right_fork == true)
+	{
+		change_fork_status(state, next_i, false);
+		change_has_fork(state, i, "right", false);
+		ft_mutex_unlock(&(state)->forks[next_i].mtx_fork);
+		if (DEBUG == 1)
+			printf("        🔓 👴 philo %d unlocked fork 🍴 %d!\n",
+				i + 1, next_i + 1);
+	}
 	return (0);
 }
 

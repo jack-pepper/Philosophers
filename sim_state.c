@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:26:24 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/07 22:47:24 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/08 22:37:40 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	are_philo_threads_all_set(t_state *state)
 
 int	are_philo_all_fed_up(t_state *state)
 {
+	if (state->settings.number_of_times_each_philosopher_must_eat < 1)
+		return (0);
 	if (state->settings.number_of_times_each_philosopher_must_eat > 0)
 	{
 		ft_mutex_lock(&(state)->mtx_philo_all_fed_up);

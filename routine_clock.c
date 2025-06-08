@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/07 23:51:28 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/08 22:29:08 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	toll_the_bell(t_state *state)
 		ft_mutex_unlock(&(state->mtx_sim_state));
 		while (are_philo_threads_all_set(state) != 0)
 			ft_usleep(1000, "[wait sim_start] usleep failed\n");
-		if (verify_satiety(state) == true)
+		if (state->settings.number_of_times_each_philosopher_must_eat > 0
+			&& verify_satiety(state) == true)
 			return ;
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
@@ -82,6 +83,8 @@ bool	verify_satiety(t_state *state)
 	int	nb_meals;
 
 	satiety = state->settings.number_of_times_each_philosopher_must_eat;
+	if (satiety < 1)
+		return (false);
 	nb_guests = state->settings.number_of_philosophers;
 	i = 0;
 	while (i < nb_guests)
