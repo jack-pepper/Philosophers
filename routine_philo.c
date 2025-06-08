@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/08 22:56:52 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/08 23:49:26 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	have_council(t_state *state, int i, int next_i)
 		res = think(state, timestamp_ms, i);
 		if (check_exit_case(res) != 0)
 			return (res);
+		ft_mutex_lock(&(state)->mtx_sim_state);
 	}	
 	ft_mutex_unlock(&(state)->mtx_sim_state);
 	return (0);
