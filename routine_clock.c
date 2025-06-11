@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/08 22:29:08 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/11 22:32:53 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	*clock_routine(void *arg)
 	if (DEBUG == 1)
 		printf("\n🕰️ [clock_routine] Starting routine...\n");
 	set_sim_status(state, true);
+	while (are_philo_threads_all_set(state) != 0)
+		ft_usleep(1000, "[wait sim_start] usleep failed\n");
 	toll_the_bell(state);
 	return (NULL);
 }
@@ -28,26 +30,20 @@ void	*clock_routine(void *arg)
 void	toll_the_bell(t_state *state)
 {
 	volatile uint64_t	now_time;
+	int			satiety;
 
+	satiety = state->settings.number_of_times_each_philosopher_must_eat;
 	ft_mutex_lock(&(state->mtx_sim_state));
 	while (state->simulation_on == true)
 	{
 		ft_mutex_unlock(&(state->mtx_sim_state));
-		while (are_philo_threads_all_set(state) != 0)
-			ft_usleep(1000, "[wait sim_start] usleep failed\n");
 		if (state->settings.number_of_times_each_philosopher_must_eat > 0
-			&& verify_satiety(state) == true)
+			&& verify_satiety(state, state->settings.number_of_philosophers,
+					satiety) == true)
 			return ;
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
-		{
-			if (DEBUG == 1)
-			{
-				printf("\n🔔 👻 ⏳ Philosophers, settle your paradoxes...\n");
-				printf("	It's time to leave.\n");
-			}
 			return ;
-		}
 		ft_usleep(1000, "[toll_the_bell] usleep failed\n");
 		ft_mutex_lock(&(state->mtx_sim_state));
 	}
@@ -67,7 +63,12 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
 			set_sim_status(state, false);
-			change_status(state, timestamp_ms, &state->philosophers[i], "died");
+			change_status(state, timestamp_ms, &state->philosophers[i], "died");	
+			if (DEBUG == 1)
+			{
+				printf("\n🔔 👻 ⏳ Philosophers, settle your paradoxes...\n");
+				printf("	It's time to leave.\n");
+			}
 			return (1);
 		}
 		i++;
@@ -75,17 +76,13 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 	return (0);
 }
 
-bool	verify_satiety(t_state *state)
+bool	verify_satiety(t_state *state, int nb_guests, int satiety)
 {
 	int	i;
-	int	satiety;
-	int	nb_guests;
 	int	nb_meals;
 
-	satiety = state->settings.number_of_times_each_philosopher_must_eat;
 	if (satiety < 1)
 		return (false);
-	nb_guests = state->settings.number_of_philosophers;
 	i = 0;
 	while (i < nb_guests)
 	{

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/08 23:49:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/11 22:47:04 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	*philo_routine(void *arg)
 {
 	t_philo_arg	*this_arg;
-	int			res;
 	int			i;
 	int			next_i;
 
@@ -26,25 +25,8 @@ void	*philo_routine(void *arg)
 	gandalf_barrier(&(*this_arg->state));
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
-	if (this_arg->state->settings.number_of_philosophers == 1)
-		endcase_die_alone(this_arg->state,
-			&(*this_arg->state).philosophers[i], i);
-	else
-	{
-		res = have_council(&(*this_arg->state), i, next_i);
-		ft_mutex_lock(&(*this_arg->state).mtx_sim_state);
-		if (this_arg->state->philosophers[i].is_alive == false)
-		{
-			ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
-			endcase_agony(this_arg->state, &(this_arg->state)->philosophers[i], i);
-			return (0);
-		}
-		ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
-		if (res == EXIT_GRIEF)
-			endcase_grief(this_arg->state, &(this_arg->state)->philosophers[i], i);
-		else if (res == EXIT_SATIETY)
-			endcase_satiety(this_arg->state, &(this_arg->state)->philosophers[i], i);
-	}
+	
+	wait_for_death(this_arg, i, next_i);
 	return (0);
 }
 
@@ -72,6 +54,32 @@ int	wait_sim_start(t_state *state)
 	if (DEBUG == 1)
 		printf("        🔓 mtx_sim_state: unlocked (simulation_on is TRUE: let's go!)\n");
 	return (0);
+}
+
+void	wait_for_death(t_philo_arg *this_arg, int i, int next_i)
+{
+	int	res;
+
+	if (this_arg->state->settings.number_of_philosophers == 1)
+		endcase_die_alone(this_arg->state,
+			&(*this_arg->state).philosophers[i], i);
+	else
+	{
+		res = have_council(&(*this_arg->state), i, next_i);
+		ft_mutex_lock(&(*this_arg->state).mtx_sim_state);
+		if (this_arg->state->philosophers[i].is_alive == false)
+		{
+			ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
+			endcase_agony(this_arg->state, &(this_arg->state)->philosophers[i], i);
+			return ;
+		}
+		ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
+		if (res == EXIT_GRIEF)
+			endcase_grief(this_arg->state, &(this_arg->state)->philosophers[i], i);
+		else if (res == EXIT_SATIETY)
+			endcase_satiety(this_arg->state, &(this_arg->state)->philosophers[i], i);
+	}
+	return ;
 }
 
 int	have_council(t_state *state, int i, int next_i)

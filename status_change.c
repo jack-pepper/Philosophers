@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/08 23:11:40 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/11 21:40:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ int	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
 	int	satiety;
 
 	satiety = state->settings.number_of_times_each_philosopher_must_eat;
-	ft_mutex_lock(&(state->clock.mtx_get_time));
-	philosopher->last_meal_time_ms = timestamp_ms;
-	ft_mutex_unlock(&(state->clock.mtx_get_time));
+	timestamp_ms++, timestamp_ms--;
+	//ft_mutex_lock(&(state->clock.mtx_get_time));
+	//philosopher->last_meal_time_ms = timestamp_ms;
+	//ft_mutex_unlock(&(state->clock.mtx_get_time));
 	ft_usleep((int)state->settings.time_to_eat * 1000,
 		"[change_status] usleep failed\n");
 	if (satiety > 0)

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/09 00:02:45 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/11 23:08:46 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ int		break_through(t_state *state);
 void		*clock_routine(void *arg);
 void		toll_the_bell(t_state *state);
 int		take_pulse(t_state *state, uint64_t timestamp_ms);
-bool    	verify_satiety(t_state *state);
+bool    	verify_satiety(t_state *state, int nb_guests, int satiety);
 
 // status_change.c
 int		change_status(t_state *state, uint64_t timestamp_ms, t_philosopher *philosopher, char *status);
@@ -236,8 +236,10 @@ void		*philo_routine(void *arg);
 int		set_next_i(t_state *state, int i, int *next_i);
 int		wait_sim_start(t_state *state);
 int		have_council(t_state *state, int i, int next_i);
+void		wait_for_death(t_philo_arg *this_arg, int i, int next_i);
 
 // forks_algorithm.c
+int		is_endcase_met(t_state *state);
 int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		left_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 int		right_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
