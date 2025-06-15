@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/11 22:32:53 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 21:45:37 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	*clock_routine(void *arg)
 		printf("\n🕰️ [clock_routine] Starting routine...\n");
 	set_sim_status(state, true);
 	while (are_philo_threads_all_set(state) != 0)
-		ft_usleep(1000, "[wait sim_start] usleep failed\n");
+		ft_usleep(1000, "[clock_routine] usleep failed\n");
 	toll_the_bell(state);
 	return (NULL);
 }

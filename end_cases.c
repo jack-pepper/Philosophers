@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/11 22:56:51 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 21:54:01 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,14 @@ void	endcase_die_alone(t_state *state, t_philosopher *philosopher, int i)
 	if (DEBUG == 1)
 	{
 		printf("🗿 😔 [endcase_die_alone]\n");
-		printf("	👴 philo %d feels they had no chance to survive.\n", philosopher->id);
+		printf("	👴 philo %d felt their destiny was written\n", philosopher->id);
 		printf("	💀 👼 philo_arg %d freed!\n", philosopher->id);
 	}
 	return ;
 }
 
-void	endcase_agony(t_state *state, t_philosopher *philosopher, int i)
+void	endcase_agony(t_state *state, t_philosopher *philosopher)
 {
-	i++;i--; // cleanup
 	if (state->settings.number_of_philosophers > 1)
 	{
 		ft_mutex_lock(&(state)->mtx_philo_all_fed_up);

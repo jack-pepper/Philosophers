@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/15 14:40:25 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 23:29:10 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@
 # define EXIT_ERR 1
 # define EXIT_GRIEF 2
 # define EXIT_SATIETY 3
+
+# define MIN_THREADS 1
+# define MAX_THREADS 200
+# define MIN_TIME_MS 60
+# define MAX_TIME_MS 1000000
+# define MIN_MEALS 1
+# define MAX_MEALS 1000000
 
 /* Status messages */
 # define FORK_MSG "has taken a fork"
@@ -184,6 +191,7 @@ int		initer(t_state *state, int nb_guests);
 int		launch_simulation(t_state *state, int nb_guests);
 
 // args_parser.c
+int		are_args_valid(int argc, char **argv);
 void		store_args(char **argv, t_settings *settings);
 
 // initer.c
@@ -241,8 +249,6 @@ void		wait_for_death(t_philo_arg *this_arg, int i, int next_i);
 // forks_algorithm.c
 int		is_endcase_met(t_state *state);
 int		wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i);
-int		left_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
-int		right_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 
 // fork_utils.c
 int		take_left_fork(t_state *state, int i);
@@ -262,7 +268,7 @@ int		think(t_state *state, uint64_t timestamp_ms, int i);
 
 void		drop_forks(t_state *state, t_philosopher *philosopher, int i);
 void		endcase_die_alone(t_state *state, t_philosopher *philosopher, int i);
-void		endcase_agony(t_state *state, t_philosopher *philosopher, int i);
+void		endcase_agony(t_state *state, t_philosopher *philosopher);
 void		endcase_grief(t_state *state, t_philosopher *philosopher, int i);
 void		endcase_satiety(t_state *state, t_philosopher *philosopher, int i);
 

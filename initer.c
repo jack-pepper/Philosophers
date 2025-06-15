@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/07 23:30:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 21:37:37 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,6 @@ int	init_philosophers(t_state *state, int nb_guests)
 		state->philosophers[i].last_meal_time_ms = 0;
 		state->philosophers[i].has_left_fork = false;
 		state->philosophers[i].has_right_fork = false;
-		if (i % 2 != 0)
-			state->philosophers[i].is_left_handed = true;
-		else
-			state->philosophers[i].is_left_handed = false;
 		i++;
 	}
 	if (DEBUG == 1)

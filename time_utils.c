@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:28:51 by mmalie            #+#    #+#             */
-/*   Updated: 2025/05/31 00:25:18 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 21:40:51 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ uint64_t	get_timestamp_ms(struct timeval *tv)
 	return (convert_to_ms(*tv));
 }
 
-// static inline?
 uint64_t	convert_to_ms(struct timeval time)
 {
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));

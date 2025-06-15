@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 23:03:39 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 22:18:38 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ int	main(int argc, char **argv)
 	t_state	state;
 
 	memset(&state, 0, sizeof(t_state));
-	// PARSING ARGS LOGIC HERE
-	if (DEBUG == 1)
-		printf("argc: %d\n", argc); // temp for DEBUG
+	if (are_args_valid(argc, argv) != 0)
+		return (free_on_exit(&state));
 	store_args(argv, &state.settings);
 	if (DEBUG == 1)
 		display_settings(&state.settings);
