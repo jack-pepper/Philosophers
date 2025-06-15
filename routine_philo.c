@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/11 22:47:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/15 14:42:53 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	*philo_routine(void *arg)
 	set_next_i(this_arg->state, i, &next_i);
 	wait_sim_start(&(*this_arg->state));
 	gandalf_barrier(&(*this_arg->state));
+	if (i % 2 == 1)
+		ft_usleep(5000, "[philo_routine] usleep failed\n");
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
 	
