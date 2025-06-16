@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 15:31:14 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 00:05:01 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 # define STDOUT 1
 # define STDERR 2
@@ -87,6 +87,7 @@
 # define ERR_MTX_DEST_SIM_STATE "❌ Err: mutex_destroy(sim_state)\n"
 # define ERR_MTX_DEST_THREADS_READY "❌ Err: mutex_destroy(threads_ready)\n"
 # define ERR_MTX_DEST_PHILO_ALL_SET "❌ Err: mutex_destroy(philo_all_set)\n"
+# define ERR_MTX_DEST_BARRIER "❌ Err: mutex_destroy(break_through)\n"
 
 # define ERR_MTX_DEST_FORK "❌ Err: mutex_destroy(mtx_fork)\n"
 # define ERR_MTX_DEST_MEALS "❌ Err: mutex_destroy(mtx_meals)\n"
@@ -250,6 +251,7 @@ void		wait_for_death(t_philo_arg *this_arg, int i, int next_i);
 int			is_endcase_met(t_state *state);
 int			wait_forks(t_state *state, uint64_t timestamp_ms,
 				int i, int next_i);
+int			left_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
 void		drop_forks(t_state *state, t_philosopher *philosopher, int i);
 void		change_has_fork(t_state *state, int i, char *side, bool has_fork);
 
@@ -295,7 +297,7 @@ void		ft_putstr_fd(char *s, int fd);
 // pthread_wrappers.c
 void		ft_mutex_lock(pthread_mutex_t *mtx);
 void		ft_mutex_unlock(pthread_mutex_t *mtx);
-int			destroy_mutex(pthread_mutex_t *mtx, char *err_msg);
+int		ft_mutex_destroy(pthread_mutex_t *mtx, char *err_msg);
 void		ft_usleep(useconds_t usec, char *err_msg);
 
 // time_utils.c
