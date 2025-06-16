@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 21:35:32 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 15:03:52 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ int	launch_death_clock(t_state *state)
 		printf("	\n 🕰️ [launch_death_clock] Launching death clock...\n");
 	while (gettimeofday(&state->clock.cur_time, NULL) != 0)
 		;
-	//if (gettimeofday(&state->clock.cur_time, NULL) != 0) // while or if?
-	//	printf("	❌ gettimeofday fail\n");
 	set_start_time(state);
 	if (pthread_create(&state->clock.thread, NULL, &clock_routine, state) != 0)
 		return (1);

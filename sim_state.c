@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:26:24 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/08 22:37:40 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 07:41:43 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,6 @@ void	set_sim_status(t_state *state, bool sim_status)
 	ft_mutex_unlock(&(state)->mtx_sim_state);
 }
 
-void	set_philo_threads_all_set(t_state *state, bool set_status)
-{
-	ft_mutex_lock(&(state)->mtx_philo_all_set);
-	state->philo_all_set = set_status;
-	ft_mutex_unlock(&(state)->mtx_philo_all_set);
-}
-
 int	is_sim_on(t_state *state)
 {
 	ft_mutex_lock(&(state)->mtx_sim_state);
@@ -36,6 +29,13 @@ int	is_sim_on(t_state *state)
 	}
 	ft_mutex_unlock(&(state)->mtx_sim_state);
 	return (0);
+}
+
+void	set_philo_threads_all_set(t_state *state, bool set_status)
+{
+	ft_mutex_lock(&(state)->mtx_philo_all_set);
+	state->philo_all_set = set_status;
+	ft_mutex_unlock(&(state)->mtx_philo_all_set);
 }
 
 int	are_philo_threads_all_set(t_state *state)

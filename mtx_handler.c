@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/07 23:40:36 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 07:45:35 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,4 @@ int	clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i)
 			return (1);
 	}
 	return (0);
-}
-
-int	destroy_mutex(pthread_mutex_t *mtx, char *err_msg)
-{
-	int	res;
-
-	res = 0;
-	if (pthread_mutex_destroy(mtx) != 0)
-	{
-		ft_putstr_fd(err_msg, STDERR);
-		res = 1;
-	}
-	return (res);
 }

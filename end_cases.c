@@ -6,35 +6,11 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/15 21:54:01 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 10:03:04 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	drop_forks(t_state *state, t_philosopher *philosopher, int i)
-{
-	int	next_i;
-
-	next_i = set_next_i(state, i, &next_i);
-	ft_mutex_lock(&(state)->philosophers[i].mtx_has_left_fork);
-	if (philosopher->has_left_fork == true)
-	{
-		ft_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
-		put_left_fork(state, philosopher->id - 1);
-	}
-	else
-		ft_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
-	ft_mutex_lock(&(state)->philosophers[i].mtx_has_right_fork);
-	if (philosopher->has_right_fork == true)
-	{
-		ft_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
-		put_right_fork(state, philosopher->id - 1, next_i);
-	}
-	else
-		ft_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
-	return ;
-}
 
 void	endcase_die_alone(t_state *state, t_philosopher *philosopher, int i)
 {
@@ -59,11 +35,7 @@ void	endcase_die_alone(t_state *state, t_philosopher *philosopher, int i)
 	put_left_fork(state, i);
 	free(philosopher->arg);
 	if (DEBUG == 1)
-	{
-		printf("🗿 😔 [endcase_die_alone]\n");
-		printf("	👴 philo %d felt their destiny was written\n", philosopher->id);
-		printf("	💀 👼 philo_arg %d freed!\n", philosopher->id);
-	}
+		endcase_msg(philosopher, "die_alone");
 	return ;
 }
 
@@ -74,12 +46,7 @@ void	endcase_agony(t_state *state, t_philosopher *philosopher)
 		ft_mutex_lock(&(state)->mtx_philo_all_fed_up);
 		free(philosopher->arg);
 		if (DEBUG == 1)
-		{
-			printf("\n🪦 😵 [endcase_die_agony]\n");
-			printf("	👴 philo %d is lying on the floor...\n", philosopher->id);
-			printf("	🤤 👼 philo_arg %d freed!\n", philosopher->id);
-			printf("	... Shouldn't we take care of the body, though?\n");
-		}
+			endcase_msg(philosopher, "agony");
 		philosopher->arg = NULL;
 		ft_mutex_unlock(&(state)->mtx_philo_all_fed_up);
 	}
@@ -97,13 +64,9 @@ void	endcase_grief(t_state *state, t_philosopher *philosopher, int i)
 	}
 	else if (philosopher->arg != NULL)
 	{
-		free(philosopher->arg);	
+		free(philosopher->arg);
 		if (DEBUG == 1)
-		{
-			printf("\n❤️🩹 [endcase_grief]\n");
-			printf("	👴 philo %d won't eat pasta out of ethical consideration.\n", philosopher->id);
-			printf("	🕯️ 👋 philo_arg %d freed!\n", philosopher->id);
-		}
+			endcase_msg(philosopher, "grief");
 		ft_mutex_unlock(&(state)->mtx_philo_all_fed_up);
 	}
 	return ;
@@ -114,11 +77,35 @@ void	endcase_satiety(t_state *state, t_philosopher *philosopher, int i)
 	drop_forks(state, philosopher, i);
 	free(philosopher->arg);
 	if (DEBUG == 1)
-	{
-		printf("\n🍵🍃 [endcase_satiety]\n");
-		printf("	👴 philo %d had %d meals, enough!", philosopher->id, philosopher->meals_eaten);
-		printf("	There is measure in all things.\n");	
-		printf("	philo_arg %d freed!\n", philosopher->id);
-	}
+		endcase_msg(philosopher, "satiety");
 	return ;
+}
+
+void	endcase_msg(t_philosopher *philo, char *endcase)
+{
+	if (ft_strcmp(endcase, "die_alone") == 0)
+	{
+		printf("🗿 😔 [endcase_die_alone]\n");
+		printf("	👴 philo %d had no escape...\n", philo->id);
+		printf("	💀 👼 philo_arg %d freed!\n", philo->id);
+	}
+	if (ft_strcmp(endcase, "agony") == 0)
+	{
+		printf("\n🪦 😵 [endcase_die_agony]\n");
+		printf("        👴 philo %d didn't make it.\n", philo->id);
+		printf("        🤤 👼 philo_arg %d freed!\n", philo->id);
+	}
+	else if (ft_strcmp(endcase, "grief") == 0)
+	{
+		printf("\n❤️🩹 [endcase_grief]: Ethics first!\n");
+		printf("        👴 philo %d won't eat.\n", philo->id);
+		printf("        🕯️  👋 philo_arg %d freed!\n", philo->id);
+	}
+	else if (ft_strcmp(endcase, "satiety") == 0)
+	{
+		printf("\n🍵🍃 [endcase_satiety]: Measure, please!\n");
+		printf("        👴 philo %d had %d meals. It's enough!\n",
+			philo->id, philo->meals_eaten);
+		printf("        philo_arg %d freed!\n", philo->id);
+	}
 }

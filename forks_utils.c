@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/08 21:12:27 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 07:18:06 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	take_right_fork(t_state *state, int i, int next_i)
 int	put_left_fork(t_state *state, int i)
 {
 	if (state->philosophers[i].has_left_fork == true)
-	{	
+	{
 		change_fork_status(state, i, false);
 		change_has_fork(state, i, "left", false);
 		ft_mutex_unlock(&(state)->forks[i].mtx_fork);

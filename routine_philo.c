@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/15 21:55:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 09:55:22 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ int	wait_sim_start(t_state *state)
 		ft_usleep(1000, "[wait sim_start] usleep failed\n");
 		ft_mutex_lock(&(state->mtx_sim_state));
 		if (DEBUG == 1)
-			printf("        🔒 mtx_sim_state: locked (simulation_on is FALSE: waiting...)\n");
+			printf("        🔒 mtx_sim_state: locked (sim OFF: waiting...)\n");
 	}
 	ft_mutex_unlock(&(state->mtx_sim_state));
 	if (DEBUG == 1)
-		printf("        🔓 mtx_sim_state: unlocked (simulation_on is TRUE: let's go!)\n");
+		printf("        🔓 mtx_sim_state: unlocked (sim ON: let's go!)\n");
 	return (0);
 }
 
@@ -71,21 +71,24 @@ void	wait_for_death(t_philo_arg *this_arg, int i, int next_i)
 		if (this_arg->state->philosophers[i].is_alive == false)
 		{
 			ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
-			endcase_agony(this_arg->state, &(this_arg->state)->philosophers[i]);
+			endcase_agony(this_arg->state,
+				&(this_arg->state)->philosophers[i]);
 			return ;
 		}
 		ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
 		if (res == EXIT_GRIEF)
-			endcase_grief(this_arg->state, &(this_arg->state)->philosophers[i], i);
+			endcase_grief(this_arg->state,
+				&(this_arg->state)->philosophers[i], i);
 		else if (res == EXIT_SATIETY)
-			endcase_satiety(this_arg->state, &(this_arg->state)->philosophers[i], i);
+			endcase_satiety(this_arg->state,
+				&(this_arg->state)->philosophers[i], i);
 	}
 	return ;
 }
 
 int	have_council(t_state *state, int i, int next_i)
 {
-	int		res;
+	int			res;
 	uint64_t	timestamp_ms;
 
 	res = 0;
@@ -100,14 +103,14 @@ int	have_council(t_state *state, int i, int next_i)
 		res = eat_pasta(state, timestamp_ms, i, next_i);
 		if (check_exit_case(res) != 0)
 			return (res);
-		res = take_a_nap(state, timestamp_ms, i);	
+		res = take_a_nap(state, timestamp_ms, i);
 		if (check_exit_case(res) != 0)
 			return (res);
 		res = think(state, timestamp_ms, i);
 		if (check_exit_case(res) != 0)
 			return (res);
 		ft_mutex_lock(&(state)->mtx_sim_state);
-	}	
+	}
 	ft_mutex_unlock(&(state)->mtx_sim_state);
 	return (0);
 }

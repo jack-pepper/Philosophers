@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/11 23:17:21 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 09:27:01 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	eat_pasta(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 		return (is_endcase_met(state));
 	timestamp_ms = calc_timestamp_ms(state, i);
 	ft_mutex_lock(&(state->clock.mtx_get_time));
-        state->philosophers[i].last_meal_time_ms = timestamp_ms;
-        ft_mutex_unlock(&(state->clock.mtx_get_time));
+	state->philosophers[i].last_meal_time_ms = timestamp_ms;
+	ft_mutex_unlock(&(state->clock.mtx_get_time));
 	res = change_status((state), timestamp_ms, &(state)->philosophers[i],
 			EAT_MSG);
 	if (res != 0)

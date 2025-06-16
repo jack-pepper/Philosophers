@@ -6,30 +6,11 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 18:17:35 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 15:23:15 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_mutex_lock(pthread_mutex_t *mtx)
-{
-	if (pthread_mutex_lock(mtx) != 0)
-	{
-		
-		// free and exit?
-		exit (EXIT_FAILURE);
-	}
-}
-
-void	ft_mutex_unlock(pthread_mutex_t *mtx)
-{
-	if (pthread_mutex_unlock(mtx) != 0)
-	{
-		// free and exit?
-		exit (EXIT_FAILURE);
-	}
-}
 
 void	display_settings(const t_settings *settings)
 {
@@ -66,43 +47,4 @@ void	ft_putstr_fd(char *s, int fd)
 			i++;
 		}
 	}
-}
-
-int	change_has_fork(t_state *state, int i, char *side, bool has_fork)
-{
-	int	res;
-
-	res = 0;
-	if (ft_strcmp(side, "left") == 0)
-	{
-		res = pthread_mutex_lock(&(state)->philosophers[i].mtx_has_left_fork);
-		if (res != 0)
-			return (EXIT_ERR);
-		state->philosophers[i].has_left_fork = has_fork;
-		res = pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_left_fork);
-		if (res != 0)
-			return (EXIT_ERR);
-	}
-	else if (ft_strcmp(side, "right") == 0)
-	{
-		res = pthread_mutex_lock(&(state)->philosophers[i].mtx_has_right_fork);
-		if (res != 0)
-			return (EXIT_ERR);
-		state->philosophers[i].has_right_fork = has_fork;
-		res = pthread_mutex_unlock(&(state)->philosophers[i].mtx_has_right_fork);
-		if (res != 0)
-			return (EXIT_ERR);
-	}
-	return (0);
-}
-
-uint64_t	calc_starvation_duration(t_state *state, int i)
-{
-	uint64_t	starving_since;
-
-	pthread_mutex_lock(&(state->clock.mtx_get_time));
-	starving_since = state->clock.cur_time_ms
-		- state->philosophers[i].last_meal_time_ms;
-	pthread_mutex_unlock(&(state->clock.mtx_get_time));
-	return (starving_since);
 }

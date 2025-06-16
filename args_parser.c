@@ -6,47 +6,47 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:58 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 00:16:24 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 15:09:16 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long       ft_atoll(const char *nptr)
+long long	ft_atoll(const char *nptr)
 {
-        long long       result;
-        long long       sign;
+	long long	result;
+	long long	sign;
 
-        result = 0;
-        sign = 1;
-        while (ft_isspace(*nptr))
-        {
-                nptr++;
-        }
-        if (*nptr == '+' || *nptr == '-')
-        {
-                if (*nptr == '-')
-                {
-                        sign = -1;
-                }
-                nptr++;
-        }
-        while (ft_isdigit(*nptr))
-        {
-                result = (result * 10) + (*nptr - '0');
-                nptr++;
-        }
-        return (result * sign);
+	result = 0;
+	sign = 1;
+	while (ft_isspace(*nptr))
+	{
+		nptr++;
+	}
+	if (*nptr == '+' || *nptr == '-')
+	{
+		if (*nptr == '-')
+		{
+			sign = -1;
+		}
+		nptr++;
+	}
+	while (ft_isdigit(*nptr))
+	{
+		result = (result * 10) + (*nptr - '0');
+		nptr++;
+	}
+	return (result * sign);
 }
 
-int     ft_are_pos_int_strs(char **strs)
+int	ft_are_pos_int_strs(char **strs)
 {
-        int     	i;
-	int		j;
+	int			i;
+	int			j;
 	long long	num;
 
 //        if (!*strs || !strs)
-  //              return (0);
+//              return (0);
 	i = 1;
 	while (strs[i] != NULL)
 	{
@@ -58,17 +58,17 @@ int     ft_are_pos_int_strs(char **strs)
 			j++;
 		}
 		num = ft_atoll(strs[i]);
-                if (num > INT_MAX)
+		if (num > INT_MAX)
 			return (1);
 		i++;
-        }
-        return (0);
+	}
+	return (0);
 }
 
 int	are_handable_settings(char **argv)
 {
 	if (ft_atoi(argv[1]) < MIN_THREADS || ft_atoi(argv[1]) > MAX_THREADS)
-	{	
+	{
 		printf("Err: number_of_philosophers (1): req: %d < argv[1] > %d\n",
 			MIN_THREADS, MAX_THREADS);
 		return (1);
@@ -81,7 +81,8 @@ int	are_handable_settings(char **argv)
 		printf("req: %d < argv[i] > %d\n", MIN_TIME_MS, MAX_TIME_MS);
 		return (1);
 	}
-	if (argv[5] && (ft_atoi(argv[5]) < MIN_MEALS || ft_atoi(argv[5]) > MAX_MEALS))
+	if (argv[5] && (ft_atoi(argv[5]) < MIN_MEALS
+			|| ft_atoi(argv[5]) > MAX_MEALS))
 	{
 		printf("Err: number_of_times_each_philosopher_must_eat (5):");
 		printf("req: %d < argv[5] > %d\n", MIN_MEALS, MAX_MEALS);
@@ -89,8 +90,7 @@ int	are_handable_settings(char **argv)
 	return (0);
 }
 
-
-int     are_args_valid(int argc, char **argv)
+int	are_args_valid(int argc, char **argv)
 {
 	if (argc != 5 && argc != 6)
 	{
@@ -103,7 +103,7 @@ int     are_args_valid(int argc, char **argv)
 		return (-1);
 	}
 	if (are_handable_settings(argv) != 0)
-	{	
+	{
 		printf("Invalid arguments: need positive int numbers only\n");
 		return (-1);
 	}
@@ -120,11 +120,9 @@ void	store_args(char **argv, t_settings *settings)
 	if (argv[5])
 		settings->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	return ;
-
 }
 
 /*
-
 // Trim each arg (remove + sign and leading zeros)
 char	*ps_trim(char *trimmed_arg, char *arg, int len, int k)
 {

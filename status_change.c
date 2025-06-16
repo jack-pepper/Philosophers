@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/11 21:40:34 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/16 15:14:49 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	change_status(t_state *state, uint64_t timestamp_ms,
 	ft_mutex_unlock(&state->mtx_display_status);
 	if (ft_strcmp(status, EAT_MSG) == 0)
 	{
-		res = eat(state, philosopher, timestamp_ms) != 0;
+		res = eat(state, philosopher) != 0;
 		if (res == EXIT_SATIETY)
 			return (EXIT_SATIETY);
 	}
@@ -42,8 +42,6 @@ void	die(t_state *state, t_philosopher *philosopher)
 		printf("	🍽️ 😩 [change_status] last_meal: %ld\n",
 			philosopher->last_meal_time_ms);
 	ft_mutex_lock(&state->mtx_sim_state);
-//	if (state->settings.number_of_philosophers > 1)
-//		drop_forks(state, philosopher, philosopher->id - 1);
 	if (DEBUG == 1)
 	{
 		printf("\n🥀 ⚰️  philo %d died of starvation!\n", philosopher->id);
@@ -56,15 +54,11 @@ void	die(t_state *state, t_philosopher *philosopher)
 	return ;
 }
 
-int	eat(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
+int	eat(t_state *state, t_philosopher *philosopher)
 {
 	int	satiety;
 
 	satiety = state->settings.number_of_times_each_philosopher_must_eat;
-	timestamp_ms++, timestamp_ms--;
-	//ft_mutex_lock(&(state->clock.mtx_get_time));
-	//philosopher->last_meal_time_ms = timestamp_ms;
-	//ft_mutex_unlock(&(state->clock.mtx_get_time));
 	ft_usleep((int)state->settings.time_to_eat * 1000,
 		"[change_status] usleep failed\n");
 	if (satiety > 0)
