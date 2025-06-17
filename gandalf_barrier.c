@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:12:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 19:52:56 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 07:01:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	break_through(t_state *state)
 	ft_mutex_unlock(&(state)->mtx_threads_ready);
 	set_philo_threads_all_set(state, true);
 	if (ft_mutex_destroy(&(state)->mtx_threads_ready,
-		ERR_MTX_DEST_THREADS_READY) != 0)
+			ERR_MTX_DEST_THREADS_READY) != 0)
 		return (1);
 	if (DEBUG == 1)
 		printf("	philo_all_set set to TRUE!\n");

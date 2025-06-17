@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/17 00:05:01 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 09:51:54 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@
 # define ERR_MTX_DEST_IS_TAKEN "❌ Err: mutex_destroy(is_taken)\n"
 # define ERR_MTX_DEST_HAS_LEFT_FORK "❌ Err: mutex_destroy(has_left_work)\n"
 # define ERR_MTX_DEST_HAS_RIGHT_FORK "❌ Err: mutex_destroy(has_right_fork)\n"
+
+# define ERR_PHILO_THREAD_JOIN "❌ Err: philo thread not joined\n"
 
 # include <pthread.h>
 # include <stdint.h>
@@ -251,7 +253,8 @@ void		wait_for_death(t_philo_arg *this_arg, int i, int next_i);
 int			is_endcase_met(t_state *state);
 int			wait_forks(t_state *state, uint64_t timestamp_ms,
 				int i, int next_i);
-int			left_handed_case(t_state *state, uint64_t timestamp_ms, int i, int next_i);
+int			left_handed_case(t_state *state, uint64_t timestamp_ms,
+				int i, int next_i);
 void		drop_forks(t_state *state, t_philosopher *philosopher, int i);
 void		change_has_fork(t_state *state, int i, char *side, bool has_fork);
 
@@ -281,6 +284,7 @@ void		endcase_msg(t_philosopher *philo, char *endcase);
 int			free_on_exit(t_state *state);
 int			free_forks(t_state *state);
 void		free_philosophers(t_state *state);
+void		free_philo_args(t_state *state, int i);
 
 // libft_utils.c
 int			ft_isspace(int c);
@@ -297,7 +301,7 @@ void		ft_putstr_fd(char *s, int fd);
 // pthread_wrappers.c
 void		ft_mutex_lock(pthread_mutex_t *mtx);
 void		ft_mutex_unlock(pthread_mutex_t *mtx);
-int		ft_mutex_destroy(pthread_mutex_t *mtx, char *err_msg);
+int			ft_mutex_destroy(pthread_mutex_t *mtx, char *err_msg);
 void		ft_usleep(useconds_t usec, char *err_msg);
 
 // time_utils.c

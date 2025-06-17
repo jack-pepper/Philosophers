@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/01 21:25:52 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 09:43:00 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,13 @@ void	free_philosophers(t_state *state)
 {
 	if (state->philosophers)
 		free(state->philosophers);
+}
+
+void	free_philo_args(t_state *state, int i)
+{
+	free(state->philosophers[i].arg);
+	i--;
+	while (i < 0)
+		free(state->philosophers[i++].arg);
+	return ;
 }

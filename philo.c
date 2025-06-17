@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/15 22:18:38 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 09:39:33 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	launch_simulation(t_state *state, int nb_guests)
 	if (DEBUG == 1)
 		printf(SUC_LAUNCH_DEATH_CLOCK);
 	if (create_philo_threads(state, nb_guests) != 0)
-		return (ft_ret(1, ERR_CREATE_PHILO_THREADS, STDERR));
+		return (ft_ret(1, ERR_CREATE_PHILO_THREADS, STDERR)); // just stop the clock and keep on to join all threads?
 	if (DEBUG == 1)
 		printf(SUC_CREATE_PHILO_THREADS);
 	if (pthread_join(state->clock.thread, NULL) != 0)

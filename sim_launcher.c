@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 15:03:52 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 09:55:54 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ int	create_philo_threads(t_state *state, int nb_guests)
 		if (pthread_create(&state->philosophers[i].thread, NULL,
 				&philo_routine, arg) != 0)
 		{
-			// free memory depending of i
-			return (1);
+			free_philo_args(state, i); // testing
+			return (1); 
 		}
 		if (DEBUG == 1)
 			printf("	✅ thread philo %d created!\n", arg->i + 1);
@@ -79,10 +79,7 @@ int	join_philo_threads(t_state *state, int nb_guests)
 	while (i < nb_guests)
 	{
 		if (pthread_join(state->philosophers[i].thread, NULL) != 0)
-		{
-			// free memory depending of i
-			return (1);
-		}
+			ft_putstr_fd(ERR_PHILO_THREAD_JOIN, STDERR);
 		if (DEBUG == 1)
 			printf("\n	✅ thread philo %d terminated!\n", i);
 		i++;

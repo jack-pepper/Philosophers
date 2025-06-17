@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:20:25 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 19:47:43 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 07:12:37 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,28 +70,21 @@ int	clean_ret(t_state *state, char *err_msg, int *i, int lvl)
 	if (lvl > 5)
 		clean_all_forks_mutexes(&state->philosophers[(*i)].mtx_meals, i);
 	if (lvl > 6)
-		ft_mutex_destroy(&state->clock.mtx_get_time,
-			ERR_MTX_DEST_GET_TIME);
+		ft_mutex_destroy(&state->clock.mtx_get_time, ERR_MTX_DEST_GET_TIME);
 	if (lvl > 7)
-		ft_mutex_destroy(&state->mtx_sim_state,
-			ERR_MTX_DEST_SIM_STATE);
+		ft_mutex_destroy(&state->mtx_sim_state, ERR_MTX_DEST_SIM_STATE);
 	if (lvl > 8)
-		ft_mutex_destroy(&state->mtx_threads_ready,
-			ERR_MTX_DEST_THREADS_READY);
+		ft_mutex_destroy(&state->mtx_threads_ready, ERR_MTX_DEST_THREADS_READY);
 	return (1);
 }
 
 int	clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i)
 {
-	// include the err_msg, join the msg with the ft_itoa(number) + \n,
-	//then free, to display the full msg
 	while ((*i) > 0)
 	{
 		(*i)--;
 		if (ft_mutex_destroy(&mtx[(*i)], ERR_MTX_DEST_FORK) != 0)
 			return (1);
-		//if (pthread_mutex_destroy(&mtx[i]) != 0)
-		//        return (ft_ret(1, "❌ err: mutex forks[%d] not destroyed!\n", i));
 		if (ft_mutex_destroy(&mtx[(*i)], ERR_MTX_DEST_MEALS) != 0)
 			return (1);
 	}

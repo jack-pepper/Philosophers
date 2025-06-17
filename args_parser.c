@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:58 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 15:09:16 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/17 07:20:41 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ int	ft_are_pos_int_strs(char **strs)
 	int			j;
 	long long	num;
 
-//        if (!*strs || !strs)
-//              return (0);
+	if (!*strs || !strs)
+		return (0);
 	i = 1;
 	while (strs[i] != NULL)
 	{
 		j = 0;
 		while (strs[i][j] != '\0')
 		{
-			if (!ft_isdigit(strs[i][j])) // SHOULD HANDLE SPACES ETC< TOO!
+			if (!ft_isdigit(strs[i][j]) && !ft_isspace(strs[i][j]))
 				return (1);
 			j++;
 		}
