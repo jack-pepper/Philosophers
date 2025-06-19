@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 22:30:33 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 23:52:51 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 1
+# define DEBUG 0
 
 # define STDOUT 1
 # define STDERR 2
@@ -109,11 +109,12 @@
 
 typedef struct s_settings
 {
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		number_of_philosophers;
-	int		number_of_times_each_philosopher_must_eat;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			number_of_philosophers;
+	int			number_of_times_each_philosopher_must_eat;
+	useconds_t	optimal_delay;
 }			t_settings;
 
 typedef struct s_philosopher
@@ -204,12 +205,12 @@ int			init_mutexes(t_state *state, int nb_guests);
 
 // mtx_handler.c
 int			init_fork_mutexes(t_state *state, int nb_guests, int *i);
+int			init_meals_mutexes(t_state *state, int nb_guests, int *i);
 int			clean_ret(t_state *state, char *err_msg, int *i, int lvl);
 int			clean_all_forks_mutexes(pthread_mutex_t *mtx, int *i);
 
 // sim_launcher.c
 int			launch_death_clock(t_state *state);
-int			wait_sim_start(t_state *state);
 int			create_philo_threads(t_state *state, int nb_guests);
 t_philo_arg	*set_philo_arg(t_state *state, t_philo_arg *arg,
 				int i, int nb_guests);
@@ -298,17 +299,19 @@ size_t		ft_strlen(const char *s);
 void		display_settings(const t_settings *settings);
 int			ft_ret(int return_val, char *error_msg, int fd);
 void		ft_putstr_fd(char *s, int fd);
+int			set_next_i(t_state *state, int i, int *next_i);
+void		set_optimal_delay(t_settings *settings);
 
 // pthread_wrappers.c
 void		ft_mutex_lock(pthread_mutex_t *mtx);
 void		ft_mutex_unlock(pthread_mutex_t *mtx);
 int			ft_mutex_destroy(pthread_mutex_t *mtx, char *err_msg);
-void		ft_usleep(useconds_t usec, char *err_msg);
 
 // time_utils.c
 void		set_start_time(t_state *state);
 uint64_t	get_cur_time(t_state *state);
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t	convert_to_ms(struct timeval tv);
+void		ft_usleep(useconds_t usec, char *err_msg);
 
 #endif

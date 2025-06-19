@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 22:36:17 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 23:52:06 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*philo_routine(void *arg)
 		return (0);
 	}
 	if (i % 2 == 1)
-		ft_usleep(5000, "[philo_routine] usleep failed\n");
+		ft_usleep(this_arg->state->settings.optimal_delay, "[philo_routine] usleep failed\n");
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
 	ft_mutex_lock(&(this_arg->state)->mtx_sim_state);
@@ -43,15 +43,6 @@ void	*philo_routine(void *arg)
 	ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);
 	wait_for_death(this_arg, i, next_i);
 	return (0);
-}
-
-int	set_next_i(t_state *state, int i, int *next_i)
-{
-	if (i == state->settings.number_of_philosophers - 1)
-		(*next_i) = 0;
-	else
-		(*next_i) = i + 1;
-	return ((*next_i));
 }
 
 int	wait_sim_start(t_state *state)

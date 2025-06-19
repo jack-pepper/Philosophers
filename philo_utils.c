@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 15:23:15 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 23:51:50 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	display_settings(const t_settings *settings)
 		settings->time_to_sleep);
 	printf("🎯 number of times each philosopher must eat: `%d`\n",
 		settings->number_of_times_each_philosopher_must_eat);
+	printf("Optimal delay: `%d`\n", settings->optimal_delay);
 	return ;
 }
 
@@ -47,4 +48,19 @@ void	ft_putstr_fd(char *s, int fd)
 			i++;
 		}
 	}
+}
+
+int     set_next_i(t_state *state, int i, int *next_i)
+{
+	if (i == state->settings.number_of_philosophers - 1)
+		(*next_i) = 0;
+	else
+		(*next_i) = i + 1;
+	return ((*next_i));
+}
+
+void	set_optimal_delay(t_settings *settings)
+{
+	// find the best formula depending of the settings
+	settings->optimal_delay = 5000;
 }

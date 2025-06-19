@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:12:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 21:57:39 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/20 00:14:10 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	gandalf_barrier(t_state *state)
 	{
 		if (wait(state) != 0)
 			return (1);
-		return (0);
 	}
 	else
 	{
-		break_through(state);
+		if (break_through(state) != 0)
+			return (1);
 		if (DEBUG == 1)
 			printf("\n	... 💥 Gandalf barrier destroyed!\n");
 	}
@@ -68,6 +68,12 @@ int	wait_philo_all_set(t_state *state)
 int	break_through(t_state *state)
 {
 	ft_mutex_unlock(&(state)->mtx_threads_ready);
+	if (is_sim_on(state) == false)
+	{
+		ft_mutex_destroy(&(state)->mtx_threads_ready,
+			ERR_MTX_DEST_THREADS_READY);
+		return (1);
+	}	
 	set_philo_threads_all_set(state, true);
 	if (ft_mutex_destroy(&(state)->mtx_threads_ready,
 			ERR_MTX_DEST_THREADS_READY) != 0)
