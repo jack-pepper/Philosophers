@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/17 09:39:33 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 22:21:35 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char **argv)
 	if (DEBUG == 1)
 		printf(SUC_INITER);
 	if (launch_simulation(&state, state.settings.number_of_philosophers) != 0)
-		return (ft_ret(1, ERR_LAUNCH_SIMULATION, STDERR));
+		ft_putstr_fd(ERR_LAUNCH_SIMULATION, STDERR);
 	if (DEBUG == 1)
 		printf(EXIT_MESSAGE);
 	return (free_on_exit(&state));
@@ -65,17 +65,13 @@ int	launch_simulation(t_state *state, int nb_guests)
 		return (ft_ret(1, ERR_LAUNCH_DEATH_CLOCK, STDERR));
 	if (DEBUG == 1)
 		printf(SUC_LAUNCH_DEATH_CLOCK);
-	if (create_philo_threads(state, nb_guests) != 0)
-		return (ft_ret(1, ERR_CREATE_PHILO_THREADS, STDERR)); // just stop the clock and keep on to join all threads?
-	if (DEBUG == 1)
+	if (create_philo_threads(state, nb_guests) == 0 && DEBUG == 1)
 		printf(SUC_CREATE_PHILO_THREADS);
 	if (pthread_join(state->clock.thread, NULL) != 0)
 		return (ft_ret(1, ERR_JOIN_CLOCK_THREAD, STDERR));
 	if (DEBUG == 1)
 		printf(SUC_JOIN_CLOCK_THREAD);
-	if (join_philo_threads(state, nb_guests) != 0)
-		return (ft_ret(1, ERR_JOIN_PHILO_THREADS, STDERR));
-	if (DEBUG == 1)
+	if (join_philo_threads(state, nb_guests) == 0 && DEBUG == 1)
 		printf(SUC_JOIN_PHILO_THREADS);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/17 09:51:54 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 22:30:33 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ int			create_philo_threads(t_state *state, int nb_guests);
 t_philo_arg	*set_philo_arg(t_state *state, t_philo_arg *arg,
 				int i, int nb_guests);
 int			join_philo_threads(t_state *state, int nb_guests);
+void		handle_pthread_create_fail(t_state *state, t_philo_arg *arg);
 
 // sim_state.c
 void		set_sim_status(t_state *state, bool sim_status);
@@ -223,7 +224,7 @@ int			are_philo_threads_all_set(t_state *state);
 int			are_philo_all_fed_up(t_state *state);
 
 // gandalf_barrier.c
-void		gandalf_barrier(t_state *state);
+int			gandalf_barrier(t_state *state);
 int			wait_philo_all_set(t_state *state);
 int			wait(t_state *state);
 int			break_through(t_state *state);

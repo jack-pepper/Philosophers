@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 09:55:22 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 22:36:17 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,25 @@ void	*philo_routine(void *arg)
 	i = this_arg->i;
 	set_next_i(this_arg->state, i, &next_i);
 	wait_sim_start(&(*this_arg->state));
-	gandalf_barrier(&(*this_arg->state));
+	if (gandalf_barrier(&(*this_arg->state)) != 0)
+	{
+		printf("ERROR WHILE LAUNCHING PTHREAD!\n"); // issue here
+		free(this_arg);
+		return (0);
+	}
 	if (i % 2 == 1)
 		ft_usleep(5000, "[philo_routine] usleep failed\n");
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
+	ft_mutex_lock(&(this_arg->state)->mtx_sim_state);
+	if (this_arg->state->simulation_on == false)
+	{
+		ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);
+		endcase_grief(this_arg->state,
+			&(this_arg->state)->philosophers[i], i);
+		return (0);
+	}
+	ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);
 	wait_for_death(this_arg, i, next_i);
 	return (0);
 }

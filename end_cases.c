@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 10:03:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 18:01:33 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	endcase_msg(t_philosopher *philo, char *endcase)
 		printf("	👴 philo %d had no escape...\n", philo->id);
 		printf("	💀 👼 philo_arg %d freed!\n", philo->id);
 	}
-	if (ft_strcmp(endcase, "agony") == 0)
+	else if (ft_strcmp(endcase, "agony") == 0)
 	{
 		printf("\n🪦 😵 [endcase_die_agony]\n");
 		printf("        👴 philo %d didn't make it.\n", philo->id);

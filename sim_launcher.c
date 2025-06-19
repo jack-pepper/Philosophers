@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/17 09:55:54 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/19 22:37:04 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	launch_death_clock(t_state *state)
 	return (0);
 }
 
+// The usleep will let enough time for running threads to pass
+// the sim_on barrier and wait at the gandalf barrier.
 int	create_philo_threads(t_state *state, int nb_guests)
 {
 	t_philo_arg	*arg;
@@ -45,8 +47,8 @@ int	create_philo_threads(t_state *state, int nb_guests)
 		if (pthread_create(&state->philosophers[i].thread, NULL,
 				&philo_routine, arg) != 0)
 		{
-			free_philo_args(state, i); // testing
-			return (1); 
+			handle_pthread_create_fail(state, arg);
+			return (0);
 		}
 		if (DEBUG == 1)
 			printf("	✅ thread philo %d created!\n", arg->i + 1);
@@ -85,4 +87,12 @@ int	join_philo_threads(t_state *state, int nb_guests)
 		i++;
 	}
 	return (0);
+}
+
+void	handle_pthread_create_fail(t_state *state, t_philo_arg *arg)
+{
+	ft_putstr_fd(ERR_CREATE_PHILO_THREADS, STDERR);
+	free(arg);
+	ft_usleep(5000, "[create_philo_threads] usleep failed\n");
+	set_sim_status(state, false);
 }
