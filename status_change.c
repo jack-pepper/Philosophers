@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/16 15:14:49 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:56:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	eat(t_state *state, t_philosopher *philosopher)
 	int	satiety;
 
 	satiety = state->settings.number_of_times_each_philosopher_must_eat;
-	ft_usleep((int)state->settings.time_to_eat * 1000,
+	ft_usleep(state, (int)state->settings.time_to_eat * 1000,
 		"[change_status] usleep failed\n");
 	if (satiety > 0)
 	{
@@ -72,6 +72,6 @@ int	eat(t_state *state, t_philosopher *philosopher)
 
 void	nap(t_state *state)
 {
-	ft_usleep((int)state->settings.time_to_sleep * 1000,
+	ft_usleep(state, (int)state->settings.time_to_sleep * 1000,
 		"[change_status] usleep failed\n");
 }

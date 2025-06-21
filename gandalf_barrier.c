@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:12:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:34:02 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:54:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	wait(t_state *state)
 	res = 0;
 	ft_mutex_unlock(&(state)->mtx_threads_ready);
 	ft_mutex_unlock(&(state)->barrier.mtx_barrier);
-	ft_usleep(1000, "[gandalf_barrier] usleep failed\n");
+	ft_usleep(state, 1000, "[gandalf_barrier] usleep failed\n");
 	res = wait_philo_all_set(state);
 	return (res);
 }
@@ -58,7 +58,7 @@ int	wait_philo_all_set(t_state *state)
 	while (state->philo_all_set == false)
 	{
 		ft_mutex_unlock(&(state)->mtx_philo_all_set);
-		ft_usleep(1000, "[wait_philo_all_set] usleep failed\n");
+		ft_usleep(state, 1000, "[wait_philo_all_set] usleep failed\n");
 		ft_mutex_lock(&(state)->mtx_philo_all_set);
 		if (DEBUG == 1)
 			printf("        🔒 mtx_philo_all_set: locked (FALSE: waiting...)\n");

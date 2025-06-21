@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:28:10 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:52:38 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 1
+# define DEBUG 0
 
 # define STDOUT 1
 # define STDERR 2
@@ -313,6 +313,6 @@ void		set_start_time(t_state *state);
 uint64_t	get_cur_time(t_state *state);
 uint64_t	get_timestamp_ms(struct timeval *tv);
 uint64_t	convert_to_ms(struct timeval tv);
-void		ft_usleep(useconds_t usec, char *err_msg);
+void		ft_usleep(t_state *state, useconds_t usec, char *err_msg);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:34:30 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:26:33 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,5 @@ int	set_next_i(t_state *state, int i, int *next_i)
 
 void	set_optimal_delay(t_settings *settings)
 {
-	settings->optimal_delay = settings->time_to_eat;
+	settings->optimal_delay = settings->time_to_eat / 2;
 }

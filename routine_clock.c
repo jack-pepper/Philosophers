@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:33:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:55:54 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*clock_routine(void *arg)
 	set_sim_status(state, true);
 	while (1)
 	{
-		ft_usleep(1000, "[clock_routine] usleep failed\n");
+		ft_usleep(state, 1000, "[clock_routine] usleep failed\n");
 		if (are_philo_threads_all_set(state) == 0)
 			break ;
 	}
@@ -49,7 +49,7 @@ void	toll_the_bell(t_state *state)
 		now_time = get_cur_time(state);
 		if (take_pulse(state, now_time) != 0)
 			return ;
-		ft_usleep(1000, "[toll_the_bell] usleep failed\n");
+		ft_usleep(state, 1000, "[toll_the_bell] usleep failed\n");
 		ft_mutex_lock(&(state->mtx_sim_state));
 	}
 	return ;
@@ -109,7 +109,7 @@ bool	verify_satiety(t_state *state, int nb_guests, int satiety)
 		nb_meals = state->philosophers[i].meals_eaten;
 		ft_mutex_unlock(&(state->philosophers[i].mtx_meals));
 		if (nb_meals < satiety)
-			return (false);
+				return (false);
 		i++;
 	}
 	ft_mutex_lock(&state->mtx_philo_all_fed_up);

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 18:01:33 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:58:27 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	endcase_die_alone(t_state *state, t_philosopher *philosopher, int i)
 	while (state->simulation_on == true)
 	{
 		ft_mutex_unlock(&(state)->mtx_sim_state);
-		ft_usleep(1000, "[endcase_die_alone] usleep failed\n");
+		ft_usleep(state, 1000, "[endcase_die_alone] usleep failed\n");
 		ft_mutex_lock(&(state)->mtx_sim_state);
 	}
 	ft_mutex_unlock(&(state)->mtx_sim_state);

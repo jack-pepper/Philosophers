@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:36:51 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:57:42 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*philo_routine(void *arg)
 		return (0);
 	}
 	if (i % 2 == 1)
-		ft_usleep(this_arg->state->settings.optimal_delay, "[philo_routine] usleep failed\n");
+		ft_usleep(this_arg->state, this_arg->state->settings.optimal_delay, "[philo_routine] usleep failed\n");
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
 	ft_mutex_lock(&(this_arg->state)->mtx_sim_state);
@@ -51,7 +51,7 @@ int	wait_sim_start(t_state *state)
 	while (state->simulation_on == false)
 	{
 		ft_mutex_unlock(&(state->mtx_sim_state));
-		ft_usleep(1000, "[wait sim_start] usleep failed\n");
+		ft_usleep(state, 1000, "[wait sim_start] usleep failed\n");
 		ft_mutex_lock(&(state->mtx_sim_state));
 		if (DEBUG == 1)
 			printf("        🔒 mtx_sim_state: locked (sim OFF: waiting...)\n");

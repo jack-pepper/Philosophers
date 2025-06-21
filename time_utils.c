@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:28:51 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/15 21:40:51 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:17:50 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ uint64_t	get_cur_time(t_state *state)
 {
 	volatile uint64_t	cur_time;
 
-	pthread_mutex_lock(&(state->clock.mtx_get_time));
+	ft_mutex_lock(&(state->clock.mtx_get_time));
 	state->clock.cur_time_ms = get_timestamp_ms(&state->clock.cur_time)
 		- state->clock.start_time_ms;
 	cur_time = state->clock.cur_time_ms;
-	pthread_mutex_unlock(&(state->clock.mtx_get_time));
+	ft_mutex_unlock(&(state->clock.mtx_get_time));
 	return (cur_time);
 }
 
@@ -48,8 +48,18 @@ uint64_t	convert_to_ms(struct timeval time)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	ft_usleep(useconds_t usec, char *err_msg)
+void	ft_usleep(t_state *state, useconds_t usec, char *err_msg)
 {
-	if (usleep(usec) != 0)
-		ft_putstr_fd(err_msg, STDERR);
+	uint64_t	start_time;
+	uint64_t	ms;
+
+	ms = usec / 1000;
+	start_time = get_cur_time(state);
+	while (get_cur_time(state) - start_time < ms)
+	{
+		if (usleep(100) != 0)
+			ft_putstr_fd(err_msg, STDERR);
+	}
+	//if (usleep(usec) != 0)
+	//	ft_putstr_fd(err_msg, STDERR);
 }
