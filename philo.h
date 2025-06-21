@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 23:52:51 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:28:10 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 # define STDOUT 1
 # define STDERR 2
@@ -229,6 +229,7 @@ int			gandalf_barrier(t_state *state);
 int			wait_philo_all_set(t_state *state);
 int			wait(t_state *state);
 int			break_through(t_state *state);
+void		set_all_last_meal_time(t_state *state, int nb_guests);
 
 // routine_clock.c
 void		*clock_routine(void *arg);

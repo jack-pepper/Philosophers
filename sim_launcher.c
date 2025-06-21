@@ -2,11 +2,12 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   sim_launcher.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
+/*                         pthread_mutex_lock(&state->clock.mtx_get_time);
+                           +:+ +:+         +:+     */
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 22:37:04 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 19:37:59 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +25,7 @@ int	launch_death_clock(t_state *state)
 		return (1);
 	if (DEBUG == 1)
 		printf("	👍 [launch_death_clock] Death clock launched!\n");
-	ft_usleep(1000, "[launch_death_clock] usleep failed\n");
+	ft_usleep(5000, "[launch_death_clock] usleep failed\n");
 	return (0);
 }
 
@@ -42,13 +43,11 @@ int	create_philo_threads(t_state *state, int nb_guests)
 	{
 		state->philosophers[i].arg = set_philo_arg(state, arg, i, nb_guests);
 		arg = state->philosophers[i].arg;
-		if (arg == NULL)
-			return (1);
 		if (pthread_create(&state->philosophers[i].thread, NULL,
 				&philo_routine, arg) != 0)
 		{
 			handle_pthread_create_fail(state, arg);
-			return (0);
+			return (1);
 		}
 		if (DEBUG == 1)
 			printf("	✅ thread philo %d created!\n", arg->i + 1);
@@ -92,7 +91,8 @@ int	join_philo_threads(t_state *state, int nb_guests)
 void	handle_pthread_create_fail(t_state *state, t_philo_arg *arg)
 {
 	ft_putstr_fd(ERR_CREATE_PHILO_THREADS, STDERR);
-	free(arg);
-	ft_usleep(5000, "[create_philo_threads] usleep failed\n");
 	set_sim_status(state, false);
+	if (DEBUG == 1)
+		printf("[handle_pthread_create_fail] sim has been set to FALSE!\n");
+	free(arg);
 }

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/17 07:07:50 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:24:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	wait_forks(t_state *state, uint64_t timestamp_ms, int i, int next_i)
 {
 	if (is_endcase_met(state) != 0)
 		return (is_endcase_met(state));
-	if (next_i == 0)
+	if (i % 2 == 1)
 		return (left_handed_case(state, timestamp_ms, i, next_i));
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 21:58:25 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:33:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,15 @@ void	*clock_routine(void *arg)
 
 	state = (t_state *)arg;
 	if (DEBUG == 1)
-		printf("\n🕰️ [clock_routine] Starting routine...\n");
+		printf("\n	🕰️ [clock_routine] Starting routine...\n");
 	set_sim_status(state, true);
-	while (are_philo_threads_all_set(state) != 0)
+	while (1)
 	{
 		ft_usleep(1000, "[clock_routine] usleep failed\n");
-		if (is_sim_on(state) == false)
-		{
-			if (DEBUG == 1)
-				printf("\n ⏳ Error with philo threads: stopping clock...\n");
-			return (NULL);
-		}
+		if (are_philo_threads_all_set(state) == 0)
+			break ;
 	}
+	set_all_last_meal_time(state, state->settings.number_of_philosophers);
 	toll_the_bell(state);
 	return (NULL);
 }
@@ -88,11 +85,13 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 uint64_t	calc_starvation_duration(t_state *state, int i)
 {
 	uint64_t	starving_since;
+	uint64_t	now_time;
 
-	pthread_mutex_lock(&(state->clock.mtx_get_time));
-	starving_since = state->clock.cur_time_ms
+	now_time = get_cur_time(state);
+	ft_mutex_lock(&(state->clock.mtx_get_time));
+	starving_since = now_time
 		- state->philosophers[i].last_meal_time_ms;
-	pthread_mutex_unlock(&(state->clock.mtx_get_time));
+	ft_mutex_unlock(&(state->clock.mtx_get_time));
 	return (starving_since);
 }
 

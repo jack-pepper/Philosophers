@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 23:52:06 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:36:51 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	*philo_routine(void *arg)
 	wait_sim_start(&(*this_arg->state));
 	if (gandalf_barrier(&(*this_arg->state)) != 0)
 	{
-		printf("ERROR WHILE LAUNCHING PTHREAD!\n"); // issue here
+		printf("ERROR WHILE LAUNCHING PTHREAD!\n"); // issue...
 		free(this_arg);
 		return (0);
 	}
@@ -48,7 +48,7 @@ void	*philo_routine(void *arg)
 int	wait_sim_start(t_state *state)
 {
 	ft_mutex_lock(&(state->mtx_sim_state));
-	while (!state->simulation_on)
+	while (state->simulation_on == false)
 	{
 		ft_mutex_unlock(&(state->mtx_sim_state));
 		ft_usleep(1000, "[wait sim_start] usleep failed\n");
