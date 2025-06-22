@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 10:03:31 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:58:27 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 21:41:40 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	endcase_die_alone(t_state *state, t_philosopher *philosopher, int i)
 	uint64_t	timestamp_ms;
 
 	take_left_fork(state, i);
-	if (is_sim_on(state) != 0)
+	if (is_sim_on(state) == false)
 	{
 		put_left_fork(state, i);
 		return ;

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:55:54 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 20:20:58 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ bool	verify_satiety(t_state *state, int nb_guests, int satiety)
 		nb_meals = state->philosophers[i].meals_eaten;
 		ft_mutex_unlock(&(state->philosophers[i].mtx_meals));
 		if (nb_meals < satiety)
-				return (false);
+			return (false);
 		i++;
 	}
 	ft_mutex_lock(&state->mtx_philo_all_fed_up);

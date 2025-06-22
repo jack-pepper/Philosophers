@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:52:38 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 21:43:55 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ void		handle_pthread_create_fail(t_state *state, t_philo_arg *arg);
 
 // sim_state.c
 void		set_sim_status(t_state *state, bool sim_status);
-int			is_sim_on(t_state *state);
+bool		is_sim_on(t_state *state);
 void		set_philo_threads_all_set(t_state *state, bool set_status);
 int			are_philo_threads_all_set(t_state *state);
 int			are_philo_all_fed_up(t_state *state);

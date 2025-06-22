@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:57:42 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 21:39:53 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ void	*philo_routine(void *arg)
 	wait_sim_start(&(*this_arg->state));
 	if (gandalf_barrier(&(*this_arg->state)) != 0)
 	{
-		printf("ERROR WHILE LAUNCHING PTHREAD!\n"); // issue...
+		printf("ERROR WHILE LAUNCHING PTHREAD!\n");
 		free(this_arg);
 		return (0);
 	}
 	if (i % 2 == 1)
-		ft_usleep(this_arg->state, this_arg->state->settings.optimal_delay, "[philo_routine] usleep failed\n");
+		ft_usleep(this_arg->state, this_arg->state->settings.optimal_delay,
+			"[philo_routine] usleep failed\n");
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
 	ft_mutex_lock(&(this_arg->state)->mtx_sim_state);
@@ -37,7 +38,7 @@ void	*philo_routine(void *arg)
 	{
 		ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);
 		endcase_grief(this_arg->state,
-			&(this_arg->state)->philosophers[i], i);
+			&(this_arg->state)->philosophers[i], i); // ...
 		return (0);
 	}
 	ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);

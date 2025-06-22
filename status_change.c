@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:56:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 21:39:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	change_status(t_state *state, uint64_t timestamp_ms,
 	int	res;
 
 	ft_mutex_lock(&state->mtx_display_status);
-	printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
+	if (is_sim_on(state) == true)
+		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
 		die(state, philosopher);
@@ -49,6 +50,7 @@ void	die(t_state *state, t_philosopher *philosopher)
 	}
 	philosopher->is_alive = false;
 	ft_mutex_unlock(&state->mtx_sim_state);
+	ft_usleep(state, 10000, "[die] usleep failed\n");
 	ft_mutex_unlock(&state->mtx_display_status);
 	pthread_mutex_destroy(&state->mtx_display_status);
 	return ;

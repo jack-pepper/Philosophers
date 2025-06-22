@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:28:51 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 23:17:50 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 20:21:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,4 @@ void	ft_usleep(t_state *state, useconds_t usec, char *err_msg)
 		if (usleep(100) != 0)
 			ft_putstr_fd(err_msg, STDERR);
 	}
-	//if (usleep(usec) != 0)
-	//	ft_putstr_fd(err_msg, STDERR);
 }
