@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:32:47 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:57:39 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	launch_simulation(t_state *state, int nb_guests)
 {
 	if (DEBUG == 1)
 		printf(SUC_LAUNCH_SIMULATION);
+	(*state).dead_spotted = false;
 	(*state).philo_all_set = false;
 	(*state).philo_all_fed_up = false;
 	if (launch_death_clock(state) != 0)

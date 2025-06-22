@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/22 21:43:55 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 22:54:05 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 0
+# define DEBUG 1
 
 # define STDOUT 1
 # define STDERR 2
@@ -176,6 +176,7 @@ typedef struct s_state
 	volatile bool		simulation_on;
 	volatile bool		philo_all_set;
 	volatile bool		philo_all_fed_up;
+	volatile bool		dead_spotted;
 }						t_state;
 
 typedef struct s_philo_arg
@@ -247,7 +248,7 @@ void		nap(t_state *state);
 
 // routine_philo.c
 void		*philo_routine(void *arg);
-int			set_next_i(t_state *state, int i, int *next_i);
+int			philo_routine_starter(t_philo_arg *this_arg, int i);
 int			wait_sim_start(t_state *state);
 int			have_council(t_state *state, int i, int next_i);
 void		wait_for_death(t_philo_arg *this_arg, int i, int next_i);

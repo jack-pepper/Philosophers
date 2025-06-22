@@ -17,7 +17,7 @@
 int	launch_death_clock(t_state *state)
 {
 	if (DEBUG == 1)
-		printf("	\n 🕰️ [launch_death_clock] Launching death clock...\n");
+		printf("	\n 🕰️[launch_death_clock] Launching death clock...\n");
 	while (gettimeofday(&state->clock.cur_time, NULL) != 0)
 		;
 	set_start_time(state);
