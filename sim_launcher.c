@@ -25,7 +25,7 @@ int	launch_death_clock(t_state *state)
 		return (1);
 	if (DEBUG == 1)
 		printf("	👍 [launch_death_clock] Death clock launched!\n");
-	ft_usleep(state, 5000, "[launch_death_clock] usleep failed\n");
+	//ft_usleep(state, 5000, "[launch_death_clock] usleep failed\n");
 	return (0);
 }
 
@@ -82,7 +82,7 @@ int	join_philo_threads(t_state *state, int nb_guests)
 		if (pthread_join(state->philosophers[i].thread, NULL) != 0)
 			ft_putstr_fd(ERR_PHILO_THREAD_JOIN, STDERR);
 		if (DEBUG == 1)
-			printf("\n	✅ thread philo %d terminated!\n", i);
+			printf("\n	✅ thread philo %d terminated!\n", i + 1);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:58 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 23:08:31 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/24 21:14:24 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,19 +91,21 @@ long long	ft_atoll(const char *nptr)
 	result = 0;
 	sign = 1;
 	while (ft_isspace(*nptr))
-	{
 		nptr++;
-	}
 	if (*nptr == '+' || *nptr == '-')
 	{
 		if (*nptr == '-')
-		{
 			sign = -1;
-		}
 		nptr++;
 	}
 	while (ft_isdigit(*nptr))
 	{
+		if (result > (LLONG_MAX - (*nptr - '0')) / 10)
+		{
+			if (sign == 1)
+				return (LLONG_MAX);
+			return (LLONG_MIN);
+		}
 		result = (result * 10) + (*nptr - '0');
 		nptr++;
 	}

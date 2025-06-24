@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 23:26:33 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/24 23:15:11 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	display_settings(const t_settings *settings)
 		settings->time_to_sleep);
 	printf("🎯 number of times each philosopher must eat: `%d`\n",
 		settings->number_of_times_each_philosopher_must_eat);
-	printf("Optimal delay: `%d`\n", settings->optimal_delay);
+//	printf("Optimal delay: `%d`\n", settings->optimal_delay);
 	return ;
 }
 
@@ -59,7 +59,31 @@ int	set_next_i(t_state *state, int i, int *next_i)
 	return ((*next_i));
 }
 
-void	set_optimal_delay(t_settings *settings)
+void	set_optimal_delay(t_state *state, int i)
 {
-	settings->optimal_delay = settings->time_to_eat / 2;
+	int		nb_philos;
+	int		time_to_eat;
+
+	nb_philos = state->settings.number_of_philosophers;
+	time_to_eat = state->settings.time_to_eat;
+	if (nb_philos < 10)
+	{
+		if (i % 2 == 1)
+			ft_usleep(state, (useconds_t)(time_to_eat / 2),
+				"[set_optimal_delay] usleep failed\n");
+	}
+	else if (nb_philos < 50)
+	{
+		if (i % 2 == 1)
+			ft_usleep(state, (useconds_t)(time_to_eat / 2),
+				"[set_optimal_delay] usleep failed\n");
+		//else if (i % 3 == 0)
+		//	ft_usleep(state, (useconds_t)(time_to_eat / 4),
+		//		"[set_optimal_delay] usleep failed\n");
+	}
+	else if (nb_philos >= 50)
+	{
+		ft_usleep(state, (useconds_t)((time_to_eat * i) / nb_philos),
+				"[set_optimal_delay] usleep failed\n");
+	}
 }

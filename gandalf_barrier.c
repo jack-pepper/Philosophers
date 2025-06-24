@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:12:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/21 22:54:25 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/24 22:12:47 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	gandalf_barrier(t_state *state)
 			return (1);
 		if (DEBUG == 1)
 			printf("\n	... 💥 Gandalf barrier destroyed!\n");
+		set_start_time(state);
 		set_all_last_meal_time(state, state->settings.number_of_philosophers);
 	}
 	return (0);

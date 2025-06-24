@@ -6,14 +6,14 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/22 22:54:05 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 00:28:26 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# define DEBUG 1
+# define DEBUG 0
 
 # define STDOUT 1
 # define STDERR 2
@@ -114,8 +114,7 @@ typedef struct s_settings
 	int			time_to_sleep;
 	int			number_of_philosophers;
 	int			number_of_times_each_philosopher_must_eat;
-	useconds_t	optimal_delay;
-}			t_settings;
+}				t_settings;
 
 typedef struct s_philosopher
 {
@@ -285,7 +284,7 @@ void		endcase_satiety(t_state *state, t_philosopher *philosopher, int i);
 void		endcase_msg(t_philosopher *philo, char *endcase);
 
 // memory.c
-int			free_on_exit(t_state *state);
+int			free_on_exit(t_state *state, int ret_val);
 int			free_forks(t_state *state);
 void		free_philosophers(t_state *state);
 void		free_philo_args(t_state *state, int i);
@@ -302,7 +301,7 @@ void		display_settings(const t_settings *settings);
 int			ft_ret(int return_val, char *error_msg, int fd);
 void		ft_putstr_fd(char *s, int fd);
 int			set_next_i(t_state *state, int i, int *next_i);
-void		set_optimal_delay(t_settings *settings);
+void		set_optimal_delay(t_state *state, int i);
 
 // pthread_wrappers.c
 void		ft_mutex_lock(pthread_mutex_t *mtx);

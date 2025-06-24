@@ -6,11 +6,26 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/22 22:56:01 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 00:27:55 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+bool	is_dead_spotted(t_state *state)
+{
+	ft_mutex_lock(&state->mtx_sim_state);
+	if (state->dead_spotted == false)
+	{
+		ft_mutex_unlock(&state->mtx_sim_state);
+		return (false);
+	}
+	else
+	{
+		ft_mutex_unlock(&state->mtx_sim_state);
+		return (true);
+	}
+}
 
 int	change_status(t_state *state, uint64_t timestamp_ms,
 		t_philosopher *philosopher, char *status)
@@ -18,7 +33,7 @@ int	change_status(t_state *state, uint64_t timestamp_ms,
 	int	res;
 
 	ft_mutex_lock(&state->mtx_display_status);
-	if (state->dead_spotted == false)
+	if (is_dead_spotted(state) == false)
 		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	else
 		return (0);

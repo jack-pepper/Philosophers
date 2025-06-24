@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/22 22:09:03 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 00:11:06 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	*philo_routine(void *arg)
 	this_arg = (t_philo_arg *)arg;
 	i = this_arg->i;
 	set_next_i(this_arg->state, i, &next_i);
-	
 	if (philo_routine_starter(this_arg, i) == 1)
 		return (0);
 	ft_mutex_lock(&(this_arg->state)->mtx_sim_state);
@@ -38,7 +37,8 @@ void	*philo_routine(void *arg)
 }
 
 int	philo_routine_starter(t_philo_arg *this_arg, int i)
-{	
+{
+
 	wait_sim_start(&(*this_arg->state));
 	if (gandalf_barrier(&(*this_arg->state)) != 0)
 	{
@@ -46,11 +46,12 @@ int	philo_routine_starter(t_philo_arg *this_arg, int i)
 		free(this_arg);
 		return (0);
 	}
-	if (i % 2 == 1)
-		ft_usleep(this_arg->state, this_arg->state->settings.optimal_delay,
-			"[philo_routine] usleep failed\n");
+	//if (i % 2 == 1)
+	//	ft_usleep(this_arg->state, this_arg->state->settings.optimal_delay,
+	//		"[philo_routine] usleep failed\n");
+	set_optimal_delay(&(*this_arg->state), i);
 	if (DEBUG == 1)
-		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
+		printf("	🚀 👴 philo %d set, starting routine! (delay: %d)\n", i + 1, i);
 	return (0);
 }
 

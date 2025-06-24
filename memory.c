@@ -6,13 +6,13 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/17 09:43:00 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/24 20:38:59 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	free_on_exit(t_state *state)
+int	free_on_exit(t_state *state, int ret_val)
 {
 	int	ret;
 
@@ -21,7 +21,7 @@ int	free_on_exit(t_state *state)
 	ret = free_forks(state);
 	if (ret != 0)
 		return (ret);
-	return (0);
+	return (ret_val);
 }
 
 int	free_forks(t_state *state)
