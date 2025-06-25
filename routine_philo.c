@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 11:50:14 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:24:49 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	philo_routine_starter(t_philo_arg *this_arg, int i)
 		free(this_arg);
 		return (0);
 	}
-	set_optimal_delay(&(*this_arg->state), i);
+	set_optimal_delay(&(*this_arg->state), this_arg->state->settings.margin, i);
 	if (DEBUG == 1)
 		printf("	🚀 👴 philo %d set, starting routine! (delay: %d)\n", i + 1, i); // add delay here
 	return (0);

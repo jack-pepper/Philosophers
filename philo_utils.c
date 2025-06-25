@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:10:35 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 11:48:28 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:47:37 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,19 @@ void    handle_tight_timing(t_state *state, int *delay)
 }
 */
 
-void	set_optimal_delay(t_state *state, int i)
+void	set_optimal_delay(t_state *state, int margin, int i)
 {
 	int		nb_philos;
 	int		time_to_eat;
 	int		delay;
 
+	margin++; margin--;
 	delay = 0;
 	nb_philos = state->settings.number_of_philosophers;
 	time_to_eat = state->settings.time_to_eat;
 	if (nb_philos < 10 && i % 2 == 1)
 		delay = (time_to_eat / 2);
-	else if (nb_philos < 50)
+	else if (nb_philos >= 10 && nb_philos < 50)
 	{
 		if (i % 2 == 1)
 			delay = (time_to_eat / 2);
@@ -95,6 +96,8 @@ void	set_optimal_delay(t_state *state, int i)
 	}
 	else if (nb_philos >= 50)
 		delay = ((time_to_eat * i) / nb_philos);
+	if (delay > time_to_eat)
+		delay = time_to_eat;
 	if (margin > 0 && margin < (time_to_eat / 2))
 		delay = margin / 2;
 	if (delay > 500)
