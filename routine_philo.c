@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 18:38:00 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 21:20:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,11 @@ void	wait_for_death(t_philo_arg *this_arg, int i, int next_i)
 			return ;
 		}
 		ft_mutex_unlock(&(*this_arg->state).mtx_sim_state);
-		if (res == EXIT_GRIEF)
-			endcase_grief(this_arg->state,
-				&(this_arg->state)->philosophers[i], i);
-		else if (res == EXIT_SATIETY)
+		if (res == EXIT_SATIETY)
 			endcase_satiety(this_arg->state,
+				&(this_arg->state)->philosophers[i], i);
+		else
+			endcase_grief(this_arg->state,
 				&(this_arg->state)->philosophers[i], i);
 	}
 	return ;

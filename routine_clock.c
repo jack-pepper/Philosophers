@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/22 20:20:58 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 21:19:26 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int	take_pulse(t_state *state, uint64_t timestamp_ms)
 		starving_since = calc_starvation_duration(state, i);
 		if (starving_since > (uint64_t)state->settings.time_to_die)
 		{
-			set_sim_status(state, false);
 			change_status(state, timestamp_ms,
 				&state->philosophers[i], "died");
+			set_sim_status(state, false);
 			if (DEBUG == 1)
 			{
 				printf("\n🔔 👻 ⏳ Philosophers, settle your paradoxes...\n");

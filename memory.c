@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 18:33:02 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 21:36:56 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	free_on_exit(t_state *state, int ret_val)
 {
 	int	ret;
 
+	usleep(10000);
 	ret = 0;
 	pthread_mutex_destroy(&state->mtx_display_status);
 	free_philosophers(state);
