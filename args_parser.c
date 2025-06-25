@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:58 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/24 21:14:24 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 11:42:16 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,7 @@ void	store_args(char **argv, t_settings *settings)
 	settings->time_to_sleep = ft_atoi(argv[4]);
 	if (argv[5])
 		settings->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+	settings->margin = settings->time_to_die
+		- (settings->time_to_eat + settings->time_to_sleep);
 	return ;
 }

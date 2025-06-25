@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 00:27:55 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 11:40:42 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,27 @@ bool	is_dead_spotted(t_state *state)
 	}
 }
 
+void	set_last_meal_time(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
+{
+	ft_mutex_lock(&(state->clock.mtx_get_time));
+	philosopher->last_meal_time_ms = timestamp_ms;
+	ft_mutex_unlock(&(state->clock.mtx_get_time));
+}
+
 int	change_status(t_state *state, uint64_t timestamp_ms,
 		t_philosopher *philosopher, char *status)
 {
 	int	res;
 
 	ft_mutex_lock(&state->mtx_display_status);
+	timestamp_ms = calc_timestamp_ms(state, philosopher->id - 1);
 	if (is_dead_spotted(state) == false)
 		printf("%lu %d %s\n", timestamp_ms, philosopher->id, status);
 	else
+	{
+		ft_mutex_unlock(&state->mtx_display_status);
 		return (0);
+	}
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
 		die(state, philosopher);
@@ -47,6 +58,7 @@ int	change_status(t_state *state, uint64_t timestamp_ms,
 		return (0);
 	if (ft_strcmp(status, EAT_MSG) == 0)
 	{
+		set_last_meal_time(state, philosopher, timestamp_ms);
 		res = eat(state, philosopher) != 0;
 		if (res == EXIT_SATIETY)
 			return (EXIT_SATIETY);
@@ -70,9 +82,7 @@ void	die(t_state *state, t_philosopher *philosopher)
 	philosopher->is_alive = false;
 	state->dead_spotted = true;
 	ft_mutex_unlock(&state->mtx_sim_state);
-	ft_usleep(state, 10000, "[die] usleep failed\n");
 	ft_mutex_unlock(&state->mtx_display_status);
-	pthread_mutex_destroy(&state->mtx_display_status);
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 00:28:26 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 10:08:29 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ typedef struct s_settings
 	int			time_to_sleep;
 	int			number_of_philosophers;
 	int			number_of_times_each_philosopher_must_eat;
+	int			margin;
 }				t_settings;
 
 typedef struct s_philosopher

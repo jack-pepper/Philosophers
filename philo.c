@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:23:11 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/24 22:50:35 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 11:43:42 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	main(int argc, char **argv)
 	if (are_args_valid(argc, argv) != 0)
 		return (free_on_exit(&state, 1));
 	store_args(argv, &state.settings);
-//	set_optimal_delay(&state.settings);
 	if (DEBUG == 1)
 		display_settings(&state.settings);
 	if (initer(&state, state.settings.number_of_philosophers) != 0)
