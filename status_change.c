@@ -6,33 +6,11 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 11:40:42 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 18:54:15 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-bool	is_dead_spotted(t_state *state)
-{
-	ft_mutex_lock(&state->mtx_sim_state);
-	if (state->dead_spotted == false)
-	{
-		ft_mutex_unlock(&state->mtx_sim_state);
-		return (false);
-	}
-	else
-	{
-		ft_mutex_unlock(&state->mtx_sim_state);
-		return (true);
-	}
-}
-
-void	set_last_meal_time(t_state *state, t_philosopher *philosopher, uint64_t timestamp_ms)
-{
-	ft_mutex_lock(&(state->clock.mtx_get_time));
-	philosopher->last_meal_time_ms = timestamp_ms;
-	ft_mutex_unlock(&(state->clock.mtx_get_time));
-}
 
 int	change_status(t_state *state, uint64_t timestamp_ms,
 		t_philosopher *philosopher, char *status)
@@ -48,6 +26,15 @@ int	change_status(t_state *state, uint64_t timestamp_ms,
 		ft_mutex_unlock(&state->mtx_display_status);
 		return (0);
 	}
+	res = check_actions(state, timestamp_ms, philosopher, status);
+	return (res);
+}
+
+int	check_actions(t_state *state, uint64_t timestamp_ms,
+		t_philosopher *philosopher, char *status)
+{
+	int	res;
+
 	if (ft_strcmp(status, DIED_MSG) == 0)
 	{
 		die(state, philosopher);

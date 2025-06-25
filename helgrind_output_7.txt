@@ -1,0 +1,121 @@
+==65716== Helgrind, a thread error detector
+==65716== Copyright (C) 2007-2017, and GNU GPL'd, by OpenWorks LLP et al.
+==65716== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==65716== Command: ./philo 7 800 200 200 3
+==65716== 
+5 7 has taken a fork
+9 7 has taken a fork
+10 7 is eating
+12 1 has taken a fork
+15 3 has taken a fork
+15 3 has taken a fork
+15 3 is eating
+16 5 has taken a fork
+16 5 has taken a fork
+16 5 is eating
+212 7 is sleeping
+214 1 has taken a fork
+214 1 is eating
+215 3 is sleeping
+216 4 has taken a fork
+217 5 is sleeping
+218 4 has taken a fork
+219 4 is eating
+219 6 has taken a fork
+220 6 has taken a fork
+220 6 is eating
+413 7 is thinking
+415 1 is sleeping
+415 3 is thinking
+416 2 has taken a fork
+416 2 has taken a fork
+416 2 is eating
+416 7 has taken a fork
+418 5 is thinking
+419 4 is sleeping
+420 3 has taken a fork
+421 6 is sleeping
+421 7 has taken a fork
+422 7 is eating
+422 5 has taken a fork
+422 5 has taken a fork
+422 5 is eating
+615 1 is thinking
+617 3 has taken a fork
+617 3 is eating
+618 2 is sleeping
+619 1 has taken a fork
+619 4 is thinking
+623 6 is thinking
+623 7 is sleeping
+624 5 is sleeping
+625 1 has taken a fork
+625 1 is eating
+626 6 has taken a fork
+627 6 has taken a fork
+627 6 is eating
+817 3 is sleeping
+818 4 has taken a fork
+818 4 has taken a fork
+818 4 is eating
+819 2 is thinking
+823 7 is thinking
+824 5 is thinking
+827 1 is sleeping
+828 2 has taken a fork
+828 2 has taken a fork
+828 2 is eating
+828 7 has taken a fork
+829 6 is sleeping
+830 7 has taken a fork
+830 7 is eating
+831 5 has taken a fork
+1017 3 is thinking
+1018 4 is sleeping
+1019 5 has taken a fork
+1019 5 is eating
+1019 3 has taken a fork
+1027 1 is thinking
+1028 2 is sleeping
+1029 3 has taken a fork
+1029 3 is eating
+1030 1 has taken a fork
+1030 6 is thinking
+1032 7 is sleeping
+1033 1 has taken a fork
+1033 1 is eating
+1218 4 is thinking
+1221 5 is sleeping
+1222 6 has taken a fork
+1223 6 has taken a fork
+1223 6 is eating
+1228 2 is thinking
+1229 3 is sleeping
+1230 4 has taken a fork
+1231 4 has taken a fork
+1231 4 is eating
+1232 7 is thinking
+1233 1 is sleeping
+1234 2 has taken a fork
+1235 2 has taken a fork
+1235 2 is eating
+1236 7 has taken a fork
+1422 5 is thinking
+1423 6 is sleeping
+1425 7 has taken a fork
+1425 7 is eating
+1425 5 has taken a fork
+1429 3 is thinking
+1431 4 is sleeping
+1432 5 has taken a fork
+1433 5 is eating
+1433 3 has taken a fork
+1434 1 is thinking
+1435 2 is sleeping
+1436 3 has taken a fork
+1436 3 is eating
+==65716== 
+==65716== Use --history-level=approx or =none to gain increased speed, at
+==65716== the cost of reduced accuracy of conflicting-access information
+==65716== For lists of detected and suppressed errors, rerun with: -s
+==65716== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 189576 from 122)

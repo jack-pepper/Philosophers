@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 20:15:30 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 11:50:14 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 18:38:00 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*philo_routine(void *arg)
 	{
 		ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);
 		endcase_grief(this_arg->state,
-			&(this_arg->state)->philosophers[i], i); // ...
+			&(this_arg->state)->philosophers[i], i);
 		return (0);
 	}
 	ft_mutex_unlock(&(this_arg->state)->mtx_sim_state);
@@ -45,9 +45,9 @@ int	philo_routine_starter(t_philo_arg *this_arg, int i)
 		free(this_arg);
 		return (0);
 	}
-	set_optimal_delay(&(*this_arg->state), i);
+	usleep((this_arg->i % 2) * 1000);
 	if (DEBUG == 1)
-		printf("	🚀 👴 philo %d set, starting routine! (delay: %d)\n", i + 1, i); // add delay here
+		printf("	🚀 👴 philo %d set, starting routine!\n", i + 1);
 	return (0);
 }
 

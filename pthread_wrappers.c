@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 07:44:14 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/19 18:04:43 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 18:51:34 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,27 @@ int	ft_mutex_destroy(pthread_mutex_t *mtx, char *err_msg)
 		res = 1;
 	}
 	return (res);
+}
+
+bool	is_dead_spotted(t_state *state)
+{
+	ft_mutex_lock(&state->mtx_sim_state);
+	if (state->dead_spotted == false)
+	{
+		ft_mutex_unlock(&state->mtx_sim_state);
+		return (false);
+	}
+	else
+	{
+		ft_mutex_unlock(&state->mtx_sim_state);
+		return (true);
+	}
+}
+
+void	set_last_meal_time(t_state *state, t_philosopher *philosopher,
+		uint64_t timestamp_ms)
+{
+	ft_mutex_lock(&(state->clock.mtx_get_time));
+	philosopher->last_meal_time_ms = timestamp_ms;
+	ft_mutex_unlock(&(state->clock.mtx_get_time));
 }

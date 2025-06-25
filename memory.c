@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:33:19 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 09:24:05 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 18:33:02 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	free_forks(t_state *state)
 	}
 	if (state->forks)
 		free(state->forks);
-	if (res != 0)
-		printf("Warning: %d mutexes could not be destroyed.\n", res);
 	return (res);
 }
 

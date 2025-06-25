@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 10:08:29 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 18:59:45 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,6 +242,8 @@ bool		verify_satiety(t_state *state, int nb_guests, int satiety);
 // status_change.c
 int			change_status(t_state *state, uint64_t timestamp_ms,
 				t_philosopher *philosopher, char *status);
+int			check_actions(t_state *state, uint64_t timestamp_ms,
+				t_philosopher *philosopher, char *status);
 void		die(t_state *state, t_philosopher *philosopher);
 int			eat(t_state *state, t_philosopher *philosopher);
 void		nap(t_state *state);
@@ -308,6 +310,9 @@ void		set_optimal_delay(t_state *state, int i);
 void		ft_mutex_lock(pthread_mutex_t *mtx);
 void		ft_mutex_unlock(pthread_mutex_t *mtx);
 int			ft_mutex_destroy(pthread_mutex_t *mtx, char *err_msg);
+bool		is_dead_spotted(t_state *state);
+void		set_last_meal_time(t_state *state, t_philosopher *philosopher,
+				uint64_t timestamp_ms);
 
 // time_utils.c
 void		set_start_time(t_state *state);

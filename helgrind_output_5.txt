@@ -1,0 +1,90 @@
+==65691== Helgrind, a thread error detector
+==65691== Copyright (C) 2007-2017, and GNU GPL'd, by OpenWorks LLP et al.
+==65691== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==65691== Command: ./philo 5 800 200 200 3
+==65691== 
+6 5 has taken a fork
+11 5 has taken a fork
+11 5 is eating
+13 3 has taken a fork
+13 3 has taken a fork
+13 3 is eating
+17 1 has taken a fork
+213 5 is sleeping
+214 1 has taken a fork
+214 1 is eating
+215 3 is sleeping
+217 4 has taken a fork
+217 4 has taken a fork
+217 4 is eating
+413 5 is thinking
+415 1 is sleeping
+416 2 has taken a fork
+416 2 has taken a fork
+416 2 is eating
+416 3 is thinking
+417 5 has taken a fork
+417 4 is sleeping
+418 5 has taken a fork
+418 5 is eating
+419 3 has taken a fork
+615 1 is thinking
+616 3 has taken a fork
+616 3 is eating
+617 2 is sleeping
+618 1 has taken a fork
+619 5 is sleeping
+619 4 is thinking
+620 1 has taken a fork
+620 1 is eating
+817 2 is thinking
+819 4 has taken a fork
+819 4 has taken a fork
+819 4 is eating
+819 3 is sleeping
+820 5 is thinking
+820 1 is sleeping
+821 2 has taken a fork
+821 2 has taken a fork
+822 2 is eating
+823 5 has taken a fork
+1019 3 is thinking
+1020 4 is sleeping
+1021 3 has taken a fork
+1021 5 has taken a fork
+1021 5 is eating
+1021 1 is thinking
+1022 2 is sleeping
+1023 1 has taken a fork
+1023 3 has taken a fork
+1024 3 is eating
+1220 4 is thinking
+1221 5 is sleeping
+1221 1 has taken a fork
+1222 1 is eating
+1222 2 is thinking
+1226 3 is sleeping
+1227 4 has taken a fork
+1227 4 has taken a fork
+1227 4 is eating
+1421 5 is thinking
+1422 1 is sleeping
+1422 5 has taken a fork
+1423 2 has taken a fork
+1424 2 has taken a fork
+1424 2 is eating
+1426 3 is thinking
+1427 4 is sleeping
+1428 5 has taken a fork
+1428 5 is eating
+1429 3 has taken a fork
+1622 1 is thinking
+1624 2 is sleeping
+1625 3 has taken a fork
+1625 3 is eating
+1626 1 has taken a fork
+==65691== 
+==65691== Use --history-level=approx or =none to gain increased speed, at
+==65691== the cost of reduced accuracy of conflicting-access information
+==65691== For lists of detected and suppressed errors, rerun with: -s
+==65691== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 210873 from 118)
