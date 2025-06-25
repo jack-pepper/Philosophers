@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:32:52 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 21:24:45 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/25 22:08:00 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ void		display_settings(const t_settings *settings);
 int			ft_ret(int return_val, char *error_msg, int fd);
 void		ft_putstr_fd(char *s, int fd);
 int			set_next_i(t_state *state, int i, int *next_i);
-void		set_optimal_delay(t_state *state, int i);
+void		set_optimal_delay(t_state *state, int margin, int i);
 
 // pthread_wrappers.c
 void		ft_mutex_lock(pthread_mutex_t *mtx);
