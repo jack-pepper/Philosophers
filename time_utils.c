@@ -6,7 +6,7 @@
 /*   By: mmalie <mmalie@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:28:51 by mmalie            #+#    #+#             */
-/*   Updated: 2025/06/25 13:34:47 by mmalie           ###   ########.fr       */
+/*   Updated: 2025/06/22 20:21:25 by mmalie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ void	ft_usleep(t_state *state, useconds_t usec, char *err_msg)
 	uint64_t	start_time;
 	uint64_t	ms;
 
-	ms = (usec + 999) / 1000;
+	ms = usec / 1000;
 	start_time = get_cur_time(state);
 	while (get_cur_time(state) - start_time < ms)
 	{
-		if (usleep(1000) != 0)
+		if (usleep(100) != 0)
 			ft_putstr_fd(err_msg, STDERR);
 	}
 }
